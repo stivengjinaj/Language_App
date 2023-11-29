@@ -15,26 +15,30 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val lightColorScheme = lightColorScheme(
+    primary = mainColorLight,
+    background = backgroundColorLight,
+    //FONT COLOR
+    secondary = fontColor,
+    //SELECT OPTION COLOR
+    tertiary = selectColor,
+    //RED COLOR
+    error = emergency,
+    //Blue font in light/White font in dark
+    inversePrimary = mainColorLight
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val darkColorScheme = darkColorScheme(
+    primary = mainColorDark,
+    background = backgroundColorDark,
+    //FONT COLOR
+    secondary = fontColor,
+    //SELECT OPTION COLOR
+    tertiary = selectColor,
+    //RED COLOR
+    error = emergency,
+    //Blue font in light/White font in dark
+    inversePrimary = backgroundColorLight
 )
 
 @Composable
@@ -50,8 +54,8 @@ fun LanguageAppTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> darkColorScheme
+        else -> lightColorScheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
