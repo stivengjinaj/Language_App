@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Language App</string>
+    <string name="errorMessage">Inserisci il nome dello studente.</string>
+    <string name="new_course_title">Scegli il tuo corso</string>
+    <string name="student_name">Nome…</string>
+    <string name="english">Inglese</string>
+    <string name="italian">Italiano</string>
+    <string name="french">Francese</string>
+    <string name="next">Avanti</string>
+</resources>

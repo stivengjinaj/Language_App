@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -48,12 +49,19 @@ import com.stiven.languageapp.entities.Student
 import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.viewmodels.StudentViewModel
 
+
+/**
+ * Displays the page that prompts the user to start
+ * a new course.
+ *
+ * @param studentViewModel The view-model for student's data
+ * */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewCourse(studentViewModel: StudentViewModel) {
     var studentName by rememberSaveable { mutableStateOf("") }
     var studentNameError by rememberSaveable { mutableStateOf(false) }
-    val errorMessage = "Please enter the student's name."
+    val errorMessage = stringResource(R.string.errorMessage)
     var englishOption by rememberSaveable { mutableStateOf(true) }
     var italianOption by rememberSaveable { mutableStateOf(false) }
     var frenchOption by rememberSaveable { mutableStateOf(false) }
@@ -80,7 +88,7 @@ fun NewCourse(studentViewModel: StudentViewModel) {
         Spacer(modifier = Modifier.height((screenWidth / 12 + 20).dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Text(
-                text = "Choose your course",
+                text = stringResource(R.string.new_course_title),
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.inversePrimary),
                     fontSize = (screenWidth / 12).sp,
@@ -102,7 +110,7 @@ fun NewCourse(studentViewModel: StudentViewModel) {
                 },
                 label = {
                     Text(
-                        text = "Student's name...",
+                        text = stringResource(R.string.student_name),
                         style = TextStyle(
                             color = if (studentNameError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary
                         ),
@@ -165,7 +173,7 @@ fun NewCourse(studentViewModel: StudentViewModel) {
                         )
                     }
                     Text(
-                        "English",
+                        stringResource(R.string.english),
                         style = TextStyle(
                             color = MaterialTheme.colorScheme.secondary,
                             fontSize = (screenWidth / 12 - 12).sp,
@@ -210,7 +218,7 @@ fun NewCourse(studentViewModel: StudentViewModel) {
                         )
                     }
                     Text(
-                        "Italian",
+                        stringResource(R.string.italian),
                         style = TextStyle(
                             color = MaterialTheme.colorScheme.secondary,
                             fontSize = (screenWidth / 12 - 12).sp,
@@ -255,7 +263,7 @@ fun NewCourse(studentViewModel: StudentViewModel) {
                         )
                     }
                     Text(
-                        "French",
+                        stringResource(R.string.french),
                         style = TextStyle(
                             color = MaterialTheme.colorScheme.secondary,
                             fontSize = (screenWidth / 12 - 12).sp,
@@ -300,11 +308,11 @@ fun NewCourse(studentViewModel: StudentViewModel) {
                 )
             ) {
                 Text(
-                    text = "Next",
+                    text = stringResource(R.string.next),
                     textAlign = TextAlign.Center,
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.secondary,
-                        fontSize = (screenWidth / 12 - 15).sp,
+                        fontSize = (screenWidth / 12 - 16).sp,
                         fontWeight = FontWeight.Bold
                     )
                 )

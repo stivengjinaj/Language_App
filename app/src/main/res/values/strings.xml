@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Language App</string>
+    <string name="errorMessage">Please enter the student\'s name.</string>
+    <string name="new_course_title">Choose your course</string>
+    <string name="student_name">Student\'s name…</string>
+    <string name="english">English</string>
+    <string name="italian">Italian</string>
+    <string name="french">French</string>
+    <string name="next">Next</string>
 </resources>
