@@ -3,6 +3,7 @@ package com.stiven.languageapp
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +35,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -48,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import com.stiven.languageapp.entities.Student
 import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.viewmodels.StudentViewModel
+import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
 
 /**
@@ -58,7 +62,7 @@ import com.stiven.languageapp.viewmodels.StudentViewModel
  * */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewCourse(studentViewModel: StudentViewModel) {
+fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel) {
     var studentName by rememberSaveable { mutableStateOf("") }
     var studentNameError by rememberSaveable { mutableStateOf(false) }
     val errorMessage = stringResource(R.string.errorMessage)
@@ -67,6 +71,7 @@ fun NewCourse(studentViewModel: StudentViewModel) {
     var frenchOption by rememberSaveable { mutableStateOf(false) }
     var chosenCourse by rememberSaveable { mutableStateOf((Languages.ENGLISH)) }
     val screenWidth = LocalConfiguration.current.screenWidthDp
+    val context = LocalContext.current
     Column {
         Row(
             modifier = Modifier
@@ -88,6 +93,13 @@ fun NewCourse(studentViewModel: StudentViewModel) {
         Spacer(modifier = Modifier.height((screenWidth / 12 + 20).dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Text(
+                modifier = Modifier.pointerInput(Unit){
+                    detectTapGestures(
+                        onLongPress = {
+                            textToSpeechViewModel.textToSpeech(context,context.getString(R.string.new_course_title))
+                        }
+                    )
+                },
                 text = stringResource(R.string.new_course_title),
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.inversePrimary),

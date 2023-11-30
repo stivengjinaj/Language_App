@@ -10,7 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.stiven.languageapp.ui.theme.LanguageAppTheme
 import com.stiven.languageapp.viewmodels.StudentViewModel
-import com.stiven.languageapp.viewmodels.WordViewModel
+import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +19,7 @@ class MainActivity : ComponentActivity() {
         val db = AppDatabase.getDatabase(this)
         //val wordViewModel : WordViewModel by viewModels()
         val studentViewModel : StudentViewModel by viewModels()
+        val textToSpeechViewModel: TextToSpeechViewModel by viewModels()
         setContent {
             LanguageAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     //InitialPage(wordViewModel)
-                    NewCourse(studentViewModel)
+                    NewCourse(studentViewModel,textToSpeechViewModel)
                 }
             }
         }
