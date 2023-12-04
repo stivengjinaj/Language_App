@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.stiven.languageapp.graphs.RootNavGraph
 import com.stiven.languageapp.ui.theme.LanguageAppTheme
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -16,7 +18,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val db = AppDatabase.getDatabase(this)
+        //val db = AppDatabase.getDatabase(this)
         //val wordViewModel : WordViewModel by viewModels()
         val studentViewModel : StudentViewModel by viewModels()
         val textToSpeechViewModel: TextToSpeechViewModel by viewModels()
@@ -27,8 +29,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //InitialPage(wordViewModel)
-                    NewCourse(studentViewModel,textToSpeechViewModel)
+                    RootNavGraph(navController = rememberNavController(), studentViewModel = studentViewModel, textToSpeechViewModel = textToSpeechViewModel)
                 }
             }
         }

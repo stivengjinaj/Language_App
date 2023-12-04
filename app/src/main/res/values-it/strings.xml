@@ -8,4 +8,9 @@
     <string name="italian">Italiano</string>
     <string name="french">Francese</string>
     <string name="next">Avanti</string>
+    <string name="my_courses">Miei Corsi</string>
+    <string name="new_course">Nuovo Corso</string>
+    <string name="settings">Impostazioni</string>
+    <string name="emergency">Emergenza</string>
+    <string name="initial_page">Pagina Iniziale</string>
 </resources>

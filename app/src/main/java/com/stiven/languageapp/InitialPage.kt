@@ -33,16 +33,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.stiven.languageapp.entities.Word
+import com.stiven.languageapp.graphs.Graph
 import com.stiven.languageapp.viewmodels.WordViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun InitialPage(wordViewModel: WordViewModel) {
-    val lazyWords = mutableStateListOf<Word>()
-    var wordToSearch by remember { mutableStateOf(TextFieldValue("")) }
-    var wordState by remember { mutableStateOf<Word?>(null) }
+fun InitialPage(navController: NavHostController) {
     Column(
         Modifier.background(Color(android.graphics.Color.parseColor("#1DAEFC"))),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -55,7 +53,10 @@ fun InitialPage(wordViewModel: WordViewModel) {
         Row (modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center) {
             OutlinedButton(
                 modifier = Modifier.width((LocalConfiguration.current.screenWidthDp - 130).dp),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    navController.popBackStack()
+                    navController.navigate(Graph.MAIN)
+                },
                 shape = RoundedCornerShape(50),
                 border = BorderStroke(2.dp,Color.White)
             ) {
@@ -67,13 +68,8 @@ fun InitialPage(wordViewModel: WordViewModel) {
             OutlinedButton(
                 modifier = Modifier.width((LocalConfiguration.current.screenWidthDp - 130).dp),
                 onClick = {
-                    val wordList = wordViewModel.dataList
-                    for (word in wordList.value!!){
-                        word.learnt = 0
-                    }
-                    if(wordList.value != null){
-                        wordViewModel.updateAll(wordList.value!!)
-                    }
+                    navController.popBackStack()
+                    navController.navigate(Graph.MAIN)
                 },
                 shape = RoundedCornerShape(50),
                 border = BorderStroke(2.dp,Color.White)
@@ -85,7 +81,10 @@ fun InitialPage(wordViewModel: WordViewModel) {
         Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             OutlinedButton(
                 modifier = Modifier.width((LocalConfiguration.current.screenWidthDp - 130).dp),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    navController.popBackStack()
+                    navController.navigate(Graph.MAIN)
+                },
                 shape = RoundedCornerShape(50),
                 border = BorderStroke(2.dp,Color.White),
                 colors = ButtonDefaults.buttonColors(Color.Red)
@@ -93,24 +92,5 @@ fun InitialPage(wordViewModel: WordViewModel) {
                 Text("Emergency", style = TextStyle(color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold))
             }
         }
-        Spacer(modifier = Modifier.height(40.dp))
-        OutlinedTextField(
-            value = wordToSearch,
-            onValueChange = {
-                wordToSearch = it
-            },
-            label = { Text(text = "Enter word to search ") }
-        )
-        Spacer(modifier = Modifier.height(40.dp))
-        LazyColumn{
-            items(items = lazyWords){item ->
-                Words(word = item)
-            }
-        }
     }
-}
-
-@Composable
-fun Words(word: Word) {
-    Text(text = "Word: "+word.word+" Language: "+word.language+" Learnt: "+word.learnt)
 }
