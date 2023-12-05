@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Language App</string>
+    <string name="welcome_message">Bienvenue sur TrioLingo</string>
     <string name="errorMessage">Veuillez entrer le nom de l\'étudiant</string>
     <string name="new_course_title">Choisissez votre cours</string>
     <string name="student_name">Nom…</string>

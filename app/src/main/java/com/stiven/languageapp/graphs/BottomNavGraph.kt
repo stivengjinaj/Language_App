@@ -1,9 +1,11 @@
-package com.stiven.languageapp
+package com.stiven.languageapp.graphs
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.stiven.languageapp.BottomBarScreen
+import com.stiven.languageapp.NewCourse
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
@@ -13,12 +15,23 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * @param navController Navigation Host Controller
  * */
 @Composable
-fun BottomNavGraph(navController: NavHostController, studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel) {
+fun BottomNavGraph(
+    navController: NavHostController,
+    studentViewModel: StudentViewModel,
+    textToSpeechViewModel: TextToSpeechViewModel,
+    startingScreen: String
+) {
+    val startingDestination = when(startingScreen){
+        "my_courses" -> BottomBarScreen.MyCourses
+        "new_course" -> BottomBarScreen.NewCourse
+        else -> {
+            BottomBarScreen.Emergency
+        }
+    }
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.MyCourses.route
+        startDestination = startingDestination.route
     ){
-
         composable(route = BottomBarScreen.MyCourses.route){
 
         }

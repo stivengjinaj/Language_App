@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.Text
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -41,21 +41,20 @@ fun BottomBar(navController: NavHostController){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val currentSize = LocalConfiguration.current.screenWidthDp
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.primary,
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colorScheme.primary,
         modifier = Modifier
-            .clip(RoundedCornerShape(25.dp, 25.dp, 0.dp, 0.dp))
-            .height((currentSize / 6 + 10).dp),
-        content = {
-            screens.forEach { screen ->
-                AddItem(
-                    screen = screen,
-                    currentDestination = currentDestination,
-                    navController = navController
-                )
-            }
+            .clip(RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp))
+            .height((currentSize / 6 + 15).dp)
+    ){
+        screens.forEach { screen ->
+            AddItem(
+                screen = screen,
+                currentDestination = currentDestination,
+                navController = navController
+            )
         }
-    )
+    }
 }
 
 @Composable
@@ -66,32 +65,38 @@ fun RowScope.AddItem(
 ) {
     val context = LocalContext.current
     val currentSize = LocalConfiguration.current.screenWidthDp
+    val isSelected = currentDestination?.hierarchy?.any {
+        it.route == screen.route
+    } == true
     BottomNavigationItem(
+        icon = {
+            Icon(
+                modifier = Modifier
+                    .size((currentSize / 9).dp)
+                    .padding(0.dp, 0.dp, 0.dp, 10.dp),
+                painter = painterResource(id = screen.icon),
+                contentDescription = context.getString(screen.title),
+                tint =
+                if(screen == BottomBarScreen.Emergency && !isSelected) MaterialTheme.colorScheme.error
+                else if (isSelected) Color.White
+                else Color(0xFFE2DCDC)
+            )
+        },
+        selected = currentDestination?.hierarchy?.any {
+            it.route == screen.route
+        } == true,
         label = {
             Text(
                 text = context.getString(screen.title),
                 style = TextStyle(
-                    color = Color.White,
-                    fontSize = (currentSize/12-22).sp,
+                    color = if (isSelected) Color.White else Color(0xFFE2DCDC),
+                    fontSize = (currentSize / 12 - 22).sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     lineBreak = LineBreak.Simple
                 )
             )
         },
-        selectedContentColor = if(screen == BottomBarScreen.Emergency) Color.White else Color.LightGray,
-        unselectedContentColor = if(screen == BottomBarScreen.Emergency) MaterialTheme.colorScheme.error else Color.LightGray,
-        icon = {
-            Icon(
-                modifier = Modifier.size((currentSize/10).dp).padding(0.dp,0.dp,0.dp,5.dp),
-                painter = painterResource(id = screen.icon),
-                contentDescription = context.getString(screen.title),
-                tint = if(screen == BottomBarScreen.Emergency) MaterialTheme.colorScheme.error else Color.White
-            )
-        },
-        selected = currentDestination?.hierarchy?.any {
-            it.route == screen.route
-        } == true,
         onClick = {
             navController.navigate(screen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
