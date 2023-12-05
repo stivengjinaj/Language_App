@@ -1,12 +1,17 @@
 package com.stiven.languageapp
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -14,8 +19,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.ButtonDefaults
@@ -28,11 +36,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -72,7 +83,27 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     var chosenCourse by rememberSaveable { mutableStateOf((Languages.ENGLISH)) }
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val context = LocalContext.current
-    Column {
+
+    val iconsList = listOf(
+        R.raw.federica,
+        R.raw.bella,
+        R.raw.kevin,
+        R.raw.simone,
+        R.raw.francesca,
+        R.raw.jack,
+        R.raw.anna,
+        R.raw.jack2,
+        R.raw.karim,
+        R.raw.federica2,
+        R.raw.krishna,
+        R.raw.simone2,
+        R.raw.kevin2,
+    )
+
+    // Default selected icon
+    var selectedIcon = iconsList[1]
+
+    Column() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -90,7 +121,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 )
             )
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 20).dp))
+        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Text(
                 modifier = Modifier.pointerInput(Unit){
@@ -107,7 +138,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     fontWeight = FontWeight.Bold
             )
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 10).dp))
+        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             OutlinedTextField(
                 modifier = Modifier
@@ -152,7 +183,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 )
             )
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 10).dp))
+        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -197,7 +228,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 }
             }
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 10).dp))
+        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -242,7 +273,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 }
             }
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 10).dp))
+        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -287,7 +318,16 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 }
             }
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 50).dp))
+
+        Spacer(modifier = Modifier.height((screenWidth / 12 + 10).dp))
+
+        Row {
+            IconSelector(icons = iconsList) { icon ->
+                selectedIcon = icon
+            }
+        }
+
+        Spacer(modifier = Modifier.height((screenWidth / 12).dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -302,7 +342,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         val studentToInsert = Student(
                             name = studentName,
                             course = chosenCourse,
-                            picture = R.drawable.it,
+                            picture = selectedIcon,
                             points = 0
                         )
                         //CHECK IF STUDENT IS PRESENT AND IS ALREADY TAKING A COURSE IN THE SELECTED LANGUAGE
@@ -331,4 +371,59 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             }
         }
     }
+}
+
+@Composable
+fun IconSelector(
+    icons: List<Int>, // List of icon resource IDs
+    onIconSelected: (Int) -> Unit // Callback when an icon is selected
+) {
+    val currentSize = LocalConfiguration.current.screenWidthDp
+    var selectedIcon by remember { mutableIntStateOf(icons[1]) }
+    Row (
+        modifier = Modifier
+            .padding((currentSize/12-10).dp,0.dp)
+    ){
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
+        ) {
+            items(icons) { icon ->
+                val isSelected = icon == selectedIcon
+                IconItem(
+                    icon = icon,
+                    isSelected = isSelected,
+                    onIconSelected = {
+                        selectedIcon = it
+                        onIconSelected(it)
+                    }
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Function that creates an icon profile picture for user
+ *
+ * @param icon icon path
+ * @param isSelected whether the item is selected
+ * @param onIconSelected callback function when item is selected
+ * */
+@Composable
+fun IconItem(
+    icon: Int,
+    isSelected: Boolean,
+    onIconSelected: (Int) -> Unit
+) {
+    val alpha = if (isSelected) 1f else 0.5f
+
+    Image(
+        painter = painterResource(id = icon),
+        contentDescription = null,
+        modifier = Modifier
+            .padding(8.dp, 0.dp, 8.dp, 0.dp)
+            .size((LocalConfiguration.current.screenWidthDp / 6).dp)
+            .alpha(alpha)
+            .clickable { onIconSelected(icon) }
+    )
 }
