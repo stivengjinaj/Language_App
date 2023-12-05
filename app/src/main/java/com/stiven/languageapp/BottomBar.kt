@@ -45,7 +45,7 @@ fun BottomBar(navController: NavHostController){
         backgroundColor = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp))
-            .height((currentSize / 6 + 15).dp)
+            .height((currentSize / 6 + 8).dp)
     ){
         screens.forEach { screen ->
             AddItem(
@@ -72,7 +72,7 @@ fun RowScope.AddItem(
         icon = {
             Icon(
                 modifier = Modifier
-                    .size((currentSize / 9).dp)
+                    .size((currentSize / 11).dp)
                     .padding(0.dp, 0.dp, 0.dp, 10.dp),
                 painter = painterResource(id = screen.icon),
                 contentDescription = context.getString(screen.title),
