@@ -15,7 +15,11 @@ class StudentRepository(private val studentDao: StudentDao) {
         return database.studentDao().getAllStudents()
     }
 
-    fun deleteStudent(student: Student){
-        studentDao.deleteStudent(student)
+    fun deleteStudent(studentName: String){
+        studentDao.deleteStudent(studentName)
+    }
+
+    fun deleteAllStudents(){
+        studentDao.deleteAll()
     }
 }

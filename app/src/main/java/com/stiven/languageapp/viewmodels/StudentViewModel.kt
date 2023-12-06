@@ -17,7 +17,7 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
     private val repository: StudentRepository
     private val _dataList = MutableLiveData<List<Student>>()
     private val _singleStudent = MutableLiveData<Student>()
-    val dataList: LiveData<List<Student>> = _dataList
+    var dataList: LiveData<List<Student>> = _dataList
     val singleStudent: LiveData<Student> = _singleStudent
 
     init {
@@ -41,9 +41,15 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
         }
     }
 
-    fun deleteStudent(student: Student){
+    fun deleteStudent(studentName: String){
         viewModelScope.launch (Dispatchers.IO) {
-            repository.deleteStudent(student)
+            repository.deleteStudent(studentName)
+        }
+    }
+
+    fun deleteAllStudents(){
+        viewModelScope.launch (Dispatchers.IO) {
+            repository.deleteAllStudents()
         }
     }
 }
