@@ -7,8 +7,8 @@ val mainColorLight = Color(0xFF44B8F6)
 val backgroundColorLight = Color.White
 
 //DARK COLORS
-val mainColorDark = Color(0xFF525252)
-val backgroundColorDark = Color(0xFF7A7A7A)
+val mainColorDark = Color(0xFF323232)
+val backgroundColorDark = Color(0xFF5A5A5A)
 
 //COMMON COLORS
 val fontColor = Color.White

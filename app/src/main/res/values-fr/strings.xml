@@ -14,4 +14,10 @@
     <string name="settings">Paramètres</string>
     <string name="emergency">Urgence</string>
     <string name="initial_page">Première page</string>
+    <string name="confirm">Confirmer</string>
+    <string name="cancel">Annuler</string>
+    <string name="confirmation_dialog">Êtes-vous sûr de vouloir redémarrer le cours ?</string>
+    <string name="student_course_exists">Cours en cours</string>
+    <string name="classroom_full">Salle de Classe Complète</string>
+    <string name="classroom_max_students">La salle de classe a atteint sa limite de 4 étudiants.</string>
 </resources>

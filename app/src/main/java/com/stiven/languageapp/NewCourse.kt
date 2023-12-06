@@ -1,13 +1,10 @@
 package com.stiven.languageapp
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,9 +20,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -54,22 +51,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import com.stiven.languageapp.entities.Student
 import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import java.util.Locale
 
 
 /**
  * Displays the page that prompts the user to start
- * a new course.
+ * a new course. In this page the user has to input
+ * the student's name and choose the course to start.
+ * If the student name already exists but not with the
+ * same course the student will be registered if there
+ * are less than 4 student registered. Otherwise the app
+ * will notify the user.
  *
- * @param studentViewModel The view-model for student's data
+ * @param studentViewModel View-model for student's data
+ * @param textToSpeechViewModel View-model for text-to-speech accessibility
  * */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,9 +85,10 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     var italianOption by rememberSaveable { mutableStateOf(false) }
     var frenchOption by rememberSaveable { mutableStateOf(false) }
     var chosenCourse by rememberSaveable { mutableStateOf((Languages.ENGLISH)) }
+    var existingStudentDialog by rememberSaveable { mutableStateOf(false) }
+    var maxStudentDialog by rememberSaveable { mutableStateOf(false) }
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val context = LocalContext.current
-
     val iconsList = listOf(
         R.raw.federica,
         R.raw.bella,
@@ -103,7 +108,9 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     // Default selected icon
     var selectedIcon = iconsList[1]
 
-    Column() {
+    Column {
+
+        //Row containing the app title
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -122,7 +129,11 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             )
         }
         Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        //Row containing the title of the page
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
             Text(
                 modifier = Modifier.pointerInput(Unit){
                     detectTapGestures(
@@ -139,7 +150,11 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             )
         }
         Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        //Row containing the text field for for the student's name
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
             OutlinedTextField(
                 modifier = Modifier
                     .background(Color.Transparent)
@@ -178,12 +193,12 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done,
-                    capitalization = KeyboardCapitalization.Characters
+                    imeAction = ImeAction.Done
                 )
             )
         }
         Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
+        //Row containing the english button
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -229,6 +244,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             }
         }
         Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
+        //Row containing the italian button
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -274,6 +290,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             }
         }
         Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
+        //Row containing the french button
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -320,34 +337,39 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         }
 
         Spacer(modifier = Modifier.height((screenWidth / 12 + 10).dp))
-
+        //Row containing the list of icons for student's account
         Row {
             IconSelector(icons = iconsList) { icon ->
                 selectedIcon = icon
             }
         }
-
         Spacer(modifier = Modifier.height((screenWidth / 12).dp))
+        //Row containing confirm button to create the account
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier.width((LocalConfiguration.current.screenWidthDp - 300).dp),
+                modifier = Modifier.width((screenWidth - 300).dp),
                 onClick = {
                     if (studentName.isEmpty()) {
                         studentNameError = true
                     } else {
                         //STUDENT DATA
+                        //studentViewModel.deleteAllStudents()
                         val studentToInsert = Student(
-                            name = studentName,
+                            name = formatString(studentName),
                             course = chosenCourse,
                             picture = selectedIcon,
                             points = 0
                         )
                         //CHECK IF STUDENT IS PRESENT AND IS ALREADY TAKING A COURSE IN THE SELECTED LANGUAGE
-                        if (!studentViewModel.userCourseExists(studentToInsert)) {
+                        if (studentViewModel.dataList.value?.size  == 4) {
+                            maxStudentDialog = true
+                        }else if (!studentViewModel.userCourseExists(studentToInsert)) {
                             studentViewModel.insertStudent(studentToInsert)
+                        }else{
+                            existingStudentDialog = true
                         }
                     }
                 },
@@ -364,19 +386,117 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     textAlign = TextAlign.Center,
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.secondary,
-                        fontSize = (screenWidth / 12 - 16).sp,
+                        fontSize = (screenWidth / 12 - 17).sp,
                         fontWeight = FontWeight.Bold
                     )
                 )
             }
         }
     }
+    //Dialog box that appears if the student is already taking a course
+    if (existingStudentDialog) {
+        AlertDialog(
+            containerColor = MaterialTheme.colorScheme.background,
+            onDismissRequest = {
+                existingStudentDialog = false
+            },
+            title = {
+                Text(text = context.getString(R.string.student_course_exists))
+            },
+            text = {
+                Text(text = context.getString(R.string.confirmation_dialog))
+            },
+            confirmButton = {
+                OutlinedButton(
+                    onClick = {
+                        existingStudentDialog = false
+                        val studentToInsert = Student(
+                            name = formatString(studentName),
+                            course = chosenCourse,
+                            picture = selectedIcon,
+                            points = 0
+                        )
+                        studentViewModel.deleteStudent(studentToInsert.name)
+                        studentViewModel.insertStudent(studentToInsert)
+                    },
+                    border = BorderStroke(2.dp,
+                        MaterialTheme.colorScheme.error
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text(text = context.getString(R.string.confirm), color = MaterialTheme.colorScheme.secondary)
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = {
+                        existingStudentDialog = false
+                    },
+                    border = BorderStroke(2.dp,
+                        MaterialTheme.colorScheme.primary
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+
+                ) {
+                    Text(text = context.getString(R.string.cancel), color = MaterialTheme.colorScheme.secondary)
+                }
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+            )
+        )
+    }
+    //Dialog box that appears if there are already 4 students registered
+    if (maxStudentDialog){
+        AlertDialog(
+            containerColor = MaterialTheme.colorScheme.background,
+            onDismissRequest = {
+                maxStudentDialog = false
+            },
+            title = {
+                Text(text = context.getString(R.string.classroom_full))
+            },
+            text = {
+                Text(text = context.getString(R.string.classroom_max_students))
+            },
+            confirmButton = {
+                OutlinedButton(
+                    onClick = {
+                        maxStudentDialog = false
+                    },
+                    border = BorderStroke(2.dp,
+                        MaterialTheme.colorScheme.primary
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text(text = context.getString(R.string.confirm), color = MaterialTheme.colorScheme.secondary)
+                }
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+            )
+        )
+    }
 }
 
+/**
+ * Composable function that contains a LazyRow with icons to choose
+ *
+ * @param icons a list of icons to choose
+ * @param onIconSelected callback function when the item is selected
+ * */
 @Composable
 fun IconSelector(
-    icons: List<Int>, // List of icon resource IDs
-    onIconSelected: (Int) -> Unit // Callback when an icon is selected
+    icons: List<Int>,
+    onIconSelected: (Int) -> Unit
 ) {
     val currentSize = LocalConfiguration.current.screenWidthDp
     var selectedIcon by remember { mutableIntStateOf(icons[1]) }
@@ -403,7 +523,7 @@ fun IconSelector(
 }
 
 /**
- * Function that creates an icon profile picture for user
+ * Composable function that creates an icon profile picture for user
  *
  * @param icon icon path
  * @param isSelected whether the item is selected
@@ -426,4 +546,18 @@ fun IconItem(
             .alpha(alpha)
             .clickable { onIconSelected(icon) }
     )
+}
+
+/**
+ * Function that formats a string. It removes blank spaces
+ * and it capitalizes the string
+ *
+ * @param string Unformatted string
+ * @return a trimmed string without blank spaces
+ * */
+fun formatString(string: String): String {
+    // Trim leading and trailing spaces and convert to lowercase
+    val trimmedString = string.trim().lowercase(Locale.ROOT)
+
+    return trimmedString.substring(0, 1).uppercase(Locale.ROOT) + trimmedString.substring(1)
 }

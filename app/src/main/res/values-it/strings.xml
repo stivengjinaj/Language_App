@@ -14,4 +14,10 @@
     <string name="settings">Impostazioni</string>
     <string name="emergency">Emergenza</string>
     <string name="initial_page">Pagina Iniziale</string>
+    <string name="confirm">Conferma</string>
+    <string name="cancel">Annulla</string>
+    <string name="confirmation_dialog">Sei sicuro di voler riavviare il corso?</string>
+    <string name="student_course_exists">Corso in corso</string>
+    <string name="classroom_full">Aula Piena</string>
+    <string name="classroom_max_students">La classe ha raggiunto il limite di 4 studenti.</string>
 </resources>
