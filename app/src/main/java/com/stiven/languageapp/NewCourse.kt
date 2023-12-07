@@ -152,13 +152,16 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         //Row containing the text field for for the student's name
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+            ,
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedTextField(
                 modifier = Modifier
                     .background(Color.Transparent)
-                    .width((screenWidth - 110).dp),
+                    .width((screenWidth - 110).dp)
+                ,
                 value = studentName,
                 onValueChange = {
                     studentName = it
@@ -168,6 +171,13 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 },
                 label = {
                     Text(
+                        modifier = Modifier.pointerInput(Unit){
+                            detectTapGestures(
+                                onLongPress = {
+                                    textToSpeechViewModel.textToSpeech(context,context.getString(R.string.student_name_speech))
+                                }
+                            )
+                        },
                         text = stringResource(R.string.student_name),
                         style = TextStyle(
                             color = if (studentNameError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary
@@ -200,11 +210,15 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         //Row containing the english button
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+            ,
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier.width((screenWidth - 110).dp),
+                modifier = Modifier
+                    .width((screenWidth - 110).dp)
+                    ,
                 onClick = {
                     frenchOption = false
                     englishOption = true
@@ -238,7 +252,15 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             fontWeight = FontWeight.Bold
                         ),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(((screenWidth - 110) / 3).dp, 0.dp, 0.dp, 0.dp)
+                        modifier = Modifier
+                            .padding(((screenWidth - 110) / 3).dp, 0.dp, 0.dp, 0.dp)
+                            .pointerInput(Unit){
+                                detectTapGestures(
+                                    onLongPress = {
+                                        textToSpeechViewModel.textToSpeech(context,context.getString(R.string.english_button_speech))
+                                    }
+                                )
+                            }
                     )
                 }
             }
@@ -246,11 +268,15 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         //Row containing the italian button
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+            ,
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier.width((screenWidth - 110).dp),
+                modifier = Modifier
+                    .width((screenWidth - 110).dp)
+                ,
                 onClick = {
                     frenchOption = false
                     englishOption = false
@@ -284,7 +310,15 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             fontWeight = FontWeight.Bold
                         ),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(((screenWidth - 110) / 3).dp, 0.dp, 0.dp, 0.dp)
+                        modifier = Modifier
+                            .padding(((screenWidth - 110) / 3).dp, 0.dp, 0.dp, 0.dp)
+                            .pointerInput(Unit){
+                                detectTapGestures(
+                                    onLongPress = {
+                                        textToSpeechViewModel.textToSpeech(context,context.getString(R.string.italian_button_speech))
+                                    }
+                                )
+                            }
                     )
                 }
             }
@@ -292,11 +326,15 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         //Row containing the french button
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+            ,
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier.width((screenWidth - 110).dp),
+                modifier = Modifier
+                    .width((screenWidth - 110).dp)
+                ,
                 onClick = {
                     frenchOption = true
                     englishOption = false
@@ -330,7 +368,15 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             fontWeight = FontWeight.Bold
                         ),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(((screenWidth - 100) / 3).dp, 0.dp, 0.dp, 0.dp)
+                        modifier = Modifier
+                            .padding(((screenWidth - 100) / 3).dp, 0.dp, 0.dp, 0.dp)
+                            .pointerInput(Unit){
+                                detectTapGestures(
+                                    onLongPress = {
+                                        textToSpeechViewModel.textToSpeech(context,context.getString(R.string.french_button_speech))
+                                    }
+                                )
+                            }
                     )
                 }
             }
@@ -346,11 +392,15 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         Spacer(modifier = Modifier.height((screenWidth / 12).dp))
         //Row containing confirm button to create the account
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+            ,
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier.width((screenWidth - 300).dp),
+                modifier = Modifier
+                    .width((screenWidth - 300).dp)
+                ,
                 onClick = {
                     if (studentName.isEmpty()) {
                         studentNameError = true
@@ -382,6 +432,13 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 )
             ) {
                 Text(
+                    modifier = Modifier.pointerInput(Unit){
+                        detectTapGestures(
+                            onLongPress = {
+                                textToSpeechViewModel.textToSpeech(context,context.getString(R.string.next_button_speech))
+                            }
+                        )
+                    },
                     text = stringResource(R.string.next),
                     textAlign = TextAlign.Center,
                     style = TextStyle(
@@ -408,6 +465,13 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             },
             confirmButton = {
                 OutlinedButton(
+                    modifier = Modifier.pointerInput(Unit){
+                        detectTapGestures(
+                            onLongPress = {
+                                textToSpeechViewModel.textToSpeech(context,context.getString(R.string.confirm_button_speech))
+                            }
+                        )
+                    },
                     onClick = {
                         existingStudentDialog = false
                         val studentToInsert = Student(
@@ -466,6 +530,13 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             },
             confirmButton = {
                 OutlinedButton(
+                    modifier = Modifier.pointerInput(Unit){
+                        detectTapGestures(
+                            onLongPress = {
+                                textToSpeechViewModel.textToSpeech(context,context.getString(R.string.confirm_button_speech))
+                            }
+                        )
+                    },
                     onClick = {
                         maxStudentDialog = false
                     },
