@@ -90,19 +90,19 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val context = LocalContext.current
     val iconsList = listOf(
-        R.raw.federica,
         R.raw.bella,
-        R.raw.kevin,
-        R.raw.simone,
-        R.raw.francesca,
-        R.raw.jack,
-        R.raw.anna,
-        R.raw.jack2,
-        R.raw.karim,
-        R.raw.federica2,
         R.raw.krishna,
-        R.raw.simone2,
-        R.raw.kevin2,
+        R.raw.karim,
+        R.raw.chris,
+        R.raw.helen,
+        R.raw.ishanvi,
+        R.raw.kim,
+        R.raw.mattew,
+        R.raw.priyanka,
+        R.raw.usman,
+        R.raw.kulthum,
+        R.raw.ezra,
+        R.raw.justin
     )
 
     // Default selected icon
