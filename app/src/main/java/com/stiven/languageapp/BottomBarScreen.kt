@@ -1,11 +1,5 @@
 package com.stiven.languageapp
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MenuBook
-import androidx.compose.material.icons.filled.Settings
-import br.com.frazo.compose_resources.IconResource
-
 /**
  * Sealed class that creates the routes of the bottom bar
  *
@@ -18,10 +12,10 @@ sealed class BottomBarScreen(
     val title: Int,
     val icon: Int
 ) {
-    data object MyCourses : BottomBarScreen(
-        "my_courses",
-        R.string.my_courses,
-        R.drawable.my_courses
+    data object Classroom : BottomBarScreen(
+        "classroom",
+        R.string.classroom,
+        R.drawable.classroom
     )
 
     data object NewCourse : BottomBarScreen(

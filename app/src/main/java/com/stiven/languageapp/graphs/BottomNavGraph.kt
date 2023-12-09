@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.stiven.languageapp.BottomBarScreen
+import com.stiven.languageapp.Classroom
 import com.stiven.languageapp.NewCourse
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -25,7 +26,7 @@ fun BottomNavGraph(
     startingScreen: String
 ) {
     val startingDestination = when(startingScreen){
-        "my_courses" -> BottomBarScreen.MyCourses
+        "classroom" -> BottomBarScreen.Classroom
         "new_course" -> BottomBarScreen.NewCourse
         else -> {
             BottomBarScreen.Emergency
@@ -35,12 +36,12 @@ fun BottomNavGraph(
         navController = navController,
         startDestination = startingDestination.route
     ){
-        composable(route = BottomBarScreen.MyCourses.route){
-
+        composable(route = BottomBarScreen.Classroom.route){
+            Classroom(studentViewModel, textToSpeechViewModel, navController)
         }
 
         composable(route = BottomBarScreen.NewCourse.route){
-            NewCourse(studentViewModel, textToSpeechViewModel)
+            NewCourse(studentViewModel, textToSpeechViewModel, navController)
         }
 
         composable(route = BottomBarScreen.Settings.route){

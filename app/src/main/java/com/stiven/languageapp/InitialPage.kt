@@ -72,13 +72,13 @@ fun InitialPage(navController: NavHostController) {
                 modifier = Modifier.width((LocalConfiguration.current.screenWidthDp - 110).dp),
                 onClick = {
                     navController.popBackStack()
-                    navController.navigate(Graph.MAIN+"/my_courses")
+                    navController.navigate(Graph.MAIN+"/classroom")
                 },
                 shape = RoundedCornerShape(50),
                 border = BorderStroke(2.dp,Color.White)
             ) {
                 Text(
-                    context.getString(R.string.my_courses),
+                    context.getString(R.string.classroom),
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.secondary,
                         fontSize = (currentSize/12-12).sp,

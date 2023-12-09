@@ -13,7 +13,7 @@
     <string name="french_button_speech">Course for french</string>
     <string name="next">Next</string>
     <string name="next_button_speech">Click to register student</string>
-    <string name="my_courses">My Courses</string>
+    <string name="classroom">Classroom</string>
     <string name="new_course">New Course</string>
     <string name="settings">Settings</string>
     <string name="emergency">Emergency</string>
@@ -25,4 +25,5 @@
     <string name="student_course_exists">Course in progress</string>
     <string name="classroom_full">Classroom full</string>
     <string name="classroom_max_students">Classroom has reached its limit of 4 students.</string>
+    <string name="no_student_found">The classroom is empty</string>
 </resources>

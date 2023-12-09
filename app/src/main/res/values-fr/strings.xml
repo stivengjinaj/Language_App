@@ -14,7 +14,7 @@
     <string name="french_button_speech">Cours de français</string>
     <string name="next">Suivant</string>
     <string name="next_button_speech">Cliquez pour inscrire l\'étudiant</string>
-    <string name="my_courses">Mes Cours</string>
+    <string name="classroom">Classe</string>
     <string name="new_course">Nouveau Cours</string>
     <string name="settings">Paramètres</string>
     <string name="emergency">Urgence</string>
@@ -26,4 +26,5 @@
     <string name="student_course_exists">Cours en cours</string>
     <string name="classroom_full">Salle de Classe Complète</string>
     <string name="classroom_max_students">La salle de classe a atteint sa limite de 4 étudiants.</string>
+    <string name="no_student_found">La classe est vide</string>
 </resources>

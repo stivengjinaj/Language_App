@@ -1,5 +1,6 @@
 package com.stiven.languageapp
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -56,6 +57,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavHostController
 import com.stiven.languageapp.entities.Student
 import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.viewmodels.StudentViewModel
@@ -72,12 +74,12 @@ import java.util.Locale
  * are less than 4 student registered. Otherwise the app
  * will notify the user.
  *
- * @param studentViewModel View-model for student's data
- * @param textToSpeechViewModel View-model for text-to-speech accessibility
+ * @param studentViewModel view-model that handles student's data
+ * @param textToSpeechViewModel view-model for text-to-speech accessibility
  * */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel) {
+fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel, navController: NavHostController) {
     var studentName by rememberSaveable { mutableStateOf("") }
     var studentNameError by rememberSaveable { mutableStateOf(false) }
     val errorMessage = stringResource(R.string.errorMessage)
@@ -109,7 +111,6 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     var selectedIcon = iconsList[1]
 
     Column {
-
         //Row containing the app title
         Row(
             modifier = Modifier
@@ -152,9 +153,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         //Row containing the text field for for the student's name
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-            ,
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedTextField(
@@ -207,18 +206,16 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 )
             )
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
+        Spacer(modifier = Modifier.height((screenWidth / 12).dp))
         //Row containing the english button
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
             ,
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier
-                    .width((screenWidth - 110).dp)
-                    ,
+                modifier = Modifier.width((screenWidth - 110).dp)
+                ,
                 onClick = {
                     frenchOption = false
                     englishOption = true
@@ -265,7 +262,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 }
             }
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
+        Spacer(modifier = Modifier.height((screenWidth / 12).dp))
         //Row containing the italian button
         Row(
             modifier = Modifier
@@ -323,7 +320,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 }
             }
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
+        Spacer(modifier = Modifier.height((screenWidth / 12).dp))
         //Row containing the french button
         Row(
             modifier = Modifier
@@ -382,31 +379,27 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             }
         }
 
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 10).dp))
+        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
         //Row containing the list of icons for student's account
         Row {
             IconSelector(icons = iconsList) { icon ->
                 selectedIcon = icon
             }
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12).dp))
+        Spacer(modifier = Modifier.height((screenWidth / 12-10).dp))
         //Row containing confirm button to create the account
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-            ,
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier
-                    .width((screenWidth - 300).dp)
+                modifier = Modifier.width((screenWidth - 300).dp)
                 ,
                 onClick = {
                     if (studentName.isEmpty()) {
                         studentNameError = true
                     } else {
                         //STUDENT DATA
-                        //studentViewModel.deleteAllStudents()
                         val studentToInsert = Student(
                             name = formatString(studentName),
                             course = chosenCourse,
@@ -417,7 +410,9 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         if (studentViewModel.dataList.value?.size  == 4) {
                             maxStudentDialog = true
                         }else if (!studentViewModel.userCourseExists(studentToInsert)) {
+                            Log.d("STUDENT","STUDENT INSERTED")
                             studentViewModel.insertStudent(studentToInsert)
+                            navController.navigate(BottomBarScreen.Classroom.route)
                         }else{
                             existingStudentDialog = true
                         }
