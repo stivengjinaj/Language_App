@@ -1,7 +1,6 @@
 package com.stiven.languageapp
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,7 +35,7 @@ import com.stiven.languageapp.graphs.Graph
 /**
  * The first page to show when the user opens the app. The user chooses the destination.
  *
- * @param navController Navigation controller.
+ * @param navController navigation host controller.
  * */
 @SuppressLint("UnrememberedMutableState")
 @Composable

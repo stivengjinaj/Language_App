@@ -30,6 +30,12 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
+/**
+ * Function that creates the bottom navigation bar and
+ * all the pages of type BottomBarScreen
+ *
+ * @param navController navigation host controller
+ * */
 @Composable
 fun BottomBar(navController: NavHostController){
     val screens = listOf(
@@ -57,6 +63,13 @@ fun BottomBar(navController: NavHostController){
     }
 }
 
+/**
+ * Function that customizes an entry in the bottom navigation bar.
+ *
+ * @param screen the screen entry in bottom navigation bar
+ * @param currentDestination parameter used to check if the current screen is selected
+ * @param navController navigation controller
+ * */
 @Composable
 fun RowScope.AddItem(
     screen: BottomBarScreen,
