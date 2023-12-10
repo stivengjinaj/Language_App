@@ -26,4 +26,8 @@
     <string name="classroom_full">Classroom full</string>
     <string name="classroom_max_students">Classroom has reached its limit of 4 students.</string>
     <string name="no_student_found">The classroom is empty</string>
+    <string name="lessons">Lessons</string>
+    <string name="exercises">Exercises</string>
+    <string name="dictionary">Dictionary</string>
+    <string name="logout">Logout</string>
 </resources>

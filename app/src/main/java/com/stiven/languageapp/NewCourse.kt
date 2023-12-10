@@ -412,7 +412,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         }else if (!studentViewModel.userCourseExists(studentToInsert)) {
                             Log.d("STUDENT","STUDENT INSERTED")
                             studentViewModel.insertStudent(studentToInsert)
-                            navController.navigate(BottomBarScreen.Classroom.route)
+                            navController.navigate(BottomBarScreens.Classroom.route)
                         }else{
                             existingStudentDialog = true
                         }

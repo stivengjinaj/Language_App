@@ -27,4 +27,8 @@
     <string name="classroom_full">Aula Piena</string>
     <string name="classroom_max_students">La classe ha raggiunto il limite di 4 studenti.</string>
     <string name="no_student_found">L\'aula è vuota</string>
+    <string name="lessons">Lessons</string>
+    <string name="exercises">Exercises</string>
+    <string name="dictionary">Dictionary</string>
+    <string name="logout">Logout</string>
 </resources>

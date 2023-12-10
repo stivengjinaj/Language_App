@@ -39,10 +39,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 @Composable
 fun BottomBar(navController: NavHostController){
     val screens = listOf(
-        BottomBarScreen.Classroom,
-        BottomBarScreen.NewCourse,
-        BottomBarScreen.Settings,
-        BottomBarScreen.Emergency,
+        BottomBarScreens.Classroom,
+        BottomBarScreens.NewCourse,
+        BottomBarScreens.Settings,
+        BottomBarScreens.Emergency,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -72,7 +72,7 @@ fun BottomBar(navController: NavHostController){
  * */
 @Composable
 fun RowScope.AddItem(
-    screen: BottomBarScreen,
+    screen: BottomBarScreens,
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
@@ -90,7 +90,7 @@ fun RowScope.AddItem(
                 painter = painterResource(id = screen.icon),
                 contentDescription = context.getString(screen.title),
                 tint =
-                if(screen == BottomBarScreen.Emergency && !isSelected) MaterialTheme.colorScheme.error
+                if(screen == BottomBarScreens.Emergency && !isSelected) MaterialTheme.colorScheme.error
                 else if (isSelected) Color.White
                 else Color(0xFFE2DCDC)
             )

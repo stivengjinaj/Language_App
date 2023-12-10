@@ -49,7 +49,6 @@ object Graph{
     const val SPLASH = "splash_screen"
     const val INITIAL = "initial"
     const val MAIN = "main"
-    const val LESSONS = "lessons"
 }
 
 @Composable

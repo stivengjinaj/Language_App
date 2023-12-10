@@ -78,7 +78,7 @@ fun Classroom(
         }else{
             val courseStudent = studentViewModel.dataList.value
             if (courseStudent != null) {
-                CoursesList(courseStudent)
+                CoursesList(courseStudent, navController)
             }
         }
     }
@@ -113,7 +113,7 @@ fun NoStudentRegistered(navController: NavHostController){
     Row {
         OutlinedButton(
             onClick = {
-                navController.navigate(BottomBarScreen.NewCourse.route)
+                navController.navigate(BottomBarScreens.NewCourse.route)
             },
             shape = RoundedCornerShape(50.dp),
             border = BorderStroke(
@@ -141,7 +141,7 @@ fun NoStudentRegistered(navController: NavHostController){
  * @param courseStudent the list of the students present in database
  * */
 @Composable
-fun CoursesList(courseStudent: List<Student>) {
+fun CoursesList(courseStudent: List<Student>, navController: NavHostController) {
     val context = LocalContext.current
     val screenSize = LocalConfiguration.current.screenWidthDp
     Spacer(modifier = Modifier.height((screenSize/12).dp))
@@ -157,7 +157,7 @@ fun CoursesList(courseStudent: List<Student>) {
     }
     Spacer(modifier = Modifier.height(30.dp))
     for(student in courseStudent){
-        StudentRow(student)
+        StudentRow(student, navController)
     }
 }
 
@@ -169,7 +169,7 @@ fun CoursesList(courseStudent: List<Student>) {
  * @param student student entity
  * */
 @Composable
-fun StudentRow(student: Student){
+fun StudentRow(student: Student, navController: NavHostController){
     val screenSize = LocalConfiguration.current.screenWidthDp
     Row (
         horizontalArrangement = Arrangement.Start,
@@ -185,7 +185,9 @@ fun StudentRow(student: Student){
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             ClickableText(
-                onClick = { /*TODO*/ },
+                onClick = {
+                      /*TODO*/
+                },
                 text = AnnotatedString(student.name),
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.inversePrimary,
