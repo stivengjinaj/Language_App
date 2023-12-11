@@ -20,6 +20,7 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * */
 @Composable
 fun BottomNavGraph(
+    rootNavController: NavHostController,
     navController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
@@ -37,7 +38,7 @@ fun BottomNavGraph(
         startDestination = startingDestination.route
     ){
         composable(route = BottomBarScreens.Classroom.route){
-            Classroom(studentViewModel, textToSpeechViewModel, navController)
+            Classroom(rootNavController, navController, studentViewModel, textToSpeechViewModel)
         }
 
         composable(route = BottomBarScreens.NewCourse.route){

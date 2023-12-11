@@ -20,6 +20,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.stiven.languageapp.InitialPage
 import com.stiven.languageapp.R
+import com.stiven.languageapp.StudentPanel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import kotlinx.coroutines.delay
@@ -39,7 +40,11 @@ fun RootNavGraph(navController: NavHostController,studentViewModel: StudentViewM
         }
         composable(Graph.MAIN+"/{screen}"){backStackEntry ->
             backStackEntry.arguments!!.getString("screen")
-                ?.let { MainScreen(studentViewModel, textToSpeechViewModel, it) }
+                ?.let { MainScreen(navController,studentViewModel, textToSpeechViewModel, it) }
+        }
+        composable(Graph.LESSONS+"/{studentId}"){backStackEntry ->
+            backStackEntry.arguments!!.getString("studentId")
+                ?.let { StudentPanel(navController, studentViewModel, textToSpeechViewModel, it) }
         }
     }
 }
@@ -49,6 +54,7 @@ object Graph{
     const val SPLASH = "splash_screen"
     const val INITIAL = "initial"
     const val MAIN = "main"
+    const val LESSONS = "lessons"
 }
 
 @Composable

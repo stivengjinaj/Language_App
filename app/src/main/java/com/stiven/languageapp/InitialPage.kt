@@ -93,7 +93,7 @@ fun InitialPage(navController: NavHostController) {
             OutlinedButton(
                 modifier = Modifier.width((LocalConfiguration.current.screenWidthDp - 110).dp),
                 onClick = {
-                    navController.popBackStack()
+                    //navController.popBackStack()
                     navController.navigate(Graph.MAIN+"/new_course")
                 },
                 shape = RoundedCornerShape(50),

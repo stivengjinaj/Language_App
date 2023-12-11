@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.entities.Student
+import com.stiven.languageapp.graphs.Graph
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
@@ -46,9 +47,10 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * */
 @Composable
 fun Classroom(
+    rootNavController: NavHostController,
+    navController: NavHostController,
     studentViewModel: StudentViewModel,
-    textToSpeechViewModel: TextToSpeechViewModel,
-    navController: NavHostController
+    textToSpeechViewModel: TextToSpeechViewModel
 ){
     val screenSize = LocalConfiguration.current.screenWidthDp
     Column(
@@ -78,7 +80,7 @@ fun Classroom(
         }else{
             val courseStudent = studentViewModel.dataList.value
             if (courseStudent != null) {
-                CoursesList(courseStudent, navController)
+                CoursesList(rootNavController, courseStudent)
             }
         }
     }
@@ -141,7 +143,7 @@ fun NoStudentRegistered(navController: NavHostController){
  * @param courseStudent the list of the students present in database
  * */
 @Composable
-fun CoursesList(courseStudent: List<Student>, navController: NavHostController) {
+fun CoursesList(rootNavController: NavHostController,courseStudent: List<Student>) {
     val context = LocalContext.current
     val screenSize = LocalConfiguration.current.screenWidthDp
     Spacer(modifier = Modifier.height((screenSize/12).dp))
@@ -157,7 +159,7 @@ fun CoursesList(courseStudent: List<Student>, navController: NavHostController) 
     }
     Spacer(modifier = Modifier.height(30.dp))
     for(student in courseStudent){
-        StudentRow(student, navController)
+        StudentRow(rootNavController, student)
     }
 }
 
@@ -169,7 +171,7 @@ fun CoursesList(courseStudent: List<Student>, navController: NavHostController) 
  * @param student student entity
  * */
 @Composable
-fun StudentRow(student: Student, navController: NavHostController){
+fun StudentRow(rootNavController: NavHostController,student: Student){
     val screenSize = LocalConfiguration.current.screenWidthDp
     Row (
         horizontalArrangement = Arrangement.Start,
@@ -186,7 +188,7 @@ fun StudentRow(student: Student, navController: NavHostController){
         ){
             ClickableText(
                 onClick = {
-                      /*TODO*/
+                    rootNavController.navigate(Graph.LESSONS+"/${student.id}")
                 },
                 text = AnnotatedString(student.name),
                 style = TextStyle(
