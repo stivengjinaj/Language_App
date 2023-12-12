@@ -8,6 +8,16 @@ import com.stiven.languageapp.graphs.Graph
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
+/**
+ * Navigation graph for StudentPanel. Contains pages like: Lessons,
+ * Exercises, Dictionary and Logout.
+ *
+ * @param rootNavController root's navigation controller used to go back when student logs out.
+ * @param navController student panel's navigation controller.
+ * @param studentViewModel student's view-model.
+ * @param textToSpeechViewModel text to speech view-model.
+ * @param studentId id used to get student's information in order to personalize StudentPanel.
+ * */
 @Composable
 fun StudentNavGraph(
     rootNavController: NavHostController,

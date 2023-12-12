@@ -20,13 +20,22 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.stiven.languageapp.InitialPage
 import com.stiven.languageapp.R
+import com.stiven.languageapp.SplashScreen
 import com.stiven.languageapp.StudentPanel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import kotlinx.coroutines.delay
 
+/**
+ * The root (starting point) navigation graph. It contains SplashScreen, The first
+ * page that interacts with the user and 2 sub-navigation graphs: MainPanel and StudentPanel.
+ *
+ * @param navController the navigation controller.
+ * @param studentViewModel view-model that handles operations in Students database.
+ * @param textToSpeechViewModel view-model that handles text-to-speech operations.
+ * */
 @Composable
-fun RootNavGraph(navController: NavHostController,studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel) {
+fun RootNavGraph(navController: NavHostController, studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
@@ -40,7 +49,7 @@ fun RootNavGraph(navController: NavHostController,studentViewModel: StudentViewM
         }
         composable(Graph.MAIN+"/{screen}"){backStackEntry ->
             backStackEntry.arguments!!.getString("screen")
-                ?.let { MainScreen(navController,studentViewModel, textToSpeechViewModel, it) }
+                ?.let { MainPanel(navController,studentViewModel, textToSpeechViewModel, it) }
         }
         composable(Graph.LESSONS+"/{studentId}"){backStackEntry ->
             backStackEntry.arguments!!.getString("studentId")
@@ -48,38 +57,13 @@ fun RootNavGraph(navController: NavHostController,studentViewModel: StudentViewM
         }
     }
 }
-
+/**
+ * Object (enum) containing the destinations of each screen/sub-navigation graph
+ * */
 object Graph{
     const val ROOT = "root"
     const val SPLASH = "splash_screen"
     const val INITIAL = "initial"
     const val MAIN = "main"
     const val LESSONS = "lessons"
-}
-
-@Composable
-fun SplashScreen(navController: NavHostController){
-    val composition = rememberLottieComposition(LottieCompositionSpec.RawRes(if (isSystemInDarkTheme()) R.raw.lottieanimationdark else R.raw.lottieanimation))
-    val progress by animateLottieCompositionAsState(
-        composition = composition.value,
-        iterations = LottieConstants.IterateForever
-    )
-
-
-    LaunchedEffect(key1 = true){
-        delay(1500L)
-
-        navController.popBackStack()
-        navController.navigate(Graph.INITIAL)
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.primary)
-    ) {
-        LottieAnimation(modifier = Modifier
-            .fillMaxSize()
-            .fillMaxWidth(), progress = progress, composition = composition.value)
-    }
 }

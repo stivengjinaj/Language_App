@@ -9,6 +9,10 @@ import androidx.room.Update
 import com.stiven.languageapp.entities.Word
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * DAO interface for Words table in database. Executes CRUD
+ *  *  operations in Words Tables.
+ * */
 @Dao
 interface WordDao{
 

@@ -55,7 +55,9 @@ dependencies {
     val lifecycleVersion = "2.6.2"
     val roomVersion = "2.6.1"
     val coroutines = "1.7.1"
+    val accompanistVersion = "0.33.2-alpha"
 
+    implementation ("com.google.accompanist:accompanist-permissions:$accompanistVersion")
     implementation ("androidx.compose.material:material:1.5.4")
     implementation ("com.github.ygorluizfrazao:compose-resources:1.0.0-alpha01")
     implementation ("com.airbnb.android:lottie-compose:4.0.0")

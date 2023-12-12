@@ -5,6 +5,12 @@ import com.stiven.languageapp.dao.WordDao
 import com.stiven.languageapp.entities.Word
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Class (implementation of the interface) that makes use of word's DAO
+ * to execute the operations in the database.
+ *
+ * @param wordDao word's DAO
+ * */
 class WordRepository(private val wordDao: WordDao) {
 
     suspend fun insertWord(word: Word) {

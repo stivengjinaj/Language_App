@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.entities.Student
 import com.stiven.languageapp.graphs.Graph
+import com.stiven.languageapp.view.StudentView
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
@@ -41,9 +42,10 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * the name of the user the, the either the course will start
  * or the user will continue the course he/she is already doing
  *
+ * @param rootNavController root navHost to shift navigation graph
+ * @param navController navigation controller
  * @param studentViewModel view-model that handles student's data
  * @param textToSpeechViewModel view-model for text-to-speech accessibility
- * @param navController navigation controller
  * */
 @Composable
 fun Classroom(
@@ -140,6 +142,7 @@ fun NoStudentRegistered(navController: NavHostController){
 /**
  * A column containing a row for each student learning a language
  *
+ * @param rootNavController root navHost to shift navigation graph
  * @param courseStudent the list of the students present in database
  * */
 @Composable
@@ -159,62 +162,6 @@ fun CoursesList(rootNavController: NavHostController,courseStudent: List<Student
     }
     Spacer(modifier = Modifier.height(30.dp))
     for(student in courseStudent){
-        StudentRow(rootNavController, student)
+        StudentView(rootNavController, student)
     }
-}
-
-/**
- * Composable function acting as a row containing an image, a column,
- * that contains the student's name and the language he/she is learning,
- * and the points acquired from the student
- *
- * @param student student entity
- * */
-@Composable
-fun StudentRow(rootNavController: NavHostController,student: Student){
-    val screenSize = LocalConfiguration.current.screenWidthDp
-    Row (
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        Image(
-            painter = painterResource(id = student.picture),
-            contentDescription = "Student memoji",
-            modifier = Modifier.size((LocalConfiguration.current.screenWidthDp / 4-5).dp)
-        )
-        Spacer(modifier = Modifier.width((screenSize/6-5).dp))
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            ClickableText(
-                onClick = {
-                    rootNavController.navigate(Graph.LESSONS+"/${student.id}")
-                },
-                text = AnnotatedString(student.name),
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.inversePrimary,
-                    fontSize = (screenSize/12-10).sp,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-            Text(
-                text = student.course.toString().replaceFirstChar(Char::titlecase),
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.inversePrimary,
-                    fontSize = (screenSize/12-18).sp,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-        }
-        Spacer(modifier = Modifier.width((screenSize/6-5).dp))
-        Text(
-            text = student.points.toString()+ " " + if(student.points == 1) "Point" else "Points",
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.inversePrimary,
-                fontSize = (screenSize/12-18).sp,
-                fontWeight = FontWeight.Bold
-            )
-        )
-    }
-    Spacer(modifier = Modifier.height((screenSize/12-20).dp))
 }

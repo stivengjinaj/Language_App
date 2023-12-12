@@ -14,6 +14,9 @@ import com.stiven.languageapp.ui.theme.LanguageAppTheme
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
+/**
+ * The starting point of the application.
+ * */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

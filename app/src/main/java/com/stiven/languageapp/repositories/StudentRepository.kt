@@ -5,6 +5,12 @@ import com.stiven.languageapp.dao.StudentDao
 import com.stiven.languageapp.entities.Student
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Class (implementation of the interface) that makes use of student DAO
+ * to execute the operations in the database.
+ *
+ * @param studentDao student's DAO
+ * */
 class StudentRepository(private val studentDao: StudentDao) {
 
     suspend fun insertStudent(student: Student){

@@ -8,6 +8,15 @@ import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
+/**
+ * Starting point of the personalized part of the student. Contains
+ * a Scaffold with a bottom bar to navigate and a sub-navigation graph.
+ *
+ * @param rootNavController root's navigation controller used to go back when student logs out.
+ * @param studentViewModel student's view-model.
+ * @param textToSpeechViewModel text to speech view-model.
+ * @param studentId id used to get student's information in order to personalize StudentPanel.
+ * */
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun StudentPanel(

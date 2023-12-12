@@ -11,12 +11,15 @@ import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
 /**
- * Function that set the routes of the NavigationGraph with BottomBar
+ * A navigation graph inside the root navigation graph containing the general
+ * destinations of the app, such as: Classroom, NewCourse, Settings
+ * and Emergency Dictionary.
  *
- * @param navController navigation Host Controller
- * @param studentViewModel view-model that handles operations in Students database
- * @param textToSpeechViewModel view-model that handles text-to-speech operations
- * @param startingScreen the first screen selected in bottom navigation bar after user chooses it in Initial Screen
+ * @param rootNavController root navHost to shift navigation graph.
+ * @param navController navigation Host Controller.
+ * @param studentViewModel view-model that handles operations in Students database.
+ * @param textToSpeechViewModel view-model that handles text-to-speech operations.
+ * @param startingScreen the first screen selected in bottom navigation bar after user chooses it in Initial Screen.
  * */
 @Composable
 fun BottomNavGraph(

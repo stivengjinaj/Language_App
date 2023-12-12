@@ -13,6 +13,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
+/**
+ * Custom bottom bar for StudentPanel.
+ *
+ * @param navController a navigation controller inside StudentPanel navigation graph.
+ * */
 @Composable
 fun StudentBottomBar(navController: NavHostController) {
     val screens = listOf(

@@ -7,6 +7,10 @@ import androidx.room.Query
 import com.stiven.languageapp.entities.Student
 import kotlinx.coroutines.flow.Flow
 
+/**
+ *  DAO interface for Students table in database. Executes CRUD
+ *  operations in Student Tables.
+ * */
 @Dao
 interface StudentDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
