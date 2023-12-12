@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.stiven.languageapp.graphs.RootNavGraph
+import com.stiven.languageapp.navigation.RootNavGraph
 import com.stiven.languageapp.ui.theme.LanguageAppTheme
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel

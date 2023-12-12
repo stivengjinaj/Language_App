@@ -2,7 +2,7 @@ package com.stiven.languageapp.repositories
 
 import com.stiven.languageapp.AppDatabase
 import com.stiven.languageapp.dao.StudentDao
-import com.stiven.languageapp.entities.Student
+import com.stiven.languageapp.model.Student
 import kotlinx.coroutines.flow.Flow
 
 /**

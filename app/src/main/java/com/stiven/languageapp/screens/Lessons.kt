@@ -1,4 +1,4 @@
-package com.stiven.languageapp
+package com.stiven.languageapp.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("org.jetbrains.dokka") version "1.9.10"
 }
 
 android {
@@ -57,6 +58,7 @@ dependencies {
     val coroutines = "1.7.1"
     val accompanistVersion = "0.33.2-alpha"
 
+    dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
     implementation ("com.google.accompanist:accompanist-permissions:$accompanistVersion")
     implementation ("androidx.compose.material:material:1.5.4")
     implementation ("com.github.ygorluizfrazao:compose-resources:1.0.0-alpha01")

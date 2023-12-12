@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.stiven.languageapp.entities.Word
+import com.stiven.languageapp.model.Word
 import kotlinx.coroutines.flow.Flow
 
 /**

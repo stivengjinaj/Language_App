@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.stiven.languageapp.entities.Student
+import com.stiven.languageapp.model.Student
 import kotlinx.coroutines.flow.Flow
 
 /**

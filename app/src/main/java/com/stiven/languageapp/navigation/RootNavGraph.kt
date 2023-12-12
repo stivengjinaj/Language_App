@@ -1,30 +1,13 @@
-package com.stiven.languageapp.graphs
+package com.stiven.languageapp.navigation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
-import com.stiven.languageapp.InitialPage
-import com.stiven.languageapp.R
-import com.stiven.languageapp.SplashScreen
-import com.stiven.languageapp.StudentPanel
+import com.stiven.languageapp.screens.InitialPage
+import com.stiven.languageapp.screens.SplashScreen
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
-import kotlinx.coroutines.delay
 
 /**
  * The root (starting point) navigation graph. It contains SplashScreen, The first

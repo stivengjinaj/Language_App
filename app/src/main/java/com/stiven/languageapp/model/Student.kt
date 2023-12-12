@@ -1,4 +1,4 @@
-package com.stiven.languageapp.entities
+package com.stiven.languageapp.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

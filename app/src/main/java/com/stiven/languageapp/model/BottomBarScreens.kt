@@ -1,4 +1,6 @@
-package com.stiven.languageapp
+package com.stiven.languageapp.model
+
+import com.stiven.languageapp.R
 
 /**
  * Sealed class that creates the routes of the bottom bar

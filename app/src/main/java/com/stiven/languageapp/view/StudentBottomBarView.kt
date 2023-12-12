@@ -1,4 +1,4 @@
-package com.stiven.languageapp
+package com.stiven.languageapp.view
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.stiven.languageapp.model.BottomBarScreens
 
 /**
  * Custom bottom bar for StudentPanel.

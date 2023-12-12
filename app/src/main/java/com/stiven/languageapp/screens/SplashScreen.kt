@@ -1,4 +1,4 @@
-package com.stiven.languageapp
+package com.stiven.languageapp.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,7 +16,8 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.stiven.languageapp.graphs.Graph
+import com.stiven.languageapp.R
+import com.stiven.languageapp.navigation.Graph
 import kotlinx.coroutines.delay
 
 /**

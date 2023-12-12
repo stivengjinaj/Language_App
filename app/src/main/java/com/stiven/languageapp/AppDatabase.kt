@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.stiven.languageapp.dao.StudentDao
 import com.stiven.languageapp.dao.WordDao
-import com.stiven.languageapp.entities.Student
-import com.stiven.languageapp.entities.Word
+import com.stiven.languageapp.model.Student
+import com.stiven.languageapp.model.Word
 
 /**
  * Abstract class that will be used to create the database.

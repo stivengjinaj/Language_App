@@ -22,8 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.stiven.languageapp.entities.Student
-import com.stiven.languageapp.graphs.Graph
+import com.stiven.languageapp.model.Student
+import com.stiven.languageapp.navigation.Graph
 
 /**
  * Composable function acting as a row containing an image, a column,
@@ -43,9 +43,9 @@ fun StudentView(rootNavController: NavHostController, student: Student) {
         Image(
             painter = painterResource(id = student.picture),
             contentDescription = "Student memoji",
-            modifier = Modifier.size((LocalConfiguration.current.screenWidthDp / 4-5).dp)
+            modifier = Modifier.size((LocalConfiguration.current.screenWidthDp/4).dp)
         )
-        Spacer(modifier = Modifier.width((screenSize/6-5).dp))
+        Spacer(modifier = Modifier.width((screenSize/6-15).dp))
         Column (
             horizontalAlignment = Alignment.CenterHorizontally
         ){
@@ -69,7 +69,7 @@ fun StudentView(rootNavController: NavHostController, student: Student) {
                 )
             )
         }
-        Spacer(modifier = Modifier.width((screenSize/6-5).dp))
+        Spacer(modifier = Modifier.width((screenSize/6).dp))
         Text(
             text = student.points.toString()+ " " + if(student.points == 1) "Point" else "Points",
             style = TextStyle(

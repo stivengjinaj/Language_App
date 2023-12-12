@@ -1,4 +1,4 @@
-package com.stiven.languageapp
+package com.stiven.languageapp.view
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
@@ -29,6 +29,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.stiven.languageapp.model.BottomBarScreens
 
 /**
  * Function that creates the bottom navigation bar and
@@ -37,7 +38,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
  * @param navController navigation host controller
  * */
 @Composable
-fun BottomBar(navController: NavHostController){
+fun BottomBarView(navController: NavHostController){
     val screens = listOf(
         BottomBarScreens.Classroom,
         BottomBarScreens.NewCourse,
@@ -90,7 +91,7 @@ fun RowScope.AddItem(
                 painter = painterResource(id = screen.icon),
                 contentDescription = context.getString(screen.title),
                 tint =
-                if(screen == BottomBarScreens.Emergency && !isSelected) MaterialTheme.colorScheme.error
+                if(screen == BottomBarScreens.Emergency || screen == BottomBarScreens.Logout && !isSelected) MaterialTheme.colorScheme.error
                 else if (isSelected) Color.White
                 else Color(0xFFE2DCDC)
             )
@@ -102,8 +103,8 @@ fun RowScope.AddItem(
             Text(
                 text = context.getString(screen.title),
                 style = TextStyle(
-                    color = if (isSelected) Color.White else Color(0xFFE2DCDC),
-                    fontSize = (currentSize / 12 - 22).sp,
+                    color = if (isSelected) Color.White else if (screen == BottomBarScreens.Logout) Color(0xFFFF2626) else Color(0xFFE2DCDC),
+                    fontSize = (currentSize / 12 - 20).sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     lineBreak = LineBreak.Simple

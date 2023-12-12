@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.stiven.languageapp.AppDatabase
-import com.stiven.languageapp.entities.Word
+import com.stiven.languageapp.model.Word
 import com.stiven.languageapp.repositories.WordRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

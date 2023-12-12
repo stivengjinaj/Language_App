@@ -1,10 +1,11 @@
-package com.stiven.languageapp
+package com.stiven.languageapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.stiven.languageapp.graphs.Graph
+import com.stiven.languageapp.screens.Lessons
+import com.stiven.languageapp.model.BottomBarScreens
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 

@@ -2,7 +2,7 @@ package com.stiven.languageapp.repositories
 
 import com.stiven.languageapp.AppDatabase
 import com.stiven.languageapp.dao.WordDao
-import com.stiven.languageapp.entities.Word
+import com.stiven.languageapp.model.Word
 import kotlinx.coroutines.flow.Flow
 
 /**

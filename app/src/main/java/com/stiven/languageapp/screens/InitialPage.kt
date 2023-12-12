@@ -1,4 +1,4 @@
-package com.stiven.languageapp
+package com.stiven.languageapp.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
@@ -30,7 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.stiven.languageapp.graphs.Graph
+import com.stiven.languageapp.R
+import com.stiven.languageapp.navigation.Graph
 
 /**
  * The first page to show when the user opens the app. The user chooses the destination.
@@ -66,7 +67,7 @@ fun InitialPage(navController: NavHostController) {
         }
 
         Spacer(modifier = Modifier.height((currentSize/6+20).dp))
-        //MY COURSES BUTTON
+        //CLASSROOM BUTTON
         Row (modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center) {
             OutlinedButton(
                 modifier = Modifier.width((LocalConfiguration.current.screenWidthDp - 110).dp),

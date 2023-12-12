@@ -1,4 +1,4 @@
-package com.stiven.languageapp
+package com.stiven.languageapp.screens
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
@@ -58,7 +58,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
-import com.stiven.languageapp.entities.Student
+import com.stiven.languageapp.R
+import com.stiven.languageapp.model.BottomBarScreens
+import com.stiven.languageapp.model.Student
 import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -254,7 +256,9 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             .pointerInput(Unit){
                                 detectTapGestures(
                                     onLongPress = {
-                                        textToSpeechViewModel.textToSpeech(context,context.getString(R.string.english_button_speech))
+                                        textToSpeechViewModel.textToSpeech(context,context.getString(
+                                            R.string.english_button_speech
+                                        ))
                                     }
                                 )
                             }
@@ -312,7 +316,9 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             .pointerInput(Unit){
                                 detectTapGestures(
                                     onLongPress = {
-                                        textToSpeechViewModel.textToSpeech(context,context.getString(R.string.italian_button_speech))
+                                        textToSpeechViewModel.textToSpeech(context,context.getString(
+                                            R.string.italian_button_speech
+                                        ))
                                     }
                                 )
                             }
@@ -370,7 +376,9 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             .pointerInput(Unit){
                                 detectTapGestures(
                                     onLongPress = {
-                                        textToSpeechViewModel.textToSpeech(context,context.getString(R.string.french_button_speech))
+                                        textToSpeechViewModel.textToSpeech(context,context.getString(
+                                            R.string.french_button_speech
+                                        ))
                                     }
                                 )
                             }
