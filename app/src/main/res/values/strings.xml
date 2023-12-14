@@ -30,4 +30,8 @@
     <string name="exercises">Exercises</string>
     <string name="dictionary">Dictionary</string>
     <string name="logout">Logout</string>
+    <string name="student_account">Student\'s name and the language he or she is learning</string>
+    <string name="classroom_speech">Go to the classroom</string>
+    <string name="new_course_speech">Start learning a new language</string>
+    <string name="emergency_speech">Emergency dictionary</string>
 </resources>

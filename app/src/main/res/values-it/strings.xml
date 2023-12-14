@@ -27,8 +27,12 @@
     <string name="classroom_full">Aula Piena</string>
     <string name="classroom_max_students">La classe ha raggiunto il limite di 4 studenti.</string>
     <string name="no_student_found">L\'aula è vuota</string>
-    <string name="lessons">Lessons</string>
-    <string name="exercises">Exercises</string>
-    <string name="dictionary">Dictionary</string>
-    <string name="logout">Logout</string>
+    <string name="lessons">Lezioni</string>
+    <string name="exercises">Esercizi</string>
+    <string name="dictionary">Dizionario</string>
+    <string name="logout">Disconnetti</string>
+    <string name="student_account">Il nome dello studente e la lingua che sta imparando</string>
+    <string name="classroom_speech">Vai in aula</string>
+    <string name="new_course_speech">Inizia ad imparare una nuova lingua</string>
+    <string name="emergency_speech">Dizionario di emergenza</string>
 </resources>
