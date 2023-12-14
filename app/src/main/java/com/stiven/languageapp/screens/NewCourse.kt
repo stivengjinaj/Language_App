@@ -2,9 +2,11 @@ package com.stiven.languageapp.screens
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,12 +23,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -76,10 +75,14 @@ import java.util.Locale
  * are less than 4 student registered. Otherwise the app
  * will notify the user.
  *
+ * NOTE: Long pressing in any component of this page will
+ *       trigger text-to-speech that will explain the user
+ *       the propose of the component.
+ *
  * @param studentViewModel view-model that handles student's data
  * @param textToSpeechViewModel view-model for text-to-speech accessibility
  * */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel, navController: NavHostController) {
     var studentName by rememberSaveable { mutableStateOf("") }
@@ -112,26 +115,10 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     // Default selected icon
     var selectedIcon = iconsList[1]
 
-    Column {
-        //Row containing the app title
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-                .height((screenWidth / 6).dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "TrioLingo",
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontSize = (screenWidth / 12).sp,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-        }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
+    Column (
+        modifier = Modifier.fillMaxWidth()
+    ){
+        Spacer(modifier = Modifier.height((screenWidth / 4 + 5).dp))
         //Row containing the title of the page
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -162,7 +149,16 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 modifier = Modifier
                     .background(Color.Transparent)
                     .width((screenWidth - 110).dp)
-                ,
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onLongPress = {
+                                textToSpeechViewModel.textToSpeech(
+                                    context,
+                                    context.getString(R.string.student_name_speech)
+                                )
+                            }
+                        )
+                    },
                 value = studentName,
                 onValueChange = {
                     studentName = it
@@ -172,13 +168,6 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 },
                 label = {
                     Text(
-                        modifier = Modifier.pointerInput(Unit){
-                            detectTapGestures(
-                                onLongPress = {
-                                    textToSpeechViewModel.textToSpeech(context,context.getString(R.string.student_name_speech))
-                                }
-                            )
-                        },
                         text = stringResource(R.string.student_name),
                         style = TextStyle(
                             color = if (studentNameError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary
@@ -190,11 +179,6 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 supportingText = {
                     if (studentNameError) {
                         Text(text = errorMessage, style = TextStyle(color = MaterialTheme.colorScheme.error))
-                    }
-                },
-                trailingIcon = {
-                    if (studentNameError) {
-                        Icon(Icons.Filled.Error, "Error", tint = MaterialTheme.colorScheme.error)
                     }
                 },
                 shape = RoundedCornerShape(50),
@@ -211,13 +195,11 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         Spacer(modifier = Modifier.height((screenWidth / 12).dp))
         //Row containing the english button
         Row(
-            modifier = Modifier.fillMaxWidth()
-            ,
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier.width((screenWidth - 110).dp)
-                ,
+                modifier = Modifier.width((screenWidth - 110).dp),
                 onClick = {
                     frenchOption = false
                     englishOption = true
@@ -233,7 +215,25 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .combinedClickable(
+                        onClick = {
+                            frenchOption = false
+                            englishOption = true
+                            italianOption = false
+                            chosenCourse = Languages.ENGLISH
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.textToSpeech(
+                                context, context.getString(
+                                    R.string.english_button_speech
+                                )
+                            )
+                        }
+                    ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Box(modifier = Modifier.size((screenWidth / 12).dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.gb),
@@ -250,18 +250,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             fontSize = (screenWidth / 12 - 12).sp,
                             fontWeight = FontWeight.Bold
                         ),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(((screenWidth - 110) / 3).dp, 0.dp, 0.dp, 0.dp)
-                            .pointerInput(Unit){
-                                detectTapGestures(
-                                    onLongPress = {
-                                        textToSpeechViewModel.textToSpeech(context,context.getString(
-                                            R.string.english_button_speech
-                                        ))
-                                    }
-                                )
-                            }
+                        modifier = Modifier.padding(((screenWidth - 110) / 5).dp, 0.dp, 0.dp, 0.dp)
                     )
                 }
             }
@@ -293,7 +282,25 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .combinedClickable(
+                        onClick = {
+                            frenchOption = false
+                            englishOption = false
+                            italianOption = true
+                            chosenCourse = Languages.ITALIAN
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.textToSpeech(
+                                context, context.getString(
+                                    R.string.italian_button_speech
+                                )
+                            )
+                        }
+                    ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Box(modifier = Modifier.size((screenWidth / 12).dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.it),
@@ -311,17 +318,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             fontWeight = FontWeight.Bold
                         ),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(((screenWidth - 110) / 3).dp, 0.dp, 0.dp, 0.dp)
-                            .pointerInput(Unit){
-                                detectTapGestures(
-                                    onLongPress = {
-                                        textToSpeechViewModel.textToSpeech(context,context.getString(
-                                            R.string.italian_button_speech
-                                        ))
-                                    }
-                                )
-                            }
+                        modifier = Modifier.padding(((screenWidth - 110) / 5).dp, 0.dp, 0.dp, 0.dp)
                     )
                 }
             }
@@ -353,7 +350,24 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .combinedClickable(
+                        onClick = {
+                            frenchOption = true
+                            englishOption = false
+                            italianOption = false
+                            chosenCourse = Languages.FRENCH
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.textToSpeech(
+                                context, context.getString(
+                                    R.string.french_button_speech
+                                )
+                            )
+                        }
+                    ),
+                    verticalAlignment = Alignment.CenterVertically) {
                     Box(modifier = Modifier.size((screenWidth / 12).dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.fr),
@@ -371,17 +385,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             fontWeight = FontWeight.Bold
                         ),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(((screenWidth - 100) / 3).dp, 0.dp, 0.dp, 0.dp)
-                            .pointerInput(Unit){
-                                detectTapGestures(
-                                    onLongPress = {
-                                        textToSpeechViewModel.textToSpeech(context,context.getString(
-                                            R.string.french_button_speech
-                                        ))
-                                    }
-                                )
-                            }
+                        modifier = Modifier.padding(((screenWidth - 100) / 5).dp, 0.dp, 0.dp, 0.dp)
                     )
                 }
             }
@@ -397,12 +401,38 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         Spacer(modifier = Modifier.height((screenWidth / 12-10).dp))
         //Row containing confirm button to create the account
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().combinedClickable(
+                onClick = {
+                    if (studentName.isEmpty()) {
+                        studentNameError = true
+                    } else {
+                        //STUDENT DATA
+                        val studentToInsert = Student(
+                            name = formatString(studentName),
+                            course = chosenCourse,
+                            picture = selectedIcon,
+                            points = 0
+                        )
+                        //CHECK IF STUDENT IS PRESENT AND IS ALREADY TAKING A COURSE IN THE SELECTED LANGUAGE
+                        if (studentViewModel.dataList.value?.size  == 4) {
+                            maxStudentDialog = true
+                        }else if (!studentViewModel.userCourseExists(studentToInsert)) {
+                            Log.d("STUDENT","STUDENT INSERTED")
+                            studentViewModel.insertStudent(studentToInsert)
+                            navController.navigate(BottomBarScreens.Classroom.route)
+                        }else{
+                            existingStudentDialog = true
+                        }
+                    }
+                },
+                onLongClick = {
+                    textToSpeechViewModel.textToSpeech(context,context.getString(R.string.next_button_speech))
+                }
+            ),
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier.width((screenWidth - 300).dp)
-                ,
+                modifier = Modifier.width((screenWidth - 300).dp),
                 onClick = {
                     if (studentName.isEmpty()) {
                         studentNameError = true
@@ -435,13 +465,6 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 )
             ) {
                 Text(
-                    modifier = Modifier.pointerInput(Unit){
-                        detectTapGestures(
-                            onLongPress = {
-                                textToSpeechViewModel.textToSpeech(context,context.getString(R.string.next_button_speech))
-                            }
-                        )
-                    },
                     text = stringResource(R.string.next),
                     textAlign = TextAlign.Center,
                     style = TextStyle(
@@ -468,13 +491,22 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             },
             confirmButton = {
                 OutlinedButton(
-                    modifier = Modifier.pointerInput(Unit){
-                        detectTapGestures(
-                            onLongPress = {
-                                textToSpeechViewModel.textToSpeech(context,context.getString(R.string.confirm_button_speech))
-                            }
-                        )
-                    },
+                    modifier = Modifier.combinedClickable(
+                        onClick = {
+                            existingStudentDialog = false
+                            val studentToInsert = Student(
+                                name = formatString(studentName),
+                                course = chosenCourse,
+                                picture = selectedIcon,
+                                points = 0
+                            )
+                            studentViewModel.deleteStudent(studentToInsert.name)
+                            studentViewModel.insertStudent(studentToInsert)
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.textToSpeech(context,context.getString(R.string.confirm_button_speech))
+                        }
+                    ),
                     onClick = {
                         existingStudentDialog = false
                         val studentToInsert = Student(
@@ -533,13 +565,14 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             },
             confirmButton = {
                 OutlinedButton(
-                    modifier = Modifier.pointerInput(Unit){
-                        detectTapGestures(
-                            onLongPress = {
-                                textToSpeechViewModel.textToSpeech(context,context.getString(R.string.confirm_button_speech))
-                            }
-                        )
-                    },
+                    modifier = Modifier.combinedClickable(
+                        onClick = {
+                            maxStudentDialog = false
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.textToSpeech(context,context.getString(R.string.confirm_button_speech))
+                        }
+                    ),
                     onClick = {
                         maxStudentDialog = false
                     },

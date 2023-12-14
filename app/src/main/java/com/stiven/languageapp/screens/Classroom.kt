@@ -1,7 +1,6 @@
 package com.stiven.languageapp.screens
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,27 +50,11 @@ fun Classroom(
 ){
     val screenSize = LocalConfiguration.current.screenWidthDp
     Column(
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        //Row containing the app title
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-                .height((screenSize / 6).dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "TrioLingo",
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontSize = (screenSize / 12).sp,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-        }
+        Spacer(modifier = Modifier.height((screenSize / 6).dp))
         if(studentViewModel.dataList.value?.isEmpty() == true){
             NoStudentRegistered(navController)
         }else{

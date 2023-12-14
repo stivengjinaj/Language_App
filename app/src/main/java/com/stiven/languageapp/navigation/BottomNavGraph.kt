@@ -46,25 +46,13 @@ fun BottomNavGraph(
             route = BottomBarScreens.Classroom.route,
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
                     animationSpec = tween(700)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(700)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
                     animationSpec = tween(700)
                 )
             }
@@ -75,60 +63,22 @@ fun BottomNavGraph(
         composable(
             route = BottomBarScreens.NewCourse.route,
             enterTransition = {
-                when (initialState.destination.route) {
-                    BottomBarScreens.Classroom.route ->
-                        slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(700)
-                        )
-                    else ->
-                        slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(700)
-                        )
-                }
+                slideIntoContainer(
+                    towards =
+                    if(initialState.destination.route == BottomBarScreens.Classroom.route)
+                        AnimatedContentTransitionScope.SlideDirection.Left
+                    else
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
             },
             exitTransition = {
-                when (targetState.destination.route) {
-                    BottomBarScreens.Classroom.route ->
-                        slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(700)
-                        )
-                    else ->
-                        slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(700)
-                        )
-                }
-            },
-            popEnterTransition = {
-                when (initialState.destination.route) {
-                    BottomBarScreens.Classroom.route ->
-                        slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(700)
-                        )
-                    else ->
-                        slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(700)
-                        )
-                }
-            },
-            popExitTransition = {
-                when (targetState.destination.route) {
-                    BottomBarScreens.Classroom.route ->
-                        slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(700)
-                        )
-                    else ->
-                        slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(700)
-                        )
-                }
+                slideOutOfContainer(
+                    towards = if(initialState.destination.route == BottomBarScreens.Classroom.route)
+                        AnimatedContentTransitionScope.SlideDirection.Left
+                    else
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                )
             }
         ){
             NewCourse(studentViewModel, textToSpeechViewModel, navController)
@@ -137,95 +87,44 @@ fun BottomNavGraph(
         composable(
             route = BottomBarScreens.Settings.route,
             enterTransition = {
-                when (initialState.destination.route) {
-                    BottomBarScreens.Emergency.route ->
-                        slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(700)
-                        )
-                    else ->
-                        slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(700)
-                        )
-                }
+                slideIntoContainer(
+                    towards =
+                    if(initialState.destination.route == BottomBarScreens.Emergency.route)
+                        AnimatedContentTransitionScope.SlideDirection.Right
+                    else
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
             },
             exitTransition = {
-                when (targetState.destination.route) {
-                    BottomBarScreens.Emergency.route ->
-                        slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(700)
-                        )
-
-                    else ->
-                        slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(700)
-                        )
-                }
-            },
-            popEnterTransition = {
-                when (initialState.destination.route) {
-                    BottomBarScreens.Classroom.route ->
-                        slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(700)
-                        )
-                    else ->
-                        slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(700)
-                        )
-                }
-            },
-            popExitTransition = {
-                when (targetState.destination.route) {
-                    BottomBarScreens.Classroom.route ->
-                        slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(700)
-                        )
-
-                    else ->
-                        slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(700)
-                        )
-                }
+                slideOutOfContainer(
+                    towards = if(initialState.destination.route == BottomBarScreens.Emergency.route)
+                        AnimatedContentTransitionScope.SlideDirection.Right
+                    else
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
             }
         ){
-
+            //TODO
         }
 
         composable(
             route = BottomBarScreens.Emergency.route,
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
                     animationSpec = tween(700)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
                     animationSpec = tween(700)
                 )
             }
         ){
-
+            //TODO
         }
     }
 }
