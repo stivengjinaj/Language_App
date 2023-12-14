@@ -60,7 +60,7 @@ fun Classroom(
         }else{
             val courseStudent = studentViewModel.dataList.value
             if (courseStudent != null) {
-                CoursesList(rootNavController, courseStudent)
+                CoursesList(rootNavController, courseStudent, textToSpeechViewModel)
             }
         }
     }
@@ -122,9 +122,10 @@ fun NoStudentRegistered(navController: NavHostController){
  *
  * @param rootNavController root navHost to shift navigation graph
  * @param courseStudent the list of the students present in database
+ * @param textToSpeechViewModel view-model for text-to-speech accessibility
  * */
 @Composable
-fun CoursesList(rootNavController: NavHostController,courseStudent: List<Student>) {
+fun CoursesList(rootNavController: NavHostController,courseStudent: List<Student>, textToSpeechViewModel: TextToSpeechViewModel) {
     val context = LocalContext.current
     val screenSize = LocalConfiguration.current.screenWidthDp
     Spacer(modifier = Modifier.height((screenSize/12).dp))
@@ -140,6 +141,6 @@ fun CoursesList(rootNavController: NavHostController,courseStudent: List<Student
     }
     Spacer(modifier = Modifier.height(30.dp))
     for(student in courseStudent){
-        StudentView(rootNavController, student)
+        StudentView(rootNavController, student, textToSpeechViewModel)
     }
 }

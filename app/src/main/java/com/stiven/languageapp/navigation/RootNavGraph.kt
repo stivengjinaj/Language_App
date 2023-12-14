@@ -28,7 +28,7 @@ fun RootNavGraph(navController: NavHostController, studentViewModel: StudentView
             SplashScreen(navController)
         }
         composable(Graph.INITIAL){
-            InitialPage(navController)
+            InitialPage(navController, textToSpeechViewModel)
         }
         composable(Graph.MAIN+"/{screen}"){backStackEntry ->
             backStackEntry.arguments!!.getString("screen")

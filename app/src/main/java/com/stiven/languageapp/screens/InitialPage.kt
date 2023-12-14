@@ -2,8 +2,11 @@ package com.stiven.languageapp.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,15 +36,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.navigation.Graph
+import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
 /**
  * The first page to show when the user opens the app. The user chooses the destination.
  *
  * @param navController navigation host controller.
+ * @param textToSpeechViewModel view-model for text-to-speech accessibility
  * */
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun InitialPage(navController: NavHostController) {
+fun InitialPage(navController: NavHostController, textToSpeechViewModel: TextToSpeechViewModel) {
     val currentSize = LocalConfiguration.current.screenWidthDp
     val context = LocalContext.current
     Column(
@@ -65,12 +72,37 @@ fun InitialPage(navController: NavHostController) {
                     fontWeight = FontWeight.Bold)
             )
         }
-
         Spacer(modifier = Modifier.height((currentSize/6+20).dp))
         //CLASSROOM BUTTON
-        Row (modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center) {
+        Row (modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = {
+                    navController.popBackStack()
+                    navController.navigate(Graph.MAIN+"/classroom")
+                },
+                onLongClick = {
+                    textToSpeechViewModel.textToSpeech(context, context.getString(R.string.classroom_speech))
+                }
+            ),
+            horizontalArrangement = Arrangement.Center
+        ) {
             OutlinedButton(
-                modifier = Modifier.width((LocalConfiguration.current.screenWidthDp - 110).dp),
+                modifier = Modifier
+                    .width((LocalConfiguration.current.screenWidthDp - 110).dp)
+                    .combinedClickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {
+                            navController.popBackStack()
+                            navController.navigate(Graph.MAIN+"/classroom")
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.textToSpeech(context, context.getString(R.string.classroom_speech))
+                        }
+                    ),
                 onClick = {
                     navController.popBackStack()
                     navController.navigate(Graph.MAIN+"/classroom")
@@ -87,14 +119,38 @@ fun InitialPage(navController: NavHostController) {
                 )
             }
         }
-
         Spacer(modifier = Modifier.height((currentSize/6-20).dp))
         //NEW COURSE BUTTON
-        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            OutlinedButton(
-                modifier = Modifier.width((LocalConfiguration.current.screenWidthDp - 110).dp),
+        Row (modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
                 onClick = {
-                    //navController.popBackStack()
+                    navController.popBackStack()
+                    navController.navigate(Graph.MAIN+"/new_course")
+                },
+                onLongClick = {
+                    textToSpeechViewModel.textToSpeech(context, context.getString(R.string.new_course_speech))
+                }
+            ),
+            horizontalArrangement = Arrangement.Center) {
+            OutlinedButton(
+                modifier = Modifier
+                    .width((LocalConfiguration.current.screenWidthDp - 110).dp)
+                    .combinedClickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {
+                            navController.popBackStack()
+                            navController.navigate(Graph.MAIN+"/new_course")
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.textToSpeech(context, context.getString(R.string.new_course_speech))
+                        }
+                    ),
+                onClick = {
+                    navController.popBackStack()
                     navController.navigate(Graph.MAIN+"/new_course")
                 },
                 shape = RoundedCornerShape(50),
@@ -110,12 +166,34 @@ fun InitialPage(navController: NavHostController) {
                 )
             }
         }
-
         Spacer(modifier = Modifier.height((currentSize/6-20).dp))
         //EMERGENCY BUTTON
-        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        Row (modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = {
+                    navController.popBackStack()
+                    navController.navigate(Graph.MAIN+"/emergency")
+                },
+                onLongClick = {
+                    textToSpeechViewModel.textToSpeech(context, context.getString(R.string.emergency_speech))
+                }
+            ),
+            horizontalArrangement = Arrangement.Center) {
             OutlinedButton(
-                modifier = Modifier.width((LocalConfiguration.current.screenWidthDp - 110).dp),
+                modifier = Modifier
+                    .width((LocalConfiguration.current.screenWidthDp - 110).dp)
+                    .combinedClickable(
+                        onClick = {
+                            navController.popBackStack()
+                            navController.navigate(Graph.MAIN+"/emergency")
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.textToSpeech(context, context.getString(R.string.emergency_speech))
+                        }
+                    ),
                 onClick = {
                     navController.popBackStack()
                     navController.navigate(Graph.MAIN+"/emergency")
