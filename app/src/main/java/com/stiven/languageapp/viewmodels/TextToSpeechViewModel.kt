@@ -19,19 +19,12 @@ class TextToSpeechViewModel : ViewModel(){
      * @param text text to be spoken
      * */
     fun textToSpeech(context: Context, text: String){
-        textToSpeech = TextToSpeech(
-            context
-        ) {
+        textToSpeech = TextToSpeech(context) {
             if (it == TextToSpeech.SUCCESS) {
-                textToSpeech?.let { txtToSpeech ->
-                    txtToSpeech.language = Locale.getDefault()
-                    txtToSpeech.setSpeechRate(1.0f)
-                    txtToSpeech.speak(
-                        text,
-                        TextToSpeech.QUEUE_ADD,
-                        null,
-                        null
-                    )
+                textToSpeech?.let { textToSpeech ->
+                    textToSpeech.setLanguage(Locale.getDefault())
+                    textToSpeech.setSpeechRate(1.0f)
+                    textToSpeech.speak(text, TextToSpeech.QUEUE_ADD,null, null)
                 }
             }
         }
