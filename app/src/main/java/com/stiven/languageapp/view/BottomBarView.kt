@@ -104,7 +104,7 @@ fun RowScope.AddItem(
                 text = context.getString(screen.title),
                 style = TextStyle(
                     color = if (isSelected) Color.White else if (screen == BottomBarScreens.Logout) Color(0xFFFF2626) else Color(0xFFE2DCDC),
-                    fontSize = (currentSize / 12 - 20).sp,
+                    fontSize = (currentSize / 12 - 22).sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     lineBreak = LineBreak.Simple
