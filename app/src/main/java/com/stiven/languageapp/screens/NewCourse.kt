@@ -502,6 +502,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             )
                             studentViewModel.deleteStudent(studentToInsert.name)
                             studentViewModel.insertStudent(studentToInsert)
+                            navController.navigate(BottomBarScreens.Classroom.route)
                         },
                         onLongClick = {
                             textToSpeechViewModel.textToSpeech(context,context.getString(R.string.confirm_button_speech))

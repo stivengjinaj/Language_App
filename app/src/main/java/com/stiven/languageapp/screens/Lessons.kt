@@ -2,7 +2,6 @@ package com.stiven.languageapp.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,14 +20,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.stiven.languageapp.R
+import androidx.navigation.NavHostController
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
 @Composable
 fun Lessons(
-    navController: NavController,
+    rootNavController: NavHostController,
+    navController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
     studentId: String
@@ -64,9 +62,12 @@ fun Lessons(
             horizontalArrangement = Arrangement.Center
         ){
             Column (
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Image(
                         painter = painterResource(id = student!!.picture),
                         contentDescription = "Student memoji",
@@ -82,14 +83,6 @@ fun Lessons(
                         fontSize = (screenSize/12-5).sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.inversePrimary
-                    )
-                    Spacer(modifier = Modifier.width((screenSize/12-20).dp))
-                    Image(
-                        modifier = Modifier.size((LocalConfiguration.current.screenWidthDp/12).dp).clickable {
-                            //TODO
-                        },
-                        painter = painterResource(id = R.drawable.delete),
-                        contentDescription = "Delete"
                     )
                 }
             }

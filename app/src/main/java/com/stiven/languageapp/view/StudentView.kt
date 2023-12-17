@@ -30,20 +30,22 @@ import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.model.Student
 import com.stiven.languageapp.navigation.Graph
+import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
 /**
  * Composable function acting as a row containing an image, a column,
  * that contains the student's name and the language he/she is learning,
- * and the points acquired from the student
+ * and the points acquired from the student.
  *
- * @param rootNavController root navHost to shift navigation graph
- * @param student student entity
- * @param textToSpeechViewModel view-model for text-to-speech accessibility
+ * @param rootNavController root navHost to shift navigation graph.
+ * @param student student entity.
+ * @param studentViewModel view-model that handles student's data
+ * @param textToSpeechViewModel view-model for text-to-speech accessibility.
  * */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun StudentView(rootNavController: NavHostController, student: Student, textToSpeechViewModel: TextToSpeechViewModel) {
+fun StudentView(rootNavController: NavHostController, student: Student, studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel) {
     val screenSize = LocalConfiguration.current.screenWidthDp
     val context = LocalContext.current
     Row (
@@ -89,7 +91,7 @@ fun StudentView(rootNavController: NavHostController, student: Student, textToSp
                 )
             )
         }
-        Spacer(modifier = Modifier.width((screenSize/6).dp))
+        Spacer(modifier = Modifier.width((screenSize/6-20).dp))
         Text(
             text = student.points.toString()+ " " + if(student.points == 1) "Point" else "Points",
             style = TextStyle(
@@ -98,6 +100,18 @@ fun StudentView(rootNavController: NavHostController, student: Student, textToSp
                 fontWeight = FontWeight.Bold
             )
         )
+        Spacer(modifier = Modifier.width((screenSize/6-50).dp))
+        Image(
+            painter = painterResource(id = R.drawable.delete),
+            contentDescription = "Student memoji",
+            modifier = Modifier.size((LocalConfiguration.current.screenWidthDp/12-5).dp).combinedClickable(
+                onClick = {
+                    studentViewModel.deleteStudent(student.name)
+                    rootNavController.navigate(Graph.MAIN+"/classroom")
+                }
+            )
+        )
+
     }
     Spacer(modifier = Modifier.height((screenSize/12-20).dp))
 }

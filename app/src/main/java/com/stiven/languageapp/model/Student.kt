@@ -1,5 +1,6 @@
 package com.stiven.languageapp.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.stiven.languageapp.utils.Languages
@@ -17,8 +18,12 @@ import com.stiven.languageapp.utils.Languages
 data class Student(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    @ColumnInfo(name = "name")
     val name: String,
+    @ColumnInfo(name = "course")
     val course: Languages,
+    @ColumnInfo(name = "picture")
     val picture: Int,
+    @ColumnInfo(name = "points")
     val points: Int
 )

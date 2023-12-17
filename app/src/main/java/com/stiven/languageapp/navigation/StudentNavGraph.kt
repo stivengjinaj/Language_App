@@ -32,7 +32,7 @@ fun StudentNavGraph(
         startDestination = BottomBarScreens.Lessons.route
     ){
         composable(route = BottomBarScreens.Lessons.route){
-            Lessons(navController, studentViewModel, textToSpeechViewModel, studentId)
+            Lessons(rootNavController, navController, studentViewModel, textToSpeechViewModel, studentId)
         }
 
         composable(route = BottomBarScreens.Exercises.route){

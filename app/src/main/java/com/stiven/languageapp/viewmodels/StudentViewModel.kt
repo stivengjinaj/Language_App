@@ -47,6 +47,7 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
      * being inserted exists.
      *
      * @param student student to check if exists.
+     * @return true if a student with the same course exists, false otherwise.
      * */
     fun userCourseExists(student: Student): Boolean{
         return dataList.value?.find { it.name == student.name && it.course == student.course } != null
