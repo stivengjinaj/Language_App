@@ -5,7 +5,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.stiven.languageapp.screens.InitialPage
+import com.stiven.languageapp.screens.OnboardScreen
 import com.stiven.languageapp.screens.SplashScreen
+import com.stiven.languageapp.utils.PreferencesManager
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
@@ -16,16 +18,25 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * @param navController the navigation controller.
  * @param studentViewModel view-model that handles operations in Students database.
  * @param textToSpeechViewModel view-model that handles text-to-speech operations.
+ * @param preferencesManager manager for shared preferences.
  * */
 @Composable
-fun RootNavGraph(navController: NavHostController, studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel) {
+fun RootNavGraph(
+    navController: NavHostController,
+    studentViewModel: StudentViewModel,
+    textToSpeechViewModel: TextToSpeechViewModel,
+    preferencesManager: PreferencesManager
+) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
         startDestination = Graph.SPLASH
     ){
         composable(Graph.SPLASH){
-            SplashScreen(navController)
+            SplashScreen(navController, preferencesManager)
+        }
+        composable(Graph.TOUR){
+            OnboardScreen(navController)
         }
         composable(Graph.INITIAL){
             InitialPage(navController, textToSpeechViewModel)
@@ -49,4 +60,5 @@ object Graph{
     const val INITIAL = "initial"
     const val MAIN = "main"
     const val LESSONS = "lessons"
+    const val TOUR = "tour"
 }

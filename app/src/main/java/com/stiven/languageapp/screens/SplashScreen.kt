@@ -18,6 +18,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.stiven.languageapp.R
 import com.stiven.languageapp.navigation.Graph
+import com.stiven.languageapp.utils.PreferencesManager
 import kotlinx.coroutines.delay
 
 /**
@@ -25,21 +26,26 @@ import kotlinx.coroutines.delay
  * the screen disappears and disengages from the navigation graph.
  *
  * @param rootNavController root navigation controller.
+ * @param preferencesManager manager for shared preferences.
  * */
 @Composable
-fun SplashScreen(rootNavController: NavHostController) {
+fun SplashScreen(rootNavController: NavHostController, preferencesManager: PreferencesManager) {
     val composition = rememberLottieComposition(LottieCompositionSpec.RawRes(if (isSystemInDarkTheme()) R.raw.lottieanimationdark else R.raw.lottieanimation))
     val progress by animateLottieCompositionAsState(
         composition = composition.value,
         iterations = LottieConstants.IterateForever
     )
 
-
     LaunchedEffect(key1 = true){
         delay(1500L)
 
         rootNavController.popBackStack()
-        rootNavController.navigate(Graph.INITIAL)
+        if (!preferencesManager.getBooleanData("DoneInitialTour",false)){
+            preferencesManager.saveBoolean("DoneInitialTour", true)
+            rootNavController.navigate(Graph.TOUR)
+        }else{
+            rootNavController.navigate(Graph.INITIAL)
+        }
     }
 
     Box(
