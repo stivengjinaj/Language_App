@@ -93,7 +93,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     var chosenCourse by rememberSaveable { mutableStateOf((Languages.ENGLISH)) }
     var existingStudentDialog by rememberSaveable { mutableStateOf(false) }
     var maxStudentDialog by rememberSaveable { mutableStateOf(false) }
-    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val screenHeight = LocalConfiguration.current.screenHeightDp / 20
     val context = LocalContext.current
     val iconsList = listOf(
         R.raw.bella,
@@ -110,14 +110,16 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         R.raw.ezra,
         R.raw.justin
     )
-
+    val showDialog = remember { mutableStateOf(false) }
     // Default selected icon
-    var selectedIcon = iconsList[1]
+    val selectedIcon = remember { mutableStateOf(iconsList[1]) }
 
     Column (
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .alpha(if (showDialog.value) 0.3f else 1.0f)
+            .fillMaxWidth()
     ){
-        Spacer(modifier = Modifier.height((screenWidth / 4 + 5).dp))
+        Spacer(modifier = Modifier.height((screenHeight+50).dp))
         //Row containing the title of the page
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -134,11 +136,11 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 text = stringResource(R.string.new_course_title),
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.inversePrimary),
-                    fontSize = (screenWidth / 12).sp,
-                    fontWeight = FontWeight.Bold
+                fontSize = (screenHeight-10).sp,
+                fontWeight = FontWeight.Bold
             )
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
+        Spacer(modifier = Modifier.height((screenHeight).dp))
         //Row containing the text field for for the student's name
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -147,7 +149,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             OutlinedTextField(
                 modifier = Modifier
                     .background(Color.Transparent)
-                    .width((screenWidth - 110).dp)
+                    .width((screenHeight+300).dp)
                     .pointerInput(Unit) {
                         detectTapGestures(
                             onLongPress = {
@@ -191,14 +193,14 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 )
             )
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12).dp))
+        Spacer(modifier = Modifier.height((screenHeight).dp))
         //Row containing the english button
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier.width((screenWidth - 110).dp),
+                modifier = Modifier.width((screenHeight + 280).dp),
                 onClick = {
                     frenchOption = false
                     englishOption = true
@@ -233,12 +235,12 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(modifier = Modifier.size((screenWidth / 12).dp)) {
+                    Box(modifier = Modifier.size((screenHeight - 10).dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.gb),
                             "GB FLAG",
                             modifier = Modifier
-                                .size((screenWidth / 12).dp)
+                                .size((screenHeight - 10).dp)
                                 .clip(RoundedCornerShape(30))
                         )
                     }
@@ -246,26 +248,22 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         stringResource(R.string.english),
                         style = TextStyle(
                             color = MaterialTheme.colorScheme.secondary,
-                            fontSize = (screenWidth / 12 - 12).sp,
+                            fontSize = (screenHeight - 17).sp,
                             fontWeight = FontWeight.Bold
                         ),
-                        modifier = Modifier.padding(((screenWidth - 110) / 5).dp, 0.dp, 0.dp, 0.dp)
+                        modifier = Modifier.padding((screenHeight + 40).dp, 0.dp, 0.dp, 0.dp)
                     )
                 }
             }
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12).dp))
+        Spacer(modifier = Modifier.height((screenHeight).dp))
         //Row containing the italian button
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-            ,
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier
-                    .width((screenWidth - 110).dp)
-                ,
+                modifier = Modifier.width((screenHeight + 280).dp),
                 onClick = {
                     frenchOption = false
                     englishOption = false
@@ -300,12 +298,12 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(modifier = Modifier.size((screenWidth / 12).dp)) {
+                    Box(modifier = Modifier.size((screenHeight - 10).dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.it),
                             "ITALIAN FLAG",
                             modifier = Modifier
-                                .size((screenWidth / 12).dp)
+                                .size((screenHeight - 10).dp)
                                 .clip(RoundedCornerShape(30))
                         )
                     }
@@ -313,27 +311,23 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         stringResource(R.string.italian),
                         style = TextStyle(
                             color = MaterialTheme.colorScheme.secondary,
-                            fontSize = (screenWidth / 12 - 12).sp,
+                            fontSize = (screenHeight - 17).sp,
                             fontWeight = FontWeight.Bold
                         ),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(((screenWidth - 110) / 5).dp, 0.dp, 0.dp, 0.dp)
+                        modifier = Modifier.padding((screenHeight + 40).dp, 0.dp, 0.dp, 0.dp)
                     )
                 }
             }
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12).dp))
+        Spacer(modifier = Modifier.height((screenHeight).dp))
         //Row containing the french button
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-            ,
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier
-                    .width((screenWidth - 110).dp)
-                ,
+                modifier = Modifier.width((screenHeight + 280).dp),
                 onClick = {
                     frenchOption = true
                     englishOption = false
@@ -367,12 +361,12 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         }
                     ),
                     verticalAlignment = Alignment.CenterVertically) {
-                    Box(modifier = Modifier.size((screenWidth / 12).dp)) {
+                    Box(modifier = Modifier.size((screenHeight - 10).dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.fr),
                             "FRENCH FLAG",
                             modifier = Modifier
-                                .size((screenWidth / 12).dp)
+                                .size((screenHeight - 10).dp)
                                 .clip(RoundedCornerShape(30))
                         )
                     }
@@ -380,58 +374,61 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         stringResource(R.string.french),
                         style = TextStyle(
                             color = MaterialTheme.colorScheme.secondary,
-                            fontSize = (screenWidth / 12 - 12).sp,
+                            fontSize = (screenHeight - 17).sp,
                             fontWeight = FontWeight.Bold
                         ),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(((screenWidth - 100) / 5).dp, 0.dp, 0.dp, 0.dp)
+                        modifier = Modifier.padding((screenHeight + 40).dp, 0.dp, 0.dp, 0.dp)
                     )
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height((screenWidth / 12 + 5).dp))
+        Spacer(modifier = Modifier.height(screenHeight.dp))
         //Row containing the list of icons for student's account
         Row {
             IconSelector(icons = iconsList) { icon ->
-                selectedIcon = icon
+                selectedIcon.value = icon
             }
         }
-        Spacer(modifier = Modifier.height((screenWidth / 12-10).dp))
+        Spacer(modifier = Modifier.height((screenHeight-10).dp))
         //Row containing confirm button to create the account
         Row(
-            modifier = Modifier.fillMaxWidth().combinedClickable(
-                onClick = {
-                    if (studentName.isEmpty()) {
-                        studentNameError = true
-                    } else {
-                        //STUDENT DATA
-                        val studentToInsert = Student(
-                            name = formatString(studentName),
-                            course = chosenCourse,
-                            picture = selectedIcon,
-                            points = 0
-                        )
-                        //CHECK IF STUDENT IS PRESENT AND IS ALREADY TAKING A COURSE IN THE SELECTED LANGUAGE
-                        if (studentViewModel.dataList.value?.size  == 4) {
-                            maxStudentDialog = true
-                        }else if (!studentViewModel.userCourseExists(studentToInsert)) {
-                            Log.d("STUDENT","STUDENT INSERTED")
-                            studentViewModel.insertStudent(studentToInsert)
-                            navController.navigate(BottomBarScreens.Classroom.route)
-                        }else{
-                            existingStudentDialog = true
+            modifier = Modifier
+                .fillMaxWidth()
+                .combinedClickable(
+                    onClick = {
+                        if (studentName.isEmpty()) {
+                            studentNameError = true
+                        } else {
+                            //STUDENT DATA
+                            val studentToInsert = Student(
+                                name = formatString(studentName),
+                                course = chosenCourse,
+                                picture = selectedIcon.value,
+                                points = 0
+                            )
+                            //CHECK IF STUDENT IS PRESENT AND IS ALREADY TAKING A COURSE IN THE SELECTED LANGUAGE
+                            if (studentViewModel.dataList.value?.size == 4) {
+                                maxStudentDialog = true
+                            } else if (!studentViewModel.userCourseExists(studentToInsert)) {
+                                Log.d("STUDENT", "STUDENT INSERTED")
+                                studentViewModel.insertStudent(studentToInsert)
+                                navController.navigate(BottomBarScreens.Classroom.route)
+                            } else {
+                                existingStudentDialog = true
+                            }
                         }
+                    },
+                    onLongClick = {
+                        textToSpeechViewModel.textToSpeech(
+                            context,
+                            context.getString(R.string.next_button_speech)
+                        )
                     }
-                },
-                onLongClick = {
-                    textToSpeechViewModel.textToSpeech(context,context.getString(R.string.next_button_speech))
-                }
-            ),
+                ),
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
-                modifier = Modifier.width((screenWidth - 300).dp),
                 onClick = {
                     if (studentName.isEmpty()) {
                         studentNameError = true
@@ -440,7 +437,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         val studentToInsert = Student(
                             name = formatString(studentName),
                             course = chosenCourse,
-                            picture = selectedIcon,
+                            picture = selectedIcon.value,
                             points = 0
                         )
                         //CHECK IF STUDENT IS PRESENT AND IS ALREADY TAKING A COURSE IN THE SELECTED LANGUAGE
@@ -468,7 +465,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     textAlign = TextAlign.Center,
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.secondary,
-                        fontSize = (screenWidth / 12 - 17).sp,
+                        fontSize = (screenHeight - 25).sp,
                         fontWeight = FontWeight.Bold
                     )
                 )
@@ -477,6 +474,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     }
     //Dialog box that appears if the student is already taking a course
     if (existingStudentDialog) {
+        showDialog.value = true
         AlertDialog(
             containerColor = MaterialTheme.colorScheme.background,
             onDismissRequest = {
@@ -496,10 +494,10 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             val studentToInsert = Student(
                                 name = formatString(studentName),
                                 course = chosenCourse,
-                                picture = selectedIcon,
+                                picture = selectedIcon.value,
                                 points = 0
                             )
-                            studentViewModel.deleteStudent(studentToInsert.name)
+                            studentViewModel.deleteStudent(studentToInsert.name, studentToInsert.course)
                             studentViewModel.insertStudent(studentToInsert)
                             navController.navigate(BottomBarScreens.Classroom.route)
                         },
@@ -512,11 +510,12 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         val studentToInsert = Student(
                             name = formatString(studentName),
                             course = chosenCourse,
-                            picture = selectedIcon,
+                            picture = selectedIcon.value,
                             points = 0
                         )
-                        studentViewModel.deleteStudent(studentToInsert.name)
+                        studentViewModel.deleteStudent(studentToInsert.name, studentToInsert.course)
                         studentViewModel.insertStudent(studentToInsert)
+                        navController.navigate(BottomBarScreens.Classroom.route)
                     },
                     border = BorderStroke(2.dp,
                         MaterialTheme.colorScheme.error
@@ -531,6 +530,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             dismissButton = {
                 OutlinedButton(
                     onClick = {
+                        showDialog.value = false
                         existingStudentDialog = false
                     },
                     border = BorderStroke(2.dp,
@@ -552,6 +552,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     }
     //Dialog box that appears if there are already 4 students registered
     if (maxStudentDialog){
+        showDialog.value = true
         AlertDialog(
             containerColor = MaterialTheme.colorScheme.background,
             onDismissRequest = {
@@ -609,7 +610,7 @@ fun IconSelector(
     var selectedIcon by remember { mutableIntStateOf(icons[1]) }
     Row (
         modifier = Modifier
-            .padding((currentSize/12-10).dp,0.dp)
+            .padding((currentSize/12).dp,0.dp)
     ){
         LazyRow(
             contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
