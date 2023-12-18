@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.navigation.RootNavGraph
 import com.stiven.languageapp.ui.theme.LanguageAppTheme
+import com.stiven.languageapp.utils.PreferencesManager
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
         //val wordViewModel : WordViewModel by viewModels()
         val studentViewModel : StudentViewModel by viewModels()
         val textToSpeechViewModel: TextToSpeechViewModel by viewModels()
+        val preferencesManager = PreferencesManager(this)
         setContent {
             LanguageAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -32,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    RootNavGraph(navController = rememberNavController(), studentViewModel = studentViewModel, textToSpeechViewModel = textToSpeechViewModel)
+                    RootNavGraph(navController = rememberNavController(), studentViewModel = studentViewModel, textToSpeechViewModel = textToSpeechViewModel, preferencesManager)
                 }
             }
         }
