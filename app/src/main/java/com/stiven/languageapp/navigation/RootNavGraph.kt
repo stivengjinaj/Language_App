@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.stiven.languageapp.screens.InitialPage
-import com.stiven.languageapp.screens.OnboardScreen
+import com.stiven.languageapp.screens.InitialTour
 import com.stiven.languageapp.screens.SplashScreen
 import com.stiven.languageapp.utils.PreferencesManager
 import com.stiven.languageapp.viewmodels.StudentViewModel
@@ -36,7 +36,7 @@ fun RootNavGraph(
             SplashScreen(navController, preferencesManager)
         }
         composable(Graph.TOUR){
-            OnboardScreen(navController)
+            InitialTour(navController, preferencesManager)
         }
         composable(Graph.INITIAL){
             InitialPage(navController, textToSpeechViewModel)

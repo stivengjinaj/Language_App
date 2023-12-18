@@ -41,7 +41,6 @@ fun SplashScreen(rootNavController: NavHostController, preferencesManager: Prefe
 
         rootNavController.popBackStack()
         if (!preferencesManager.getBooleanData("DoneInitialTour",false)){
-            preferencesManager.saveBoolean("DoneInitialTour", true)
             rootNavController.navigate(Graph.TOUR)
         }else{
             rootNavController.navigate(Graph.INITIAL)

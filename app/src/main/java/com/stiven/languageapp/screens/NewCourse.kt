@@ -65,7 +65,6 @@ import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import java.util.Locale
 
-
 /**
  * Displays the page that prompts the user to start
  * a new course. In this page the user has to input
