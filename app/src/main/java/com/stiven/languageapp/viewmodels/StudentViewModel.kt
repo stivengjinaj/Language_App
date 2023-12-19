@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.stiven.languageapp.AppDatabase
 import com.stiven.languageapp.model.Student
 import com.stiven.languageapp.repositories.StudentRepository
+import com.stiven.languageapp.utils.Languages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -68,10 +69,11 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
      * Function that deletes a student from database.
      *
      * @param studentName name of the student to be deleted.
+     * @param course language the student is learning.
      * */
-    fun deleteStudent(studentName: String){
+    fun deleteStudent(studentName: String, course: Languages){
         viewModelScope.launch (Dispatchers.IO) {
-            repository.deleteStudent(studentName)
+            repository.deleteStudent(studentName, course)
         }
     }
 

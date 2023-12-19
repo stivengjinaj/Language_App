@@ -3,6 +3,7 @@ package com.stiven.languageapp.repositories
 import com.stiven.languageapp.AppDatabase
 import com.stiven.languageapp.dao.StudentDao
 import com.stiven.languageapp.model.Student
+import com.stiven.languageapp.utils.Languages
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -37,9 +38,10 @@ class StudentRepository(private val studentDao: StudentDao) {
      * by name.
      *
      * @param studentName student to be deleted name.
+     * @param course language the student is learning.
      * */
-    fun deleteStudent(studentName: String){
-        studentDao.deleteStudent(studentName)
+    fun deleteStudent(studentName: String, course: Languages){
+        studentDao.deleteStudent(studentName, course)
     }
 
     /**

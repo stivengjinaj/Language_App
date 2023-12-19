@@ -106,7 +106,7 @@ fun StudentView(rootNavController: NavHostController, student: Student, studentV
             contentDescription = "Student memoji",
             modifier = Modifier.size((LocalConfiguration.current.screenWidthDp/12-5).dp).combinedClickable(
                 onClick = {
-                    studentViewModel.deleteStudent(student.name)
+                    studentViewModel.deleteStudent(student.name, student.course)
                     rootNavController.navigate(Graph.MAIN+"/classroom")
                 }
             )
