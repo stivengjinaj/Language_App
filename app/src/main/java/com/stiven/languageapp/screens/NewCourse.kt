@@ -251,7 +251,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             fontSize = (screenHeight - 17).sp,
                             fontWeight = FontWeight.Bold
                         ),
-                        modifier = Modifier.padding((screenHeight + 40).dp, 0.dp, 0.dp, 0.dp)
+                        modifier = Modifier.padding((screenHeight + 35).dp, 0.dp, 0.dp, 0.dp)
                     )
                 }
             }
@@ -315,7 +315,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             fontWeight = FontWeight.Bold
                         ),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding((screenHeight + 40).dp, 0.dp, 0.dp, 0.dp)
+                        modifier = Modifier.padding((screenHeight + 35).dp, 0.dp, 0.dp, 0.dp)
                     )
                 }
             }
@@ -378,7 +378,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             fontWeight = FontWeight.Bold
                         ),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding((screenHeight + 40).dp, 0.dp, 0.dp, 0.dp)
+                        modifier = Modifier.padding((screenHeight + 35).dp, 0.dp, 0.dp, 0.dp)
                     )
                 }
             }
