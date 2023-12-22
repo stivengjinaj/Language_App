@@ -241,7 +241,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             "GB FLAG",
                             modifier = Modifier
                                 .size((screenHeight - 10).dp)
-                                .clip(RoundedCornerShape(30))
+                                .clip(RoundedCornerShape(20))
                         )
                     }
                     Text(
@@ -304,7 +304,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             "ITALIAN FLAG",
                             modifier = Modifier
                                 .size((screenHeight - 10).dp)
-                                .clip(RoundedCornerShape(30))
+                                .clip(RoundedCornerShape(20))
                         )
                     }
                     Text(
@@ -367,7 +367,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             "FRENCH FLAG",
                             modifier = Modifier
                                 .size((screenHeight - 10).dp)
-                                .clip(RoundedCornerShape(30))
+                                .clip(RoundedCornerShape(20))
                         )
                     }
                     Text(
