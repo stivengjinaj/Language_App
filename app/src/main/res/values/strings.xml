@@ -34,4 +34,5 @@
     <string name="classroom_speech">Go to the classroom</string>
     <string name="new_course_speech">Start learning a new language</string>
     <string name="emergency_speech">Emergency dictionary</string>
+    <string name="change_language">Change App Language</string>
 </resources>

@@ -35,4 +35,5 @@
     <string name="classroom_speech">Aller en classe</string>
     <string name="new_course_speech">Commencez à apprendre une nouvelle langue</string>
     <string name="emergency_speech">Dictionnaire d\'urgence</string>
+    <string name="change_language">Changer la langue de l\'application</string>
 </resources>
