@@ -112,7 +112,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     )
     val showDialog = remember { mutableStateOf(false) }
     // Default selected icon
-    val selectedIcon = remember { mutableStateOf(iconsList[1]) }
+    val selectedIcon = remember { mutableIntStateOf(iconsList[1]) }
 
     Column (
         modifier = Modifier
@@ -387,7 +387,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
         //Row containing the list of icons for student's account
         Row {
             IconSelector(icons = iconsList) { icon ->
-                selectedIcon.value = icon
+                selectedIcon.intValue = icon
             }
         }
         Spacer(modifier = Modifier.height((screenHeight-10).dp))
@@ -404,7 +404,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             val studentToInsert = Student(
                                 name = formatString(studentName),
                                 course = chosenCourse,
-                                picture = selectedIcon.value,
+                                picture = selectedIcon.intValue,
                                 points = 0
                             )
                             //CHECK IF STUDENT IS PRESENT AND IS ALREADY TAKING A COURSE IN THE SELECTED LANGUAGE
@@ -437,7 +437,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         val studentToInsert = Student(
                             name = formatString(studentName),
                             course = chosenCourse,
-                            picture = selectedIcon.value,
+                            picture = selectedIcon.intValue,
                             points = 0
                         )
                         //CHECK IF STUDENT IS PRESENT AND IS ALREADY TAKING A COURSE IN THE SELECTED LANGUAGE
@@ -494,7 +494,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             val studentToInsert = Student(
                                 name = formatString(studentName),
                                 course = chosenCourse,
-                                picture = selectedIcon.value,
+                                picture = selectedIcon.intValue,
                                 points = 0
                             )
                             studentViewModel.deleteStudent(studentToInsert.name, studentToInsert.course)
@@ -510,7 +510,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         val studentToInsert = Student(
                             name = formatString(studentName),
                             course = chosenCourse,
-                            picture = selectedIcon.value,
+                            picture = selectedIcon.intValue,
                             points = 0
                         )
                         studentViewModel.deleteStudent(studentToInsert.name, studentToInsert.course)

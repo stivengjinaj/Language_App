@@ -2,8 +2,10 @@ package com.stiven.languageapp.screens
 
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -46,6 +49,14 @@ import com.stiven.languageapp.navigation.Graph
 import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.utils.PreferencesManager
 
+/**
+ * One time walkthrough guide for the user to get to know the application.
+ * Clicking buttons as "Skip" or "Done" will discard the walkthrough and
+ * it will not appear anymore until the user prompts it from settings screen.
+ *
+ * @param rootNavController navigation controller to go to the root of the app.
+ * @param preferencesManager preferences manager used to specify the completion of the walkthrough.
+ * */
 @Composable
 fun InitialTour(rootNavController: NavHostController, preferencesManager: PreferencesManager){
     val context = LocalContext.current
@@ -53,7 +64,7 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
     val currentPageIcon = Icons.Default.FiberManualRecord
     val otherPageIcon = Icons.Outlined.FiberManualRecord
     val currentPage = remember { mutableIntStateOf(0) }
-    val numberOfPages = 3 //Starting counting from 0
+    val numberOfPages = 4 //Starting counting from 0
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -61,50 +72,30 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height((currentSize + 50).dp))
-        if(currentPage.intValue <= 2){
-            Row(
-                modifier = Modifier
-                    .height((currentSize + 300).dp)
-                    .width((currentSize + 300).dp)
-            ) {
-                PageDescription(currentPage.intValue)
+        when(currentPage.intValue){
+            0 -> {
+                ChooseLanguage(context, currentSize)
             }
-            Spacer(modifier = Modifier.height((currentSize - 50).dp))
-            //CLASSROOM BUTTON
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(if (currentPage.intValue == 0) 1.0f else 0.3f),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                ClassroomButton(context, currentSize)
+            in 1 .. 3 -> {
+                Spacer(modifier = Modifier.height((currentSize + 50).dp))
+                //PAGE DESCRIPTION
+                PageDescription(context, currentPage.intValue, currentSize)
+                Spacer(modifier = Modifier.height((currentSize - 50).dp))
+                //CLASSROOM BUTTON
+                ClassroomButton(context, currentPage, currentSize)
+                Spacer(modifier = Modifier.height((currentSize - 20).dp))
+                //NEW COURSE BUTTON
+                NewCourseButton(context, currentPage, currentSize)
+                Spacer(modifier = Modifier.height((currentSize - 20).dp))
+                //EMERGENCY BUTTON
+                EmergencyButton(context, currentPage, currentSize)
             }
-            Spacer(modifier = Modifier.height((currentSize - 20).dp))
-            //NEW COURSE BUTTON
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(if (currentPage.intValue == 1) 1.0f else 0.3f),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                NewCourseButton(context, currentSize)
+            4 -> {
+                //CLASSROOM PAGE
+                ClassroomPage(context, currentSize)
+                Spacer(modifier = Modifier.height((currentSize + 150).dp))
             }
-            Spacer(modifier = Modifier.height((currentSize - 20).dp))
-            //EMERGENCY BUTTON
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(if (currentPage.intValue == 2) 1.0f else 0.3f),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                EmergencyButton(context, currentSize)
-            }
-        }else{
-            ClassroomPage(context, currentSize)
-            Spacer(modifier = Modifier.height((currentSize + 150).dp))
         }
-
         // NEXT, BACK, SKIP, FINISHED BUTTONS
         Spacer(modifier = Modifier.height((currentSize + 50).dp))
         Row (
@@ -125,18 +116,21 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
                 }
             ) {
                 Text(
-                    text = if(currentPage.intValue != 0) "Back" else "Skip",
+                    text = if(currentPage.intValue != 0) context.getString(R.string.back) else context.getString(R.string.skip),
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.secondary
                     )
                 )
             }
-            Spacer(modifier = Modifier.width((currentSize).dp))
-            Icon(imageVector = if(currentPage.intValue == 0) currentPageIcon else otherPageIcon, contentDescription = "First page")
-            Icon(imageVector = if(currentPage.intValue == 1) currentPageIcon else otherPageIcon, contentDescription = "Second page")
-            Icon(imageVector = if(currentPage.intValue == 2) currentPageIcon else otherPageIcon, contentDescription = "Third page")
-            Icon(imageVector = if(currentPage.intValue == 3) currentPageIcon else otherPageIcon, contentDescription = "Fourth page")
-            Spacer(modifier = Modifier.width((currentSize).dp))
+            Spacer(modifier = Modifier.width((currentSize - 10).dp))
+            for(i in 0..4){
+                Icon(
+                    modifier = Modifier.size((currentSize-20).dp),
+                    imageVector = if(currentPage.intValue == i) currentPageIcon else otherPageIcon,
+                    contentDescription = "Page $i"
+                )
+            }
+            Spacer(modifier = Modifier.width((currentSize - 10).dp))
             OutlinedButton(
                 modifier = Modifier.width((currentSize + 60).dp),
                 shape = RoundedCornerShape(50),
@@ -149,7 +143,7 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
                     }
                 }
             ) {
-                Text(text = if(currentPage.intValue < numberOfPages) "Next" else "Finish", style = TextStyle(
+                Text(text = if(currentPage.intValue < numberOfPages) context.getString(R.string.next) else context.getString(R.string.done), style = TextStyle(
                     color = MaterialTheme.colorScheme.secondary
                 ))
             }
@@ -157,81 +151,128 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
     }
 }
 
+/**
+ * UI visuals for "Classroom" button.
+ *
+ * @param context application context.
+ * @param currentPage current page where the visual appears.
+ * @param currentSize static size for the current screen.
+ * */
 @Composable
-fun ClassroomButton(context: Context, currentSize: Int){
-    OutlinedButton(
-        modifier = Modifier.width((currentSize + 250).dp),
-        onClick = {
+private fun ClassroomButton(context: Context, currentPage: MutableIntState, currentSize: Int){
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .alpha(if (currentPage.intValue == 1) 1.0f else 0.3f),
+        horizontalArrangement = Arrangement.Center
+    ){
+        OutlinedButton(
+            modifier = Modifier.width((currentSize + 250).dp),
+            onClick = {
 
-        },
-        shape = RoundedCornerShape(50),
-        border = BorderStroke(2.dp, Color.White)
-    ) {
-        Text(
-            context.getString(R.string.classroom),
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.secondary,
-                fontSize = (currentSize - 20).sp,
-                fontWeight = FontWeight.Bold)
-        )
-    }
-}
-
-@Composable
-fun NewCourseButton(context: Context, currentSize: Int){
-    val screenHeight = LocalConfiguration.current.screenHeightDp / 20
-    OutlinedButton(
-        modifier = Modifier.width((currentSize + 250).dp),
-        onClick = {
-
-        },
-        shape = RoundedCornerShape(50),
-        border = BorderStroke(2.dp, Color.White)
-    ) {
-        Text(
-            context.getString(R.string.new_course),
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.secondary,
-                fontSize = (currentSize - 20).sp,
-                fontWeight = FontWeight.Bold
+            },
+            shape = RoundedCornerShape(50),
+            border = BorderStroke(2.dp, Color.White)
+        ) {
+            Text(
+                context.getString(R.string.classroom),
+                style = TextStyle(
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontSize = (currentSize - 20).sp,
+                    fontWeight = FontWeight.Bold)
             )
-        )
+        }
     }
 }
 
+/**
+ * UI visuals for "New Course" button.
+ *
+ * @param context application context.
+ * @param currentPage current page where the visual appears.
+ * @param currentSize static size for the current screen.
+ * */
 @Composable
-fun EmergencyButton(context: Context, currentSize: Int){
-    OutlinedButton(
-        modifier = Modifier.width((currentSize + 250).dp),
-        onClick = {
+fun NewCourseButton(context: Context, currentPage: MutableIntState, currentSize: Int){
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .alpha(if (currentPage.intValue == 2) 1.0f else 0.3f),
+        horizontalArrangement = Arrangement.Center
+    ){
+        OutlinedButton(
+            modifier = Modifier.width((currentSize + 250).dp),
+            onClick = {
 
-        },
-        shape = RoundedCornerShape(50),
-        border = BorderStroke(2.dp, Color.White),
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
-    ) {
-        Text(
-            context.getString(R.string.emergency),
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.secondary,
-                fontSize = (currentSize - 20).sp,
-                fontWeight = FontWeight.Bold
+            },
+            shape = RoundedCornerShape(50),
+            border = BorderStroke(2.dp, Color.White)
+        ) {
+            Text(
+                context.getString(R.string.new_course),
+                style = TextStyle(
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontSize = (currentSize - 20).sp,
+                    fontWeight = FontWeight.Bold
+                )
             )
-        )
+        }
     }
 }
 
+/**
+ * UI visuals for "Emergency" button.
+ *
+ * @param context application context.
+ * @param currentPage current page where the visual appears.
+ * @param currentSize static size for the current screen.
+ * */
+@Composable
+fun EmergencyButton(context: Context, currentPage: MutableIntState, currentSize: Int){
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .alpha(if (currentPage.intValue == 3) 1.0f else 0.3f),
+        horizontalArrangement = Arrangement.Center
+    ){
+        OutlinedButton(
+            modifier = Modifier.width((currentSize + 250).dp),
+            onClick = {
+
+            },
+            shape = RoundedCornerShape(50),
+            border = BorderStroke(2.dp, Color.White),
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
+        ) {
+            Text(
+                context.getString(R.string.emergency),
+                style = TextStyle(
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontSize = (currentSize - 20).sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+        }
+    }
+}
+
+/**
+ * UI visuals for "Classroom" content.
+ *
+ * @param context application context.
+ * @param currentSize static size for the current screen.
+ * */
 @Composable
 fun ClassroomPage(context: Context, currentSize: Int){
     val student = Student(name = "Tiffany", course = Languages.ENGLISH, picture = R.raw.helen, points = 50)
-    Spacer(modifier = Modifier.height((currentSize - 50).dp))
+    Spacer(modifier = Modifier.height((currentSize + 50).dp))
     Row(
         modifier = Modifier
             .height((currentSize + 200).dp)
             .width((currentSize + 300).dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        PageDescription(pageIndex = 3)
+        PageDescription(context, currentPage = 4, currentSize)
     }
     Row (
         modifier = Modifier
@@ -269,7 +310,7 @@ fun ClassroomPage(context: Context, currentSize: Int){
         }
         Spacer(modifier = Modifier.width((currentSize).dp))
         Text(
-            text = student.points.toString() + " " + if (student.points == 1) "Point" else "Points",
+            text = student.points.toString() + " " + if (student.points == 1) context.getString(R.string.point) else context.getString(R.string.points),
             style = TextStyle(
                 color = MaterialTheme.colorScheme.inversePrimary,
                 fontSize = (currentSize - 20).sp,
@@ -285,23 +326,99 @@ fun ClassroomPage(context: Context, currentSize: Int){
     }
 }
 
+/**
+ * Prompt to change the language.
+ *
+ * @param context application context.
+ * @param currentSize static size for the current screen.
+ * */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PageDescription(pageIndex: Int){
-    val description = when(pageIndex){
-        0 -> "Click this button in order to go where the classroom is and where all students are. If you created a student for yourself you will find it here. Clicking it will get you to your personalized portfolio."
-        1 -> "Click this button in order to go and create a student for yourself with a language you want to learn."
-        2 -> "Click this button in order to use the dictionary for emergency cases."
-        3 -> "This is your student account. Click the name to open your personalized portfolio."
+fun ChooseLanguage(context: Context, currentSize: Int){
+    Spacer(modifier = Modifier.height((currentSize + 50).dp))
+    Row(
+        modifier = Modifier
+            .height((currentSize + 100).dp)
+            .width((currentSize + 300).dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        PageDescription(context, currentPage = 0, currentSize)
+    }
+    Row(
+        modifier = Modifier.combinedClickable(
+            onClick = {
+                changeLanguage(Languages.ENGLISH, context)
+            }
+        )
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.gb),
+            contentDescription = "GB FLAG",
+            modifier = Modifier.size((currentSize + 88).dp)
+        )
+    }
+    Row(
+        modifier = Modifier.combinedClickable(
+            onClick = {
+                changeLanguage(Languages.ITALIAN, context)
+            }
+        ),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.it),
+            contentDescription = "GB FLAG",
+            modifier = Modifier.size((currentSize + 88).dp)
+        )
+    }
+    Row(
+        modifier = Modifier.combinedClickable(
+            onClick = {
+                changeLanguage(Languages.FRENCH, context)
+            }
+        )
+    ){
+        Image(
+            painter = painterResource(id = R.drawable.fr),
+            contentDescription = "GB FLAG",
+            modifier = Modifier.size((currentSize + 88).dp)
+        )
+    }
+}
+
+/**
+ * The description of each page.
+ *
+ * @param context application context.
+ * @param currentPage current page where the visual appears.
+ * @param currentSize static size for the current screen.
+ * */
+@Composable
+fun PageDescription(context: Context, currentPage: Int, currentSize: Int){
+    val description = when(currentPage){
+        0 -> context.getString(R.string.change_language)
+        1 -> context.getString(R.string.page_1)
+        2 -> context.getString(R.string.page_2)
+        3 -> context.getString(R.string.page_3)
+        4 -> context.getString(R.string.page_4)
         else -> {
             "TrioLingo"
         }
     }
-    Text(
-        text = description,
-        style = TextStyle(
-            color = MaterialTheme.colorScheme.secondary,
-            textAlign = TextAlign.Center,
-            fontSize = (LocalConfiguration.current.screenWidthDp/12-10).sp
+    Row(
+        modifier = Modifier
+            .height((currentSize + 300).dp)
+            .width((currentSize + 300).dp),
+        horizontalArrangement = Arrangement.Center
+    ){
+        Text(
+            text = description,
+            style = TextStyle(
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Center,
+                fontSize = (LocalConfiguration.current.screenWidthDp/12-10).sp,
+                fontWeight = FontWeight.Bold
+            )
         )
-    )
+    }
 }

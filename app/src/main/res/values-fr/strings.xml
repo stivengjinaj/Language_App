@@ -36,4 +36,13 @@
     <string name="new_course_speech">Commencez à apprendre une nouvelle langue</string>
     <string name="emergency_speech">Dictionnaire d\'urgence</string>
     <string name="change_language">Changer la langue de l\'application</string>
+    <string name="back">Dos</string>
+    <string name="skip">Sauter</string>
+    <string name="done">Fait</string>
+    <string name="point">Indiquer</string>
+    <string name="points">Points</string>
+    <string name="page_1">Cliquez sur ce bouton pour aller là où se trouve la salle de classe et là où se trouvent tous les étudiants. Si vous avez créé un étudiant pour vous-même, vous le trouverez ici. En cliquant dessus, vous accéderez à votre portfolio personnalisé.</string>
+    <string name="page_2">Cliquez sur ce bouton pour créer vous-même un étudiant avec une langue que vous souhaitez apprendre.</string>
+    <string name="page_3">Cliquez sur ce bouton pour utiliser le dictionnaire pour les cas d\'urgence.</string>
+    <string name="page_4">Ceci est votre compte étudiant. Cliquez sur le nom pour ouvrir votre portfolio personnalisé.</string>
 </resources>

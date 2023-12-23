@@ -35,4 +35,14 @@
     <string name="new_course_speech">Start learning a new language</string>
     <string name="emergency_speech">Emergency dictionary</string>
     <string name="change_language">Change App Language</string>
+    <string name="back">Back</string>
+    <string name="skip">Skip</string>
+    <string name="done">Done</string>
+    <string name="point">Point</string>
+    <string name="points">Points</string>
+    <string name="page_1">Click this button to go where the classroom is and where all students are. If you created a student for yourself you will find it here. Clicking it will get you to your personalized portfolio.</string>
+    <string name="page_2">Click this button to go and create a student for yourself with a language you want to learn.</string>
+    <string name="page_3">Click this button to use the dictionary for emergency cases.</string>
+    <string name="page_4">This is your student account. Click the name to open your personalized portfolio.</string>
+
 </resources>

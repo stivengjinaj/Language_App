@@ -9,12 +9,14 @@ android {
     namespace = "com.stiven.languageapp"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "com.stiven.languageapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        //resourceConfigurations.plus(listOf("en", "it", "fr"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

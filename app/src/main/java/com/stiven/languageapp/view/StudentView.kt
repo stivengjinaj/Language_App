@@ -93,7 +93,7 @@ fun StudentView(rootNavController: NavHostController, student: Student, studentV
         }
         Spacer(modifier = Modifier.width((screenSize/6-20).dp))
         Text(
-            text = student.points.toString()+ " " + if(student.points == 1) "Point" else "Points",
+            text = student.points.toString()+ " " + if(student.points == 1) context.getString(R.string.point) else context.getString(R.string.points),
             style = TextStyle(
                 color = MaterialTheme.colorScheme.inversePrimary,
                 fontSize = (screenSize/12-18).sp,
