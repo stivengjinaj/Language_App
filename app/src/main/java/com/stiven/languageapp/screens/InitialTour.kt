@@ -6,6 +6,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,13 +26,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -43,11 +48,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.stiven.languageapp.R
 import com.stiven.languageapp.model.Student
 import com.stiven.languageapp.navigation.Graph
 import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.utils.PreferencesManager
+import kotlinx.coroutines.delay
 
 /**
  * One time walkthrough guide for the user to get to know the application.
@@ -64,6 +75,7 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
     val currentPageIcon = Icons.Default.FiberManualRecord
     val otherPageIcon = Icons.Outlined.FiberManualRecord
     val currentPage = remember { mutableIntStateOf(0) }
+    val doneWalkthrough = remember { mutableStateOf(false) }
     val numberOfPages = 4 //Starting counting from 0
     Column(
         modifier = Modifier
@@ -111,7 +123,7 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
                         currentPage.intValue--
                     }else{
                         preferencesManager.saveBoolean("DoneInitialTour", true)
-                        rootNavController.navigate(Graph.INITIAL)
+                        doneWalkthrough.value = true
                     }
                 }
             ) {
@@ -139,7 +151,7 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
                     currentPage.intValue++
                     if(currentPage.intValue > numberOfPages){
                         preferencesManager.saveBoolean("DoneInitialTour", true)
-                        rootNavController.navigate(Graph.INITIAL)
+                        doneWalkthrough.value = true
                     }
                 }
             ) {
@@ -148,6 +160,9 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
                 ))
             }
         }
+    }
+    if(doneWalkthrough.value){
+        OutroSplash(rootNavController)
     }
 }
 
@@ -193,7 +208,7 @@ private fun ClassroomButton(context: Context, currentPage: MutableIntState, curr
  * @param currentSize static size for the current screen.
  * */
 @Composable
-fun NewCourseButton(context: Context, currentPage: MutableIntState, currentSize: Int){
+private fun NewCourseButton(context: Context, currentPage: MutableIntState, currentSize: Int){
     Row (
         modifier = Modifier
             .fillMaxWidth()
@@ -228,7 +243,7 @@ fun NewCourseButton(context: Context, currentPage: MutableIntState, currentSize:
  * @param currentSize static size for the current screen.
  * */
 @Composable
-fun EmergencyButton(context: Context, currentPage: MutableIntState, currentSize: Int){
+private fun EmergencyButton(context: Context, currentPage: MutableIntState, currentSize: Int){
     Row (
         modifier = Modifier
             .fillMaxWidth()
@@ -263,7 +278,7 @@ fun EmergencyButton(context: Context, currentPage: MutableIntState, currentSize:
  * @param currentSize static size for the current screen.
  * */
 @Composable
-fun ClassroomPage(context: Context, currentSize: Int){
+private fun ClassroomPage(context: Context, currentSize: Int){
     val student = Student(name = "Tiffany", course = Languages.ENGLISH, picture = R.raw.helen, points = 50)
     Spacer(modifier = Modifier.height((currentSize + 50).dp))
     Row(
@@ -334,7 +349,7 @@ fun ClassroomPage(context: Context, currentSize: Int){
  * */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ChooseLanguage(context: Context, currentSize: Int){
+private fun ChooseLanguage(context: Context, currentSize: Int){
     Spacer(modifier = Modifier.height((currentSize + 50).dp))
     Row(
         modifier = Modifier
@@ -394,7 +409,7 @@ fun ChooseLanguage(context: Context, currentSize: Int){
  * @param currentSize static size for the current screen.
  * */
 @Composable
-fun PageDescription(context: Context, currentPage: Int, currentSize: Int){
+private fun PageDescription(context: Context, currentPage: Int, currentSize: Int){
     val description = when(currentPage){
         0 -> context.getString(R.string.change_language)
         1 -> context.getString(R.string.page_1)
@@ -419,6 +434,34 @@ fun PageDescription(context: Context, currentPage: Int, currentSize: Int){
                 fontSize = (LocalConfiguration.current.screenWidthDp/12-10).sp,
                 fontWeight = FontWeight.Bold
             )
+        )
+    }
+}
+
+@Composable
+private fun OutroSplash(rootNavController: NavHostController){
+    val composition = rememberLottieComposition(LottieCompositionSpec.RawRes(if (isSystemInDarkTheme()) R.raw.walkthrough_outro_dark else R.raw.walkthrough_outro))
+    val progress by animateLottieCompositionAsState(
+        composition = composition.value,
+        iterations = LottieConstants.IterateForever
+    )
+
+    LaunchedEffect(key1 = true){
+        delay(1000L)
+
+        rootNavController.popBackStack()
+        rootNavController.navigate(Graph.INITIAL)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.Transparent)
+    ) {
+        LottieAnimation(
+            modifier = Modifier.fillMaxSize().scale(1.5f),
+            progress = progress,
+            composition = composition.value
         )
     }
 }
