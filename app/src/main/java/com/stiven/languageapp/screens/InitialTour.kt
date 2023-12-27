@@ -86,6 +86,7 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
     ) {
         when(currentPage.intValue){
             0 -> {
+                //CHOOSE LANGUAGE PAGE
                 ChooseLanguage(context, currentSize)
             }
             in 1 .. 3 -> {
@@ -114,25 +115,29 @@ fun InitialTour(rootNavController: NavHostController, preferencesManager: Prefer
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ){
-            OutlinedButton(
-                modifier = Modifier.width((currentSize + 60).dp),
-                shape = RoundedCornerShape(50),
-                border = BorderStroke(2.dp,Color.White),
-                onClick = {
-                    if(currentPage.intValue != 0){
-                        currentPage.intValue--
-                    }else{
-                        preferencesManager.saveBoolean("DoneInitialTour", true)
-                        doneWalkthrough.value = true
+            if(currentPage.intValue != 0){
+                OutlinedButton(
+                    modifier = Modifier.width((currentSize + 60).dp),
+                    shape = RoundedCornerShape(50),
+                    border = BorderStroke(2.dp,Color.White),
+                    onClick = {
+                        if(currentPage.intValue != 0){
+                            currentPage.intValue--
+                        }else{
+                            preferencesManager.saveBoolean("DoneInitialTour", true)
+                            doneWalkthrough.value = true
+                        }
                     }
-                }
-            ) {
-                Text(
-                    text = if(currentPage.intValue != 0) context.getString(R.string.back) else context.getString(R.string.skip),
-                    style = TextStyle(
-                        color = MaterialTheme.colorScheme.secondary
+                ) {
+                    Text(
+                        text = context.getString(R.string.back),
+                        style = TextStyle(
+                            color = MaterialTheme.colorScheme.secondary
+                        )
                     )
-                )
+                }
+            }else{
+                Spacer(modifier = Modifier.width((currentSize + 60).dp))
             }
             Spacer(modifier = Modifier.width((currentSize - 10).dp))
             for(i in 0..4){
@@ -459,7 +464,9 @@ private fun OutroSplash(rootNavController: NavHostController){
             .background(color = Color.Transparent)
     ) {
         LottieAnimation(
-            modifier = Modifier.fillMaxSize().scale(1.5f),
+            modifier = Modifier
+                .fillMaxSize()
+                .scale(1.5f),
             progress = progress,
             composition = composition.value
         )

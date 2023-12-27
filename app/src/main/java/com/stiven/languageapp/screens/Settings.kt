@@ -4,6 +4,7 @@ import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
 import android.os.LocaleList
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
@@ -18,6 +19,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,17 +34,54 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.LocaleListCompat
+import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
+import com.stiven.languageapp.navigation.Graph
 import com.stiven.languageapp.utils.Languages
-import java.util.Locale
+import com.stiven.languageapp.viewmodels.StudentViewModel
+import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Settings(){
+fun Settings(rootNavController: NavHostController, studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel){
     val context = LocalContext.current
     val screenSize = LocalConfiguration.current.screenHeightDp / 20
     Column(modifier = Modifier.fillMaxSize()){
         Spacer(modifier = Modifier.height((screenSize + 50).dp))
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = context.getString(R.string.play_walkthrough),
+                color = MaterialTheme.colorScheme.inversePrimary,
+                fontSize = (screenSize - 20).sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+            IconButton(
+                onClick = {
+                    rootNavController.popBackStack()
+                    rootNavController.navigate(Graph.TOUR)
+                },
+                modifier = Modifier.size((screenSize + 40).dp)
+            ) {
+                Icon(
+                    Icons.Rounded.PlayArrow,
+                    contentDescription = "PLAY",
+                    tint = MaterialTheme.colorScheme.inversePrimary,
+                    modifier = Modifier.size((screenSize + 40).dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height((screenSize - 20).dp))
         Row (
             modifier = Modifier
             .fillMaxWidth(),
@@ -97,9 +139,7 @@ fun Settings(){
                             )
                     )
                 }
-
             }
-
         }
     }
 }
@@ -117,16 +157,11 @@ fun changeLanguage(language: Languages, context: Context) {
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        // Method for android 13+
-        context.getSystemService(LocaleManager::class.java).applicationLocales = LocaleList.forLanguageTags(languageString)
+        context.getSystemService(LocaleManager::class.java).applicationLocales =
+            LocaleList.forLanguageTags(languageString)
     } else {
-        // Method for android 12-
-        val locale = Locale(languageString)
-        Locale.setDefault(locale)
-
-        val resources = context.resources
-        val configuration = resources.configuration
-        configuration.setLocale(locale)
-        context.createConfigurationContext(configuration)
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(languageString)
+        )
     }
 }
