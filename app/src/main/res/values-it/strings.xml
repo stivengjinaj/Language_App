@@ -37,7 +37,6 @@
     <string name="emergency_speech">Dizionario di emergenza</string>
     <string name="change_language">Cambia la lingua dell\'app</string>
     <string name="back">Indietro</string>
-    <string name="skip">Salta</string>
     <string name="done">Finito</string>
     <string name="point">Punto</string>
     <string name="points">Punti</string>
@@ -45,4 +44,6 @@
     <string name="page_2">Fai clic su questo pulsante per creare uno studente per te con la lingua che desideri imparare.</string>
     <string name="page_3">Fare clic su questo pulsante per utilizzare il dizionario per casi di emergenza.</string>
     <string name="page_4">Questo è il tuo account studente. Clicca sul nome per aprire il tuo portfolio personalizzato.</string>
+    <string name="play_walkthrough">Riproduci la guida iniziale</string>
+    <string name="alphabet">Alfabeto</string>
 </resources>
