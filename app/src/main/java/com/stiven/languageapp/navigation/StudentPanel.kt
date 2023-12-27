@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.view.StudentBottomBar
+import com.stiven.languageapp.viewmodels.LetterViewModel
+import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
@@ -17,6 +19,8 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * @param studentViewModel student's view-model.
  * @param textToSpeechViewModel text to speech view-model.
  * @param studentId id used to get student's information in order to personalize StudentPanel.
+ * @param speechToTextViewModel speech to text view-model.
+ * @param letterViewModel letter's view-model.
  * */
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -24,7 +28,9 @@ fun StudentPanel(
     rootNavController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
-    studentId: String
+    studentId: String,
+    speechToTextViewModel: SpeechToTextViewModel,
+    letterViewModel: LetterViewModel
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -32,6 +38,6 @@ fun StudentPanel(
             StudentBottomBar(navController = navController)
         }
     ) {
-        StudentNavGraph(rootNavController, navController, studentViewModel, textToSpeechViewModel, studentId)
+        StudentNavGraph(rootNavController, navController, studentViewModel, textToSpeechViewModel, studentId, speechToTextViewModel, letterViewModel)
     }
 }

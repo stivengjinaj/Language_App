@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.stiven.languageapp.model.BottomBarScreens
 import com.stiven.languageapp.screens.Classroom
+import com.stiven.languageapp.screens.Emergency
 import com.stiven.languageapp.screens.NewCourse
 import com.stiven.languageapp.screens.Settings
 import com.stiven.languageapp.viewmodels.StudentViewModel
@@ -107,7 +108,7 @@ fun BottomNavGraph(
                 )
             }
         ){
-            Settings()
+            Settings(rootNavController, studentViewModel, textToSpeechViewModel)
         }
 
         composable(
@@ -125,7 +126,7 @@ fun BottomNavGraph(
                 )
             }
         ){
-            //TODO
+            Emergency()
         }
     }
 }

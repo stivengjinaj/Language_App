@@ -35,7 +35,7 @@ fun MainPanel(
     rootNavController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
-    startingScreen: String
+    startingScreen: String,
 ) {
     val navController = rememberNavController()
     val screenSize = LocalConfiguration.current.screenWidthDp
