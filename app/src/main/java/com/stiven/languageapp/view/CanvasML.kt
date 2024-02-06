@@ -7,14 +7,16 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Undo
+import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.Icon
@@ -68,88 +70,131 @@ fun DrawingCanvas(letterToDraw: Char){
     val bitmapDrawing: MutableState<Bitmap?> = remember {
         mutableStateOf(null)
     }
+    val bitmapPhoto: MutableState<Bitmap?> = remember {
+        mutableStateOf(null)
+    }
     val letterRecognized = remember {
+        mutableStateOf(false)
+    }
+    val cameraDraw = remember {
         mutableStateOf(false)
     }
     val picture = remember { Picture() }
     if(!letterRecognized.value){
-        Row(
-            modifier = Modifier
-                .width(300.dp)
-                .height(300.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color.White)
-        ){
-            Canvas(
+        if(!cameraDraw.value){
+            Row(
                 modifier = Modifier
                     .width(300.dp)
                     .height(300.dp)
+                    .clip(RoundedCornerShape(20.dp))
                     .background(Color.White)
-                    .clipToBounds()
-                    .drawWithCache {
-                        val width = 1000
-                        val height = 1000
-                        onDrawWithContent {
-                            val pictureCanvas = androidx.compose.ui.graphics.Canvas(
-                                picture.beginRecording(
-                                    width,
-                                    height
+            ){
+                Canvas(
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(300.dp)
+                        .background(Color.White)
+                        .clipToBounds()
+                        .drawWithCache {
+                            val width = 1000
+                            val height = 1000
+                            onDrawWithContent {
+                                val pictureCanvas = androidx.compose.ui.graphics.Canvas(
+                                    picture.beginRecording(
+                                        width,
+                                        height
+                                    )
                                 )
-                            )
-                            draw(this, this.layoutDirection, pictureCanvas, this.size) {
-                                this@onDrawWithContent.drawContent()
-                            }
-                            picture.endRecording()
+                                draw(this, this.layoutDirection, pictureCanvas, this.size) {
+                                    this@onDrawWithContent.drawContent()
+                                }
+                                picture.endRecording()
 
-                            drawIntoCanvas { canvas -> canvas.nativeCanvas.drawPicture(picture) }
+                                drawIntoCanvas { canvas -> canvas.nativeCanvas.drawPicture(picture) }
+                            }
                         }
-                    }
-                    .pointerInput(true) {
-                        detectDragGestures { change, dragAmount ->
-                            change.consume()
-                            val line = Line(
-                                start = change.position - dragAmount,
-                                end = change.position
-                            )
-                            lines.add(line)
+                        .pointerInput(true) {
+                            detectDragGestures { change, dragAmount ->
+                                change.consume()
+                                val line = Line(
+                                    start = change.position - dragAmount,
+                                    end = change.position
+                                )
+                                lines.add(line)
+                            }
                         }
+                ) {
+                    lines.forEach { line ->
+                        drawLine(
+                            color = line.color,
+                            start = line.start,
+                            end = line.end,
+                            strokeWidth = line.strokeWidth.toPx(),
+                            cap = StrokeCap.Round
+                        )
                     }
-            ) {
-                lines.forEach { line ->
-                    drawLine(
-                        color = line.color,
-                        start = line.start,
-                        end = line.end,
-                        strokeWidth = line.strokeWidth.toPx(),
-                        cap = StrokeCap.Round
-                    )
                 }
             }
+        }else{
+            Camera(onPhotoCaptured = {
+                bitmapPhoto.value = it
+            })
+            if (bitmapPhoto.value != null){
+                val imageToProcess = InputImage.fromBitmap(bitmapPhoto.value!!, 0)
+                labeler.process(imageToProcess)
+                    .addOnSuccessListener { labels ->
+                        for (label in labels) {
+                            if (label.confidence >= 0.8f) {
+                                Log.d("LABEL", labelMap(label.index).toString())
+                                if(labelMap(label.index) == letterToDraw){
+                                    Log.d("RECOGNIZED CAMERA", "TRUE")
+                                    letterRecognized.value = true
+                                    bitmapPhoto.value = null
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.d("ML ERROR", e.message.toString())
+                    }
+                cameraDraw.value = false
+            }
         }
-        //CANVAS CONTROL BUTTONS
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+    }else{
+        LetterCorrect(letterRecognized)
+    }
+    //CONTROL PANEL
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (!cameraDraw.value) {
             //ERASE BUTTON
             IconButton(onClick = {
                 lines.clear()
+                bitmapPhoto.value = null
+                bitmapDrawing.value = null
             }) {
-                Icon(imageVector = Icons.Rounded.Cancel, contentDescription = "Erase all", tint = MaterialTheme.colorScheme.error)
+                Icon(
+                    imageVector = Icons.Rounded.Cancel,
+                    contentDescription = "Erase all",
+                    tint = MaterialTheme.colorScheme.error
+                )
             }
             Spacer(modifier = Modifier.width(20.dp))
             //VALIDATION BUTTON
             IconButton(onClick = {
                 bitmapDrawing.value = createBitmapFromPicture(picture)
-                if(bitmapDrawing.value != null){
+                if (bitmapDrawing.value != null) {
                     val imageToProcess = InputImage.fromBitmap(bitmapDrawing.value!!, 0)
                     labeler.process(imageToProcess)
                         .addOnSuccessListener { labels ->
                             for (label in labels) {
                                 if (label.confidence >= 0.8f) {
                                     Log.d("LABEL", labelMap(label.index).toString())
-                                    if(labelMap(label.index) == letterToDraw){
+                                    if (labelMap(label.index) == letterToDraw) {
                                         letterRecognized.value = true
                                         break
                                     }
@@ -161,26 +206,74 @@ fun DrawingCanvas(letterToDraw: Char){
                         }
                 }
             }) {
-                Icon(imageVector = Icons.Rounded.Check, contentDescription = "Validate", tint = Color.Green)
+                Icon(
+                    imageVector = Icons.Rounded.Check,
+                    contentDescription = "Validate",
+                    tint = Color.Green
+                )
+            }
+            Spacer(modifier = Modifier.width(20.dp))
+            IconButton(onClick = {
+                lines.clear()
+                bitmapDrawing.value = null
+                bitmapPhoto.value = null
+                cameraDraw.value = true
+            }) {
+                Icon(
+                    imageVector = Icons.Rounded.CameraAlt,
+                    contentDescription = "CAMERA CHECK",
+                    tint = Color.Blue
+                )
+            }
+        } else {
+            IconButton(onClick = {
+                cameraDraw.value = false
+            }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.Undo,
+                    contentDescription = "Go Back",
+                    tint = Color.Green
+                )
             }
         }
-    }else{
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(imageVector = Icons.Rounded.Check, contentDescription = "CORRECT", tint = Color.Green, modifier = Modifier.width(500.dp).height(500.dp).clip(
-                RoundedCornerShape(50)
-            ))
+    }
+}
+
+/**
+ * UI function to show a green signal for correctly written letters
+ *
+ * @param letterRecognized boolean that changes after 1 second
+ * */
+@Composable
+fun LetterCorrect(letterRecognized: MutableState<Boolean>){
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box (
+            modifier = Modifier
+                .clip(RoundedCornerShape(100))
+                .background(Color.Green)
+                .width(300.dp)
+                .height(300.dp)
+        ){
+            Icon(
+                imageVector = Icons.Rounded.Check,
+                contentDescription = "CORRECT",
+                tint = Color.White,
+                modifier = Modifier
+                    .width(300.dp)
+                    .height(300.dp)
+            )
         }
-        LaunchedEffect(letterRecognized.value) {
-            if (letterRecognized.value) {
-                // Wait for 1 second
-                delay(1000)
-                // Reset letterRecognized value to false after the delay
-                letterRecognized.value = false
-            }
+
+    }
+    LaunchedEffect(letterRecognized.value) {
+        if (letterRecognized.value) {
+            // Wait for 1 second
+            delay(1000)
+            // Reset letterRecognized value to false after the delay
+            letterRecognized.value = false
         }
     }
 }
