@@ -60,8 +60,16 @@ dependencies {
     val roomVersion = "2.6.1"
     val coroutines = "1.7.1"
     val accompanistVersion = "0.33.2-alpha"
+    val cameraxVersion = "1.4.0-alpha04"
+
 
     dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
+    implementation ("androidx.camera:camera-core:${cameraxVersion}")
+    implementation ("androidx.camera:camera-camera2:${cameraxVersion}")
+    implementation ("androidx.camera:camera-lifecycle:${cameraxVersion}")
+    implementation ("androidx.camera:camera-video:${cameraxVersion}")
+    implementation ("androidx.camera:camera-extensions:${cameraxVersion}")
+    implementation("androidx.camera:camera-view:${cameraxVersion}")
     implementation  ("io.ak1:drawbox:1.0.3")
     implementation ("com.google.mlkit:image-labeling-custom:17.0.2")
     implementation ("androidx.appcompat:appcompat:1.7.0-alpha03")
