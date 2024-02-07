@@ -1,19 +1,37 @@
 package com.stiven.languageapp.screens
 
+import android.graphics.RectF
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.PointMode
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -21,9 +39,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.stiven.languageapp.R
+import com.stiven.languageapp.model.Cloud
+import com.stiven.languageapp.utils.Clouds
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
+/**
+ * Composable that contains the Roadmap an its logics.
+ *
+ * @param rootNavController Root navigation controller of the application.
+ * @param navController Navigation controller for the student section.
+ * @param studentViewModel ViewModel of the current student.
+ * @param textToSpeechViewModel ViewModel that handles text-to-speech options.
+ * @param studentId Current student's id.
+ * */
 @Composable
 fun Lessons(
     rootNavController: NavHostController,
@@ -32,12 +64,13 @@ fun Lessons(
     textToSpeechViewModel: TextToSpeechViewModel,
     studentId: String
 ) {
+    val id = studentId.toInt()
+    val student = studentViewModel.dataList.value!!.find { it.id == id }
+    val screenSize = LocalConfiguration.current.screenWidthDp
+    val background = if(isSystemInDarkTheme()) R.drawable.cloudybackgrounddark else R.drawable.cloudybackgroundlight
     Column (
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        val id = studentId.toInt()
-        val student = studentViewModel.dataList.value!!.find { it.id == id }
-        val screenSize = LocalConfiguration.current.screenWidthDp
         //Row containing the app title
         Row(
             modifier = Modifier
@@ -56,36 +89,174 @@ fun Lessons(
                 )
             )
         }
-        Spacer(modifier = Modifier.height((screenSize/12-10).dp))
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ){
-            Column (
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = student!!.picture),
-                        contentDescription = "Student memoji",
-                        modifier = Modifier.size((LocalConfiguration.current.screenWidthDp/4+20).dp)
-                    )
-                }
-                Spacer(modifier = Modifier.height((screenSize/12-60).dp))
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    Text(
-                        student!!.name,
-                        fontSize = (screenSize/12-5).sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.inversePrimary
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .paint(
+                    painter = painterResource(id = background),
+                    contentScale = ContentScale.FillHeight
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = student!!.picture),
+                contentDescription = "Student memoji",
+                modifier = Modifier.size((LocalConfiguration.current.screenWidthDp/4+20).dp)
+            )
+            Spacer(modifier = Modifier.height((screenSize/12).dp))
+            RoadMap(screenSize)
+        }
+    }
+}
+
+/**
+ * The core of the Roadmap graphics.
+ *
+ * @param screenSize The width of the screen used to scale the view.
+ * */
+@Composable
+fun RoadMap(screenSize: Int) {
+    val roadColor = MaterialTheme.colorScheme.primary
+    val undoneCloud = painterResource(id = R.drawable.undone_checkpoint)
+    val doneCloud = painterResource(id = R.drawable.done_checkpoint)
+    val cloudCoordinates = listOf(
+        Cloud(Clouds.CLOUD1, Pair(screenSize * 2f, screenSize * 0.01f), checkCloudStatus()),
+        Cloud(Clouds.CLOUD2, Pair(screenSize * 0.7f, screenSize * 0.75f), checkCloudStatus()),
+        Cloud(Clouds.CLOUD3, Pair(screenSize * 1.27f, screenSize * 1.3f), checkCloudStatus()),
+        Cloud(Clouds.CLOUD4, Pair(screenSize * 0.55f, screenSize * 2.1f), checkCloudStatus())
+    )
+    val cloudOffsets = remember {
+        cloudCoordinates.map { Animatable(it.position.second) }
+    }
+    val roadCoordinates = listOf(
+        //ROAD 1
+        Offset(screenSize * 0.3f, screenSize * 0.2f),
+        Offset(screenSize * 1.9f, screenSize * 0.2f),
+
+        //CLOUD
+
+        //ROAD 2
+        Offset(screenSize * 2.2f, screenSize * 0.45f),
+        Offset(screenSize * 2.2f, screenSize * 0.9f),
+        //ROAD 3
+        Offset(screenSize * 2.2f, screenSize * 0.9f),
+        Offset(screenSize * 1.2f, screenSize * 0.9f),
+
+        //CLOUD
+
+        //ROAD 4
+        Offset(screenSize * 0.65f, screenSize * 0.9f),
+        Offset(screenSize * 0.3f, screenSize * 0.9f),
+        //ROAD 5
+        Offset(screenSize * 0.3f, screenSize * 0.9f),
+        Offset(screenSize * 0.3f, screenSize * 1.5f),
+        //ROAD 6
+        Offset(screenSize * 0.3f, screenSize * 1.5f),
+        Offset(screenSize * 1.2f, screenSize * 1.5f),
+
+        //CLOUD
+
+        //ROAD 7
+        Offset(screenSize * 1.75f, screenSize * 1.5f),
+        Offset(screenSize * 2.2f, screenSize * 1.5f),
+
+        //ROAD 8
+        Offset(screenSize * 2.2f, screenSize * 1.5f),
+        Offset(screenSize * 2.2f, screenSize * 2.3f),
+        //ROAD 9
+        Offset(screenSize * 2.2f, screenSize * 2.3f),
+        Offset(screenSize * 1f, screenSize * 2.3f),
+
+        //CLOUD
+
+        //ROAD 10
+        Offset(screenSize * 0.5f, screenSize * 2.3f),
+        Offset(screenSize * 0.3f, screenSize * 2.3f),
+        //ROAD 11
+        Offset(screenSize * 0.3f, screenSize * 2.3f),
+        Offset(screenSize * 0.3f, screenSize * 3f),
+        //ROAD 12
+        Offset(screenSize * 0.3f, screenSize * 3f),
+        Offset(screenSize * 5f, screenSize * 3f)
+    )
+
+    LaunchedEffect(Unit) {
+        cloudOffsets.forEachIndexed { index, animatable ->
+            launch {
+                while (true) {
+                    val targetValue = if (animatable.value < cloudCoordinates[index].position.second) cloudCoordinates[index].position.second + Random.nextDouble(
+                        5.0, 10.0
+                    ).toFloat()
+                    else cloudCoordinates[index].position.second - Random.nextDouble(
+                        5.0, 10.0
+                    ).toFloat()
+                    animatable.animateTo(
+                        targetValue = targetValue,
+                        animationSpec = tween(durationMillis = Random.nextInt(500,1000), easing = LinearEasing)
                     )
                 }
             }
         }
     }
+
+    Canvas(modifier = Modifier
+        .fillMaxSize()
+        .pointerInput(Unit) {
+            detectTapGestures {
+                // Handle clicks on the canvas
+                // Calculate the click position relative to each cloud's position
+                val clickOffset = Offset(it.x, it.y)
+                cloudCoordinates.forEachIndexed { index, (cloud, position) ->
+                    val cloudRect = Offset(position.first, position.second).toRect()
+                    if (cloudRect.contains(clickOffset.x, clickOffset.y)) {
+                        println("Cloud $cloud clicked!")
+                    }
+                }
+            }
+        }
+    ) {
+        // Draw the road lines
+        drawPoints(
+            points = roadCoordinates,
+            pointMode = PointMode.Lines,
+            color = roadColor,
+            strokeWidth = 50f,
+            cap = StrokeCap.Round
+        )
+
+        cloudOffsets.forEachIndexed{ index, offset ->
+            if(cloudCoordinates[index].status){
+                with(doneCloud){
+                    translate(left = cloudCoordinates[index].position.first, top = offset.value) {
+                        draw(size = Size(160f, 130f))
+                    }
+                }
+            }else{
+                with(undoneCloud){
+                    translate(left = cloudCoordinates[index].position.first, top = offset.value) {
+                        draw(size = Size(160f, 130f))
+                    }
+                }
+            }
+        }
+    }
 }
+/**
+ * TODO. Function that checks if the lesson of the cloud has been learnt.
+ *
+ * @return true if the student has learnt the lesson, false otherwise.
+ * */
+private fun checkCloudStatus(): Boolean{
+
+    return false
+}
+
+/**
+ * Function that handles the coordinates of the touching area for the clouds.
+ * */
+private fun Offset.toRect(size: Size = Size(160f, 130f)) = RectF(
+    this.x,
+    this.y,
+    this.x + size.width,
+    this.y + size.height
+)
