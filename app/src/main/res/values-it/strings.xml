@@ -4,7 +4,7 @@
     <string name="welcome_message">Benvenuto su TrioLingo</string>
     <string name="errorMessage">Inserisci il nome dello studente.</string>
     <string name="student_name_speech">Inserisci il nome dello studente</string>
-    <string name="new_course_title">Scegli il tuo corso</string>
+    <string name="new_course_title">Inizia il corso</string>
     <string name="student_name">Nome…</string>
     <string name="english">Inglese</string>
     <string name="english_button_speech">Corso per l\'inglese</string>
