@@ -5,7 +5,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -98,13 +96,13 @@ fun Lessons(
                 ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
+            /*Image(
                 painter = painterResource(id = student!!.picture),
                 contentDescription = "Student memoji",
                 modifier = Modifier.size((LocalConfiguration.current.screenWidthDp/4+20).dp)
-            )
-            Spacer(modifier = Modifier.height((screenSize/12).dp))
-            RoadMap(screenSize)
+            )*/
+            Spacer(modifier = Modifier.height((screenSize/6+30).dp))
+            RoadMap(screenSize, student!!.picture)
         }
     }
 }
@@ -115,10 +113,11 @@ fun Lessons(
  * @param screenSize The width of the screen used to scale the view.
  * */
 @Composable
-fun RoadMap(screenSize: Int) {
+fun RoadMap(screenSize: Int, picture: Int ) {
     val roadColor = MaterialTheme.colorScheme.primary
     val undoneCloud = painterResource(id = R.drawable.undone_checkpoint)
     val doneCloud = painterResource(id = R.drawable.done_checkpoint)
+    val avatar = painterResource(id = picture)
     val cloudCoordinates = listOf(
         Cloud(Clouds.CLOUD1, Pair(screenSize * 2f, screenSize * 0.01f), checkCloudStatus()),
         Cloud(Clouds.CLOUD2, Pair(screenSize * 0.7f, screenSize * 0.75f), checkCloudStatus()),
@@ -179,7 +178,13 @@ fun RoadMap(screenSize: Int) {
         Offset(screenSize * 0.3f, screenSize * 3f),
         Offset(screenSize * 5f, screenSize * 3f)
     )
-
+    val avatarCoordinates = listOf(
+        Pair(roadCoordinates[0].x - 70f, roadCoordinates[0].y - 100)
+    )
+    val avatarOffsets = remember {
+        avatarCoordinates.map { Animatable(it.second) }
+    }
+    //val avatarProgress = pointsToRoadMap(20, avatarCoordinates[0],roadCoordinates, cloudCoordinates.map { it.position })
     LaunchedEffect(Unit) {
         cloudOffsets.forEachIndexed { index, animatable ->
             launch {
@@ -199,6 +204,21 @@ fun RoadMap(screenSize: Int) {
         }
     }
 
+    LaunchedEffect(Unit) {
+        avatarOffsets.forEachIndexed { _, animatable ->
+            launch {
+                while(true){
+                    val avatarTargetValue = if (animatable.value < avatarCoordinates[0].second) avatarCoordinates[0].second + Random.nextDouble(5.0,10.0).toFloat()
+                    else avatarCoordinates[0].second - Random.nextDouble(5.0,10.0).toFloat()
+                    animatable.animateTo(
+                        targetValue = avatarTargetValue,
+                        animationSpec = tween(durationMillis = Random.nextInt(500,1000), easing = LinearEasing)
+                    )
+                }
+            }
+        }
+    }
+
     Canvas(modifier = Modifier
         .fillMaxSize()
         .pointerInput(Unit) {
@@ -206,7 +226,7 @@ fun RoadMap(screenSize: Int) {
                 // Handle clicks on the canvas
                 // Calculate the click position relative to each cloud's position
                 val clickOffset = Offset(it.x, it.y)
-                cloudCoordinates.forEachIndexed { index, (cloud, position) ->
+                cloudCoordinates.forEachIndexed { _, (cloud, position) ->
                     val cloudRect = Offset(position.first, position.second).toRect()
                     if (cloudRect.contains(clickOffset.x, clickOffset.y)) {
                         println("Cloud $cloud clicked!")
@@ -239,6 +259,13 @@ fun RoadMap(screenSize: Int) {
                 }
             }
         }
+        avatarOffsets.forEachIndexed{ _, offset ->
+            with(avatar){
+                translate(left = avatarCoordinates[0].first, top = offset.value - 100f){
+                    draw(size = Size(200f, 200f))
+                }
+            }
+        }
     }
 }
 /**
@@ -260,3 +287,19 @@ private fun Offset.toRect(size: Size = Size(160f, 130f)) = RectF(
     this.x + size.width,
     this.y + size.height
 )
+
+/**
+ * TODO: Function tha determines the position of the avatar base on student's points.
+ *
+ * @param points student's points.
+ * @param avatarCoordinates avatar coordinates.
+ * @param roadCoordinates road coordinates.
+ * @param cloudCoordinates cloud coordinates.
+ *
+ * @return Pair<Float,Float> the new position of the avatar.
+ * */
+private fun pointsToRoadMap(points: Int, avatarCoordinates: Pair<Float, Float>, roadCoordinates: List<Offset>, cloudCoordinates: List<Pair<Float,Float>>): Pair<Float,Float>{
+    val currentRoadCoordinates = Pair(avatarCoordinates.first+70f,avatarCoordinates.second+100f)
+    val step = currentRoadCoordinates.first / 50f
+    return Pair(currentRoadCoordinates.first + step, currentRoadCoordinates.second)
+}
