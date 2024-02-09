@@ -159,7 +159,7 @@ fun RoadMap(screenSize: Int, picture: Int ) {
         //ROAD 12
         Pair(Offset(screenSize * 0.3f, screenSize * 3f), Offset(screenSize * 5f, screenSize * 3f))
     )
-    val point = 110
+    val point = 120
     val avatarCoordinates = listOf(
         //TO GET POINTS
         pointsToPosition(point, roadCoordinates, cloudCoordinates).second
@@ -173,33 +173,8 @@ fun RoadMap(screenSize: Int, picture: Int ) {
         avatarCoordinates.map { Animatable(it.second) }
     }
     //Calculates the current position of the avatar and draws the road until it reaches the avatar
-    val partialCompletedRoad = listOf(
-        //Checks the road orientation
-        if(calculateRoadLength(Pair(
-                roadCoordinates[completedRoads].first,
-                Offset(avatarCoordinates[0].first,avatarCoordinates[0].second))
-        ).first == 0f) {
-            //Road is vertical, takes the last completed road and the offset goes to the avatar's position
-            Pair(
-                Offset(roadCoordinates[completedRoads].first.x,roadCoordinates[completedRoads].first.y),
-                Offset(roadCoordinates[completedRoads].first.y, avatarCoordinates[0].second)
-            )
-        }else {
-            //In case of horizontal road, if the avatar has reached a cloud the road drawing stops to the last road
-            //before the cloud.
-            if(cloudCoordinates.flatMap { listOf( it.position ) }.toList().contains(avatarCoordinates[0])){
-                Pair(
-                    Offset(roadCoordinates[completedRoads-1].first.x,roadCoordinates[completedRoads-1].first.y),
-                    Offset(roadCoordinates[completedRoads-1].second.x, roadCoordinates[completedRoads-1].second.y)
-                )
-            }else{
-                Pair(
-                    Offset(roadCoordinates[completedRoads].first.x,roadCoordinates[completedRoads].first.y),
-                    Offset(avatarCoordinates[0].first + 70, avatarCoordinates[0].second+100)
-                )
-            }
-        }
-    )
+    val partialCompletedRoad = partiallyCompletedRoad(completedRoads, roadCoordinates, cloudCoordinates, avatarCoordinates[0])
+
     //Clouds animation
     LaunchedEffect(Unit) {
         cloudOffsets.forEachIndexed { index, animatable ->
@@ -282,20 +257,55 @@ fun RoadMap(screenSize: Int, picture: Int ) {
         }
     }
 }
+/**
+ * Function that calculates the position of the avatar and the road he has
+ * completed. If the avatar has not completed the entire road, it returns the
+ * position of a new road that starts at beginning of the current road and it
+ * ends in the avatar's position, creating the a "following road" effect.
+ *
+ * @param completedRoads Number of completed roads.
+ * @param roadCoordinates Coordinates of all roads.
+ * @param cloudCoordinates Coordinates of all clouds.
+ * @param avatarCoordinates Coordinated of avatar.
+ *
+ * @return Coordinates of the following road.
+ * */
+fun partiallyCompletedRoad(
+    completedRoads: Int,
+    roadCoordinates: List<Pair<Offset, Offset>>,
+    cloudCoordinates: List<Cloud>,
+    avatarCoordinates: Pair<Float, Float>
+): List<Pair<Offset, Offset>>{
 
-fun customDraw(
-    drawScope: DrawScope,
-    points: List<Offset>,
-    color: Color,
-) {
-    drawScope.drawPoints(
-        points = points,
-        pointMode = PointMode.Lines,
-        color = color,
-        strokeWidth = 50f,
-        cap = StrokeCap.Round
+    //Checks the road orientation
+    return listOf(
+        if(calculateRoadLength(Pair(
+                roadCoordinates[completedRoads].first,
+                Offset(avatarCoordinates.first,avatarCoordinates.second))
+            ).first == 0f) {
+            //Road is vertical, takes the last completed road and the offset goes to the avatar's position
+            Pair(
+                Offset(roadCoordinates[completedRoads].first.x,roadCoordinates[completedRoads].first.y),
+                Offset(roadCoordinates[completedRoads].first.y, avatarCoordinates.second)
+            )
+        }else {
+            //In case of horizontal road, if the avatar has reached a cloud the road drawing stops to the last road
+            //before the cloud.
+            if(cloudCoordinates.flatMap { listOf( it.position ) }.toList().contains(avatarCoordinates)){
+                Pair(
+                    Offset(roadCoordinates[completedRoads-1].first.x,roadCoordinates[completedRoads-1].first.y),
+                    Offset(roadCoordinates[completedRoads-1].second.x, roadCoordinates[completedRoads-1].second.y)
+                )
+            }else{
+                Pair(
+                    Offset(roadCoordinates[completedRoads].first.x,roadCoordinates[completedRoads].first.y),
+                    Offset(avatarCoordinates.first + 70, avatarCoordinates.second+100)
+                )
+            }
+        }
     )
 }
+
 
 
 /**
@@ -460,6 +470,27 @@ private fun Offset.toRect(size: Size = Size(160f, 130f)) = RectF(
     this.x + size.width,
     this.y + size.height
 )
+
+/**
+ * DrawScope function that draws a list of offsets.
+ *
+ * @param drawScope DrawScope where to draw.
+ * @param points Offsets to draw.
+ * @param color Color of drawings.
+ * */
+fun customDraw(
+    drawScope: DrawScope,
+    points: List<Offset>,
+    color: Color,
+) {
+    drawScope.drawPoints(
+        points = points,
+        pointMode = PointMode.Lines,
+        color = color,
+        strokeWidth = 50f,
+        cap = StrokeCap.Round
+    )
+}
 
 /**
  * TODO. Function that checks if the lesson of the cloud has been learnt.
