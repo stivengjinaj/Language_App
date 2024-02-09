@@ -1,6 +1,6 @@
 package com.stiven.languageapp.utils
 
-enum class Clouds {
+enum class CloudType {
     CLOUD1,
     CLOUD2,
     CLOUD3,

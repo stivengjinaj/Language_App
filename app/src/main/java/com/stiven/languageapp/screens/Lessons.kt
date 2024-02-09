@@ -1,6 +1,7 @@
 package com.stiven.languageapp.screens
 
 import android.graphics.RectF
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -25,8 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -39,10 +42,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.model.Cloud
-import com.stiven.languageapp.utils.Clouds
+import com.stiven.languageapp.utils.CloudType
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 import kotlin.random.Random
 
 /**
@@ -96,11 +100,6 @@ fun Lessons(
                 ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            /*Image(
-                painter = painterResource(id = student!!.picture),
-                contentDescription = "Student memoji",
-                modifier = Modifier.size((LocalConfiguration.current.screenWidthDp/4+20).dp)
-            )*/
             Spacer(modifier = Modifier.height((screenSize/6+30).dp))
             RoadMap(screenSize, student!!.picture)
         }
@@ -108,83 +107,100 @@ fun Lessons(
 }
 
 /**
- * The core of the Roadmap graphics.
+ * The core of the Roadmap graphics. This composable contains a list of roads with offsets,
+ * clouds and the avatar that are drawn, animated and updated.
  *
  * @param screenSize The width of the screen used to scale the view.
+ * @param picture Avatar image.
  * */
 @Composable
 fun RoadMap(screenSize: Int, picture: Int ) {
     val roadColor = MaterialTheme.colorScheme.primary
+    val completedRoadColor = MaterialTheme.colorScheme.tertiary
     val undoneCloud = painterResource(id = R.drawable.undone_checkpoint)
     val doneCloud = painterResource(id = R.drawable.done_checkpoint)
     val avatar = painterResource(id = picture)
     val cloudCoordinates = listOf(
-        Cloud(Clouds.CLOUD1, Pair(screenSize * 2f, screenSize * 0.01f), checkCloudStatus()),
-        Cloud(Clouds.CLOUD2, Pair(screenSize * 0.7f, screenSize * 0.75f), checkCloudStatus()),
-        Cloud(Clouds.CLOUD3, Pair(screenSize * 1.27f, screenSize * 1.3f), checkCloudStatus()),
-        Cloud(Clouds.CLOUD4, Pair(screenSize * 0.55f, screenSize * 2.1f), checkCloudStatus())
+        Cloud(CloudType.CLOUD1, Pair(screenSize * 2f, screenSize * 0.01f), checkCloudStatus(), 50),
+        Cloud(CloudType.CLOUD2, Pair(screenSize * 0.7f, screenSize * 0.75f), checkCloudStatus(), 100),
+        Cloud(CloudType.CLOUD3, Pair(screenSize * 1.27f, screenSize * 1.3f), checkCloudStatus(), 150),
+        Cloud(CloudType.CLOUD4, Pair(screenSize * 0.55f, screenSize * 2.1f), checkCloudStatus(), 200)
     )
     val cloudOffsets = remember {
         cloudCoordinates.map { Animatable(it.position.second) }
     }
     val roadCoordinates = listOf(
         //ROAD 1
-        Offset(screenSize * 0.3f, screenSize * 0.2f),
-        Offset(screenSize * 1.9f, screenSize * 0.2f),
-
-        //CLOUD
-
+        Pair(Offset(screenSize * 0.3f, screenSize * 0.2f), Offset(screenSize * 1.9f, screenSize * 0.2f)),
+        //-----------------------------------------CLOUD------------------------------------------------------------
         //ROAD 2
-        Offset(screenSize * 2.2f, screenSize * 0.45f),
-        Offset(screenSize * 2.2f, screenSize * 0.9f),
+        Pair(Offset(screenSize * 2.2f, screenSize * 0.45f), Offset(screenSize * 2.2f, screenSize * 0.9f)),
         //ROAD 3
-        Offset(screenSize * 2.2f, screenSize * 0.9f),
-        Offset(screenSize * 1.2f, screenSize * 0.9f),
-
-        //CLOUD
-
+        Pair(Offset(screenSize * 2.2f, screenSize * 0.9f), Offset(screenSize * 1.2f, screenSize * 0.9f)),
+        //-----------------------------------------CLOUD------------------------------------------------------------
         //ROAD 4
-        Offset(screenSize * 0.65f, screenSize * 0.9f),
-        Offset(screenSize * 0.3f, screenSize * 0.9f),
+        Pair(Offset(screenSize * 0.65f, screenSize * 0.9f), Offset(screenSize * 0.3f, screenSize * 0.9f)),
         //ROAD 5
-        Offset(screenSize * 0.3f, screenSize * 0.9f),
-        Offset(screenSize * 0.3f, screenSize * 1.5f),
+        Pair(Offset(screenSize * 0.3f, screenSize * 0.9f), Offset(screenSize * 0.3f, screenSize * 1.5f)),
         //ROAD 6
-        Offset(screenSize * 0.3f, screenSize * 1.5f),
-        Offset(screenSize * 1.2f, screenSize * 1.5f),
-
-        //CLOUD
-
+        Pair(Offset(screenSize * 0.3f, screenSize * 1.5f), Offset(screenSize * 1.2f, screenSize * 1.5f)),
+        //-----------------------------------------CLOUD------------------------------------------------------------
         //ROAD 7
-        Offset(screenSize * 1.75f, screenSize * 1.5f),
-        Offset(screenSize * 2.2f, screenSize * 1.5f),
-
+        Pair(Offset(screenSize * 1.75f, screenSize * 1.5f), Offset(screenSize * 2.2f, screenSize * 1.5f)),
         //ROAD 8
-        Offset(screenSize * 2.2f, screenSize * 1.5f),
-        Offset(screenSize * 2.2f, screenSize * 2.3f),
+        Pair(Offset(screenSize * 2.2f, screenSize * 1.5f), Offset(screenSize * 2.2f, screenSize * 2.3f)),
         //ROAD 9
-        Offset(screenSize * 2.2f, screenSize * 2.3f),
-        Offset(screenSize * 1f, screenSize * 2.3f),
-
-        //CLOUD
-
+        Pair(Offset(screenSize * 2.2f, screenSize * 2.3f), Offset(screenSize * 1f, screenSize * 2.3f)),
+        //-----------------------------------------CLOUD------------------------------------------------------------
         //ROAD 10
-        Offset(screenSize * 0.5f, screenSize * 2.3f),
-        Offset(screenSize * 0.3f, screenSize * 2.3f),
+        Pair(Offset(screenSize * 0.5f, screenSize * 2.3f), Offset(screenSize * 0.3f, screenSize * 2.3f)),
         //ROAD 11
-        Offset(screenSize * 0.3f, screenSize * 2.3f),
-        Offset(screenSize * 0.3f, screenSize * 3f),
+        Pair(Offset(screenSize * 0.3f, screenSize * 2.3f), Offset(screenSize * 0.3f, screenSize * 3f)),
         //ROAD 12
-        Offset(screenSize * 0.3f, screenSize * 3f),
-        Offset(screenSize * 5f, screenSize * 3f)
+        Pair(Offset(screenSize * 0.3f, screenSize * 3f), Offset(screenSize * 5f, screenSize * 3f))
     )
+    val point = 110
     val avatarCoordinates = listOf(
-        Pair(roadCoordinates[0].x - 70f, roadCoordinates[0].y - 100)
+        //TO GET POINTS
+        pointsToPosition(point, roadCoordinates, cloudCoordinates).second
     )
+    val completedRoads = pointsToPosition(point, roadCoordinates, cloudCoordinates).first
+    val completedRoadsList = roadCoordinates
+        .subList(0, completedRoads)
+        .toList()
+
     val avatarOffsets = remember {
         avatarCoordinates.map { Animatable(it.second) }
     }
-    //val avatarProgress = pointsToRoadMap(20, avatarCoordinates[0],roadCoordinates, cloudCoordinates.map { it.position })
+    //Calculates the current position of the avatar and draws the road until it reaches the avatar
+    val partialCompletedRoad = listOf(
+        //Checks the road orientation
+        if(calculateRoadLength(Pair(
+                roadCoordinates[completedRoads].first,
+                Offset(avatarCoordinates[0].first,avatarCoordinates[0].second))
+        ).first == 0f) {
+            //Road is vertical, takes the last completed road and the offset goes to the avatar's position
+            Pair(
+                Offset(roadCoordinates[completedRoads].first.x,roadCoordinates[completedRoads].first.y),
+                Offset(roadCoordinates[completedRoads].first.y, avatarCoordinates[0].second)
+            )
+        }else {
+            //In case of horizontal road, if the avatar has reached a cloud the road drawing stops to the last road
+            //before the cloud.
+            if(cloudCoordinates.flatMap { listOf( it.position ) }.toList().contains(avatarCoordinates[0])){
+                Pair(
+                    Offset(roadCoordinates[completedRoads-1].first.x,roadCoordinates[completedRoads-1].first.y),
+                    Offset(roadCoordinates[completedRoads-1].second.x, roadCoordinates[completedRoads-1].second.y)
+                )
+            }else{
+                Pair(
+                    Offset(roadCoordinates[completedRoads].first.x,roadCoordinates[completedRoads].first.y),
+                    Offset(avatarCoordinates[0].first + 70, avatarCoordinates[0].second+100)
+                )
+            }
+        }
+    )
+    //Clouds animation
     LaunchedEffect(Unit) {
         cloudOffsets.forEachIndexed { index, animatable ->
             launch {
@@ -203,7 +219,7 @@ fun RoadMap(screenSize: Int, picture: Int ) {
             }
         }
     }
-
+    //Avatar animation
     LaunchedEffect(Unit) {
         avatarOffsets.forEachIndexed { _, animatable ->
             launch {
@@ -236,15 +252,12 @@ fun RoadMap(screenSize: Int, picture: Int ) {
         }
     ) {
         // Draw the road lines
-        drawPoints(
-            points = roadCoordinates,
-            pointMode = PointMode.Lines,
-            color = roadColor,
-            strokeWidth = 50f,
-            cap = StrokeCap.Round
-        )
-
+        customDraw(this, roadCoordinates.flatMap { listOf(it.first, it.second) }.toList(), roadColor)
+        customDraw(this, completedRoadsList.flatMap { listOf(it.first, it.second).toList() }, completedRoadColor)
+        customDraw(this, partialCompletedRoad.flatMap { listOf(it.first, it.second) }.toList(), completedRoadColor)
+        // Draw clouds
         cloudOffsets.forEachIndexed{ index, offset ->
+            //If cloud status is true (lesson finished), change cloud color.
             if(cloudCoordinates[index].status){
                 with(doneCloud){
                     translate(left = cloudCoordinates[index].position.first, top = offset.value) {
@@ -259,6 +272,7 @@ fun RoadMap(screenSize: Int, picture: Int ) {
                 }
             }
         }
+        //Draw avatar
         avatarOffsets.forEachIndexed{ _, offset ->
             with(avatar){
                 translate(left = avatarCoordinates[0].first, top = offset.value - 100f){
@@ -268,14 +282,173 @@ fun RoadMap(screenSize: Int, picture: Int ) {
         }
     }
 }
-/**
- * TODO. Function that checks if the lesson of the cloud has been learnt.
- *
- * @return true if the student has learnt the lesson, false otherwise.
- * */
-private fun checkCloudStatus(): Boolean{
 
-    return false
+fun customDraw(
+    drawScope: DrawScope,
+    points: List<Offset>,
+    color: Color,
+) {
+    drawScope.drawPoints(
+        points = points,
+        pointMode = PointMode.Lines,
+        color = color,
+        strokeWidth = 50f,
+        cap = StrokeCap.Round
+    )
+}
+
+
+/**
+ * Function tha determines the position of the avatar base on student's points.
+ *
+ * @param points student's points.
+ * @param roadCoordinates road coordinates.
+ * @param clouds cloud coordinates.
+ *
+ * @return Pair<Float,Float> the new position of the avatar.
+ * */
+private fun pointsToPosition(points: Int, roadCoordinates: List<Pair<Offset, Offset>>, clouds: List<Cloud>): Pair<Int,Pair<Float,Float>>{
+    val pointsRange: Pair<Int, Int>
+    val segmentIndex: Int
+    val completedRoads: Int
+    when (points) {
+        in 0..50 -> {
+            segmentIndex = 0
+            completedRoads = when (points) {
+                in 0..49 -> 0
+                else -> 1
+            }
+            pointsRange = Pair(0,50)
+        }
+        in 51..75 -> {
+            segmentIndex = 1
+            completedRoads = when (points) {
+                in 51..74 -> 1
+                else -> 2
+            }
+            pointsRange = Pair(51,75)
+        }
+        in 76..100 -> {
+            segmentIndex = 2
+            completedRoads = when (points) {
+                in 76..99 -> 2
+                else -> 3
+            }
+            pointsRange = Pair(76,100)
+        }
+        in 101..117 -> {
+            segmentIndex = 3
+            completedRoads = when (points) {
+                in 101..116 -> 3
+                else -> 4
+            }
+            pointsRange = Pair(101,117)
+        }
+        in 118..134 -> {
+            segmentIndex = 4
+            completedRoads = when (points) {
+                in 118..133 -> 4
+                else -> 5
+            }
+            pointsRange = Pair(118,134)
+        }
+        in 134..150 -> {
+            segmentIndex = 5
+            completedRoads = when (points) {
+                in 134..149 -> 5
+                else -> 6
+            }
+            pointsRange = Pair(134,150)
+        }
+        in 151..167 -> {
+            segmentIndex = 6
+            completedRoads = when (points) {
+                in 151..166 -> 6
+                else -> 7
+            }
+            pointsRange = Pair(151,167)
+        }
+        in 168..184 -> {
+            segmentIndex = 7
+            completedRoads = when (points) {
+                in 168..183 -> 7
+                else -> 8
+            }
+            pointsRange = Pair(168,184)
+        }
+        in 185..200 -> {
+            segmentIndex = 8
+            completedRoads = when (points) {
+                in 185..199 -> 8
+                else -> 9
+            }
+            pointsRange = Pair(185,200)
+        }
+        else -> {
+            segmentIndex = 8
+            completedRoads = 9
+            pointsRange = Pair(200,200)
+        }
+    }
+    val cloudIndex = when (segmentIndex){
+        0 -> 0
+        in 1..2 -> 1
+        in 3..5 -> 2
+        in 6..8 -> 3
+        else -> {3}
+    }
+    if(points == clouds[cloudIndex].cloudThreshold){
+        return Pair(completedRoads, Pair(clouds[cloudIndex].position.first,clouds[cloudIndex].position.second))
+    }
+    val roadSegment = roadCoordinates[segmentIndex]
+    val segmentLength = calculateRoadLength(roadSegment)
+
+    //The road is horizontal, otherwise vertical.
+    return if(segmentLength.second == 0f){
+        val xOffset = mapValue(points, pointsRange, Pair(roadSegment.first.x,roadSegment.second.x))
+        Pair(completedRoads, Pair(xOffset - 70f, roadSegment.second.y - 100f))
+    } else{
+        val yOffset = mapValue(points, pointsRange, Pair(roadSegment.first.y,roadSegment.second.y))
+        Pair(completedRoads, Pair(roadSegment.second.x - 70f, yOffset - 100f))
+    }
+}
+
+/**
+ * Function returns an Int value in an interval, mapped in another interval of floats. The output
+ * is a float coordinate that will be used as offset from another starting point and it won't exceed
+ * the toRange maximum.
+ *
+ * @param value Value to map.
+ * @param fromRange Pair<Int,Int> range where value currently is.
+ * @param toRange Pair<Float,Float> range where the value is mapped.
+ *
+ * @return Float-type offset.
+ * */
+private fun mapValue(value: Int, fromRange: Pair<Int, Int>, toRange: Pair<Float, Float>): Float {
+    val (fromMin, fromMax) = fromRange
+    val (toMin, toMax) = toRange
+
+    // Make sure value is within the fromRange
+    val clampedValue = value.coerceIn(fromMin, fromMax)
+
+    // Calculate the ratio of how far along the fromRange the value is
+    val ratio = (clampedValue - fromMin).toFloat() / (fromMax - fromMin)
+
+    // Map the ratio to the toRange
+    return toMin + ratio * (toMax - toMin)
+}
+
+/**
+ * Function that calculates the horizontal and vertical length of the road.
+ *
+ * @param positions the coordinates of the road to calculate.
+ * @return Pair of <Float, Float>. The first float is the horizontal distance, while the second
+ *         one is the vertical distance. If the road is horizontal, the second float will be 0.
+ *         Same thing for the first float in case of vertical road.
+ * */
+private fun calculateRoadLength(positions: Pair<Offset,Offset>): Pair<Float, Float>{
+    Log.d("SEGMENT LENGTH", "X: ${abs(positions.first.x - positions.second.x)} Y: ${abs(positions.first.y - positions.second.y)}")
+    return Pair(abs(positions.first.x - positions.second.x), abs(positions.first.y - positions.second.y))
 }
 
 /**
@@ -289,17 +462,11 @@ private fun Offset.toRect(size: Size = Size(160f, 130f)) = RectF(
 )
 
 /**
- * TODO: Function tha determines the position of the avatar base on student's points.
+ * TODO. Function that checks if the lesson of the cloud has been learnt.
  *
- * @param points student's points.
- * @param avatarCoordinates avatar coordinates.
- * @param roadCoordinates road coordinates.
- * @param cloudCoordinates cloud coordinates.
- *
- * @return Pair<Float,Float> the new position of the avatar.
+ * @return true if the student has learnt the lesson, false otherwise.
  * */
-private fun pointsToRoadMap(points: Int, avatarCoordinates: Pair<Float, Float>, roadCoordinates: List<Offset>, cloudCoordinates: List<Pair<Float,Float>>): Pair<Float,Float>{
-    val currentRoadCoordinates = Pair(avatarCoordinates.first+70f,avatarCoordinates.second+100f)
-    val step = currentRoadCoordinates.first / 50f
-    return Pair(currentRoadCoordinates.first + step, currentRoadCoordinates.second)
+private fun checkCloudStatus(): Boolean{
+
+    return false
 }
