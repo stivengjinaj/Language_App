@@ -24,7 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.navigation.RootNavGraph
 import com.stiven.languageapp.ui.theme.LanguageAppTheme
 import com.stiven.languageapp.utils.PreferencesManager
-import com.stiven.languageapp.utils.SpeechToTextImpl
+import com.stiven.languageapp.model.SpeechToTextImpl
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel

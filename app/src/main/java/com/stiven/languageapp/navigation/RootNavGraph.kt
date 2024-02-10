@@ -49,7 +49,7 @@ fun RootNavGraph(
         }
         composable(Graph.MAIN+"/{screen}"){backStackEntry ->
             backStackEntry.arguments!!.getString("screen")
-                ?.let { MainPanel(navController, studentViewModel, textToSpeechViewModel, it) }
+                ?.let { MainPanel(navController, studentViewModel, textToSpeechViewModel, speechToTextViewModel, it) }
         }
         composable(Graph.LESSONS+"/{studentId}"){backStackEntry ->
             backStackEntry.arguments!!.getString("studentId")

@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,10 +39,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
@@ -87,10 +86,8 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     var studentName by rememberSaveable { mutableStateOf("") }
     var studentNameError by rememberSaveable { mutableStateOf(false) }
     val errorMessage = stringResource(R.string.errorMessage)
-    var englishOption by rememberSaveable { mutableStateOf(true) }
-    var italianOption by rememberSaveable { mutableStateOf(false) }
-    var frenchOption by rememberSaveable { mutableStateOf(false) }
-    var chosenCourse by rememberSaveable { mutableStateOf((Languages.ENGLISH)) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val chosenCourse by rememberSaveable { mutableStateOf((Languages.ITALIAN)) }
     var existingStudentDialog by rememberSaveable { mutableStateOf(false) }
     var maxStudentDialog by rememberSaveable { mutableStateOf(false) }
     val screenHeight = LocalConfiguration.current.screenHeightDp / 20
@@ -194,193 +191,31 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
             )
         }
         Spacer(modifier = Modifier.height((screenHeight).dp))
-        //Row containing the english button
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            OutlinedButton(
-                modifier = Modifier.width((screenHeight + 280).dp),
-                onClick = {
-                    frenchOption = false
-                    englishOption = true
-                    italianOption = false
-                    chosenCourse = Languages.ENGLISH
-                },
-                shape = RoundedCornerShape(50),
-                border = BorderStroke(
-                    3.dp,
-                    if (englishOption) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
-                ),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            ) {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .combinedClickable(
-                        onClick = {
-                            frenchOption = false
-                            englishOption = true
-                            italianOption = false
-                            chosenCourse = Languages.ENGLISH
-                        },
-                        onLongClick = {
-                            textToSpeechViewModel.textToSpeech(
-                                context, context.getString(
-                                    R.string.english_button_speech
-                                )
-                            )
-                        }
-                    ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(modifier = Modifier.size((screenHeight - 10).dp)) {
-                        Image(
-                            painter = painterResource(id = R.drawable.gb),
-                            "GB FLAG",
-                            modifier = Modifier
-                                .size((screenHeight - 10).dp)
-                                .clip(RoundedCornerShape(20))
-                        )
-                    }
-                    Text(
-                        stringResource(R.string.english),
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontSize = (screenHeight - 17).sp,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        modifier = Modifier.padding((screenHeight + 35).dp, 0.dp, 0.dp, 0.dp)
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height((screenHeight).dp))
         //Row containing the italian button
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            OutlinedButton(
-                modifier = Modifier.width((screenHeight + 280).dp),
-                onClick = {
-                    frenchOption = false
-                    englishOption = false
-                    italianOption = true
-                    chosenCourse = Languages.ITALIAN
-                },
-                shape = RoundedCornerShape(50),
-                border = BorderStroke(
-                    3.dp,
-                    if (italianOption) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
-                ),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            ) {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .combinedClickable(
-                        onClick = {
-                            frenchOption = false
-                            englishOption = false
-                            italianOption = true
-                            chosenCourse = Languages.ITALIAN
-                        },
-                        onLongClick = {
-                            textToSpeechViewModel.textToSpeech(
-                                context, context.getString(
-                                    R.string.italian_button_speech
+            Box(modifier = Modifier.size((screenHeight * 5).dp)) {
+                Image(
+                    painter = painterResource(id = R.drawable.it),
+                    "ITALIAN FLAG",
+                    modifier = Modifier
+                        .size((screenHeight * 5).dp)
+                        .combinedClickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                            onClick = {
+
+                            },
+                            onLongClick = {
+                                textToSpeechViewModel.textToSpeech(
+                                    context,
+                                    context.getString(R.string.italian_button_speech)
                                 )
-                            )
-                        }
-                    ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(modifier = Modifier.size((screenHeight - 10).dp)) {
-                        Image(
-                            painter = painterResource(id = R.drawable.it),
-                            "ITALIAN FLAG",
-                            modifier = Modifier
-                                .size((screenHeight - 10).dp)
-                                .clip(RoundedCornerShape(20))
+                            }
                         )
-                    }
-                    Text(
-                        stringResource(R.string.italian),
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontSize = (screenHeight - 17).sp,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding((screenHeight + 35).dp, 0.dp, 0.dp, 0.dp)
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height((screenHeight).dp))
-        //Row containing the french button
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            OutlinedButton(
-                modifier = Modifier.width((screenHeight + 280).dp),
-                onClick = {
-                    frenchOption = true
-                    englishOption = false
-                    italianOption = false
-                    chosenCourse = Languages.FRENCH
-                },
-                shape = RoundedCornerShape(50),
-                border = BorderStroke(
-                    3.dp,
-                    if (frenchOption) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
-                ),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
                 )
-            ) {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .combinedClickable(
-                        onClick = {
-                            frenchOption = true
-                            englishOption = false
-                            italianOption = false
-                            chosenCourse = Languages.FRENCH
-                        },
-                        onLongClick = {
-                            textToSpeechViewModel.textToSpeech(
-                                context, context.getString(
-                                    R.string.french_button_speech
-                                )
-                            )
-                        }
-                    ),
-                    verticalAlignment = Alignment.CenterVertically) {
-                    Box(modifier = Modifier.size((screenHeight - 10).dp)) {
-                        Image(
-                            painter = painterResource(id = R.drawable.fr),
-                            "FRENCH FLAG",
-                            modifier = Modifier
-                                .size((screenHeight - 10).dp)
-                                .clip(RoundedCornerShape(20))
-                        )
-                    }
-                    Text(
-                        stringResource(R.string.french),
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontSize = (screenHeight - 17).sp,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding((screenHeight + 35).dp, 0.dp, 0.dp, 0.dp)
-                    )
-                }
             }
         }
         Spacer(modifier = Modifier.height(screenHeight.dp))
@@ -413,6 +248,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             } else if (!studentViewModel.userCourseExists(studentToInsert)) {
                                 Log.d("STUDENT", "STUDENT INSERTED")
                                 studentViewModel.insertStudent(studentToInsert)
+                                studentName = ""
                                 navController.navigate(BottomBarScreens.Classroom.route)
                             } else {
                                 existingStudentDialog = true

@@ -11,6 +11,7 @@ import com.stiven.languageapp.screens.Classroom
 import com.stiven.languageapp.screens.Emergency
 import com.stiven.languageapp.screens.NewCourse
 import com.stiven.languageapp.screens.Settings
+import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
@@ -31,6 +32,7 @@ fun BottomNavGraph(
     navController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
+    speechToTextViewModel: SpeechToTextViewModel,
     startingScreen: String
 ) {
     val startingDestination = when(startingScreen){

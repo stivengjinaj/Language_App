@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.view.BottomBarView
+import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
@@ -35,6 +36,7 @@ fun MainPanel(
     rootNavController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
+    speechToTextViewModel: SpeechToTextViewModel,
     startingScreen: String,
 ) {
     val navController = rememberNavController()
@@ -62,6 +64,6 @@ fun MainPanel(
             BottomBarView(navController = navController)
         }
     ) {
-        BottomNavGraph(rootNavController, navController, studentViewModel, textToSpeechViewModel, startingScreen)
+        BottomNavGraph(rootNavController, navController, studentViewModel, textToSpeechViewModel, speechToTextViewModel, startingScreen)
     }
 }

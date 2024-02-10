@@ -52,7 +52,7 @@ fun BottomBarView(navController: NavHostController){
         backgroundColor = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp))
-            .height((currentSize / 6 + 8).dp)
+            .height((currentSize / 6 ).dp)
     ){
         screens.forEach { screen ->
             AddItem(
@@ -87,7 +87,7 @@ fun RowScope.AddItem(
             Icon(
                 modifier = Modifier
                     .size((currentSize / 11).dp)
-                    .padding(0.dp, 0.dp, 0.dp, 10.dp),
+                    .padding(0.dp, 5.dp, 0.dp, 4.dp),
                 painter = painterResource(id = screen.icon),
                 contentDescription = context.getString(screen.title),
                 tint =
@@ -104,7 +104,7 @@ fun RowScope.AddItem(
                 text = context.getString(screen.title),
                 style = TextStyle(
                     color = if (isSelected) Color.White else if (screen == BottomBarScreens.Logout) Color(0xFFFF2626) else Color(0xFFE2DCDC),
-                    fontSize = (currentSize / 12 - 22).sp,
+                    fontSize = (currentSize / 12 - 23).sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     lineBreak = LineBreak.Simple
