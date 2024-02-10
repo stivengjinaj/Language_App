@@ -16,6 +16,8 @@ private val lightColorScheme = lightColorScheme(
     background = backgroundColorLight,
     //FONT COLOR
     secondary = fontColor,
+    //ICONS
+    onSecondary = mainColorLight,
     //SELECT OPTION COLOR
     tertiary = selectColor,
     //RED COLOR
@@ -29,6 +31,8 @@ private val darkColorScheme = darkColorScheme(
     background = backgroundColorDark,
     //FONT COLOR
     secondary = fontColor,
+    //ICONS
+    onSecondary = fontColor,
     //SELECT OPTION COLOR
     tertiary = selectColorDark,
     //RED COLOR
