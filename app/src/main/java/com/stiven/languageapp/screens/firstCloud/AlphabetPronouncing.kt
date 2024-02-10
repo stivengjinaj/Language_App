@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.navigation.Graph
-import com.stiven.languageapp.utils.LogoBannerNavigation
+import com.stiven.languageapp.view.LogoBannerNavigation
 import com.stiven.languageapp.viewmodels.SpeechActions
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel

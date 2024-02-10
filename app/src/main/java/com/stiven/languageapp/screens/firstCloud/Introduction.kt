@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.navigation.FirstCloudGraph
 import com.stiven.languageapp.navigation.Graph
-import com.stiven.languageapp.utils.LogoBannerNavigation
+import com.stiven.languageapp.view.LogoBannerNavigation
 
 /**
  * Introduction to the exercises taught in this section.

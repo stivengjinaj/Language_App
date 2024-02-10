@@ -35,7 +35,7 @@ import com.stiven.languageapp.R
 import com.stiven.languageapp.model.Cloud
 import com.stiven.languageapp.navigation.FirstCloudGraph
 import com.stiven.languageapp.utils.CloudType
-import com.stiven.languageapp.utils.LogoBanner
+import com.stiven.languageapp.view.LogoBanner
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
