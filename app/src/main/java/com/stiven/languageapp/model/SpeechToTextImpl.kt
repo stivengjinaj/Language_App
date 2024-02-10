@@ -1,4 +1,4 @@
-package com.stiven.languageapp.utils
+package com.stiven.languageapp.model
 
 import android.content.Context
 import android.content.Intent

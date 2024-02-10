@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.screens.Lessons
 import com.stiven.languageapp.model.BottomBarScreens
 import com.stiven.languageapp.screens.Alphabet
@@ -39,7 +40,17 @@ fun StudentNavGraph(
         startDestination = BottomBarScreens.Lessons.route
     ){
         composable(route = BottomBarScreens.Lessons.route){
-            Lessons(rootNavController, navController, studentViewModel, textToSpeechViewModel, studentId)
+            Lessons(rootNavController, navController, studentViewModel, textToSpeechViewModel, speechToTextViewModel, studentId)
+        }
+        composable(route = FirstCloudGraph.FIRST_CLOUD){
+            FirstCloudNavGraph(
+                studentId = studentId,
+                rootNavController = rootNavController,
+                studentViewModel =studentViewModel ,
+                navController = rememberNavController(),
+                textToSpeechViewModel = textToSpeechViewModel,
+                speechToTextViewModel = speechToTextViewModel
+            )
         }
 
         composable(route = BottomBarScreens.Exercises.route){

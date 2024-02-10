@@ -1,23 +1,17 @@
 package com.stiven.languageapp.screens
 
 import android.graphics.RectF
-import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -35,14 +29,14 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.model.Cloud
+import com.stiven.languageapp.navigation.FirstCloudGraph
 import com.stiven.languageapp.utils.CloudType
+import com.stiven.languageapp.utils.LogoBanner
+import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import kotlinx.coroutines.launch
@@ -64,6 +58,7 @@ fun Lessons(
     navController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
+    speechToTextViewModel: SpeechToTextViewModel,
     studentId: String
 ) {
     val id = studentId.toInt()
@@ -74,23 +69,8 @@ fun Lessons(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         //Row containing the app title
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-                .height((screenSize / 6).dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "TrioLingo",
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontSize = (screenSize / 12).sp,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-        }
+        LogoBanner(screenSize)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -101,7 +81,7 @@ fun Lessons(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height((screenSize/6+30).dp))
-            RoadMap(screenSize, student!!.picture)
+            RoadMap(screenSize, student!!.picture, navController)
         }
     }
 }
@@ -112,9 +92,10 @@ fun Lessons(
  *
  * @param screenSize The width of the screen used to scale the view.
  * @param picture Avatar image.
+ *
  * */
 @Composable
-fun RoadMap(screenSize: Int, picture: Int ) {
+fun RoadMap(screenSize: Int, picture: Int, navController: NavHostController) {
     val roadColor = MaterialTheme.colorScheme.primary
     val completedRoadColor = MaterialTheme.colorScheme.tertiary
     val undoneCloud = painterResource(id = R.drawable.undone_checkpoint)
@@ -159,7 +140,7 @@ fun RoadMap(screenSize: Int, picture: Int ) {
         //ROAD 12
         Pair(Offset(screenSize * 0.3f, screenSize * 3f), Offset(screenSize * 5f, screenSize * 3f))
     )
-    val point = 120
+    val point = 20
     val avatarCoordinates = listOf(
         //TO GET POINTS
         pointsToPosition(point, roadCoordinates, cloudCoordinates).second
@@ -220,7 +201,23 @@ fun RoadMap(screenSize: Int, picture: Int ) {
                 cloudCoordinates.forEachIndexed { _, (cloud, position) ->
                     val cloudRect = Offset(position.first, position.second).toRect()
                     if (cloudRect.contains(clickOffset.x, clickOffset.y)) {
-                        println("Cloud $cloud clicked!")
+                        when (cloud) {
+                            CloudType.CLOUD1 -> {
+                                navController.navigate(FirstCloudGraph.FIRST_CLOUD)
+                            }
+
+                            CloudType.CLOUD2 -> {
+
+                            }
+
+                            CloudType.CLOUD3 -> {
+
+                            }
+
+                            CloudType.CLOUD4 -> {
+
+                            }
+                        }
                     }
                 }
             }
@@ -457,7 +454,6 @@ private fun mapValue(value: Int, fromRange: Pair<Int, Int>, toRange: Pair<Float,
  *         Same thing for the first float in case of vertical road.
  * */
 private fun calculateRoadLength(positions: Pair<Offset,Offset>): Pair<Float, Float>{
-    Log.d("SEGMENT LENGTH", "X: ${abs(positions.first.x - positions.second.x)} Y: ${abs(positions.first.y - positions.second.y)}")
     return Pair(abs(positions.first.x - positions.second.x), abs(positions.first.y - positions.second.y))
 }
 

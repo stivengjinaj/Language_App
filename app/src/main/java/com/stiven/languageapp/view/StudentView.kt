@@ -45,7 +45,12 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun StudentView(rootNavController: NavHostController, student: Student, studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel) {
+fun StudentView(
+    rootNavController: NavHostController,
+    student: Student,
+    studentViewModel: StudentViewModel,
+    textToSpeechViewModel: TextToSpeechViewModel
+) {
     val screenSize = LocalConfiguration.current.screenWidthDp
     val context = LocalContext.current
     Row (
@@ -79,14 +84,6 @@ fun StudentView(rootNavController: NavHostController, student: Student, studentV
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.inversePrimary,
                     fontSize = (screenSize/12-10).sp,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-            Text(
-                text = student.course.toString().replaceFirstChar(Char::titlecase),
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.inversePrimary,
-                    fontSize = (screenSize/12-18).sp,
                     fontWeight = FontWeight.Bold
                 )
             )

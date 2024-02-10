@@ -34,7 +34,7 @@ fun StudentBottomBar(navController: NavHostController) {
         backgroundColor = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp))
-            .height((currentSize / 6 + 8).dp)
+            .height((currentSize / 6).dp)
     ){
         screens.forEach { screen ->
             AddItem(
