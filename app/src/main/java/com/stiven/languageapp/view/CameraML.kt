@@ -11,24 +11,28 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CameraAlt
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -42,7 +46,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.stiven.languageapp.R
 import java.util.concurrent.Executor
 
 
@@ -53,19 +56,25 @@ import java.util.concurrent.Executor
  * */
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun Camera(onPhotoCaptured: (Bitmap) -> Unit){
+fun CameraML(onPhotoCaptured: (Bitmap) -> Unit){
     val capturedImage: MutableState<Bitmap?> = remember {
         mutableStateOf(null)
     }
     val cameraPermissionState: PermissionState = rememberPermissionState(Manifest.permission.CAMERA)
-    CameraView(
-        cameraPermissionState.status.isGranted,
-        onPhotoCaptured = {
-            capturedImage.value = it
-            onPhotoCaptured(it)
-        },
-        onRequestPermission = cameraPermissionState::launchPermissionRequest
-    )
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        CameraView(
+            cameraPermissionState.status.isGranted,
+            onPhotoCaptured = {
+                capturedImage.value = it
+                onPhotoCaptured(it)
+            },
+            onRequestPermission = cameraPermissionState::launchPermissionRequest
+        )
+    }
 }
 
 /**
@@ -93,11 +102,18 @@ private fun CameraView(
             .width(300.dp)
             .clip(RoundedCornerShape(20.dp)),
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                text = { Text(text = context.getString(R.string.check)) },
-                onClick = { capturePhoto(context, cameraController, onPhotoCaptured) },
-                icon = { Icon(imageVector = Icons.Rounded.CameraAlt, contentDescription = "Camera capture icon") }
-            )
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                onClick = {
+                    capturePhoto(context, cameraController, onPhotoCaptured)
+                }
+            ) {
+                Icon(
+                    tint = Color.White,
+                    imageVector = Icons.Rounded.CameraAlt,
+                    contentDescription = "Camera capture icon"
+                )
+            }
         },
         floatingActionButtonPosition = FabPosition.Center
     ) { paddingValues: PaddingValues ->

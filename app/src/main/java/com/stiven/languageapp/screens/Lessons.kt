@@ -33,7 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.model.Cloud
-import com.stiven.languageapp.navigation.FirstCloudGraph
+import com.stiven.languageapp.navigation.FirstCloudRoutes
+import com.stiven.languageapp.navigation.SecondCloudNavGraph
 import com.stiven.languageapp.utils.CloudType
 import com.stiven.languageapp.view.LogoBanner
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
@@ -215,11 +216,11 @@ fun RoadMap(
                     if (cloudRect.contains(clickOffset.x, clickOffset.y)) {
                         when (cloud) {
                             CloudType.CLOUD1 -> {
-                                navController.navigate(FirstCloudGraph.FIRST_CLOUD)
+                                navController.navigate(FirstCloudRoutes.FIRST_CLOUD)
                             }
 
                             CloudType.CLOUD2 -> {
-
+                                navController.navigate(SecondCloudNavGraph.SECOND_CLOUD)
                             }
 
                             CloudType.CLOUD3 -> {

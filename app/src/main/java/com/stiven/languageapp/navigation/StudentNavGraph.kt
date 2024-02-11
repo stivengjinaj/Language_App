@@ -45,18 +45,27 @@ fun StudentNavGraph(
         composable(route = BottomBarScreens.Lessons.route){
             Lessons(rootNavController, navController, studentViewModel, textToSpeechViewModel, speechToTextViewModel, studentId)
         }
-        composable(route = FirstCloudGraph.FIRST_CLOUD){
+        composable(route = FirstCloudRoutes.FIRST_CLOUD){
             FirstCloudNavGraph(
                 studentId = studentId,
                 rootNavController = rootNavController,
-                studentViewModel =studentViewModel ,
+                studentViewModel = studentViewModel ,
                 navController = rememberNavController(),
                 textToSpeechViewModel = textToSpeechViewModel,
                 speechToTextViewModel = speechToTextViewModel,
                 lettersLearntViewModel = lettersLearntViewModel
             )
         }
-
+        composable(route = SecondCloudNavGraph.SECOND_CLOUD){
+            SecondCloudNavGraph(
+                studentId = studentId,
+                rootNavController = rootNavController,
+                studentViewModel = studentViewModel,
+                navController = rememberNavController(),
+                textToSpeechViewModel = textToSpeechViewModel,
+                lettersLearntViewModel = lettersLearntViewModel
+            )
+        }
         composable(route = BottomBarScreens.Exercises.route){
             Alphabet(letterViewModel, speechToTextViewModel)
         }

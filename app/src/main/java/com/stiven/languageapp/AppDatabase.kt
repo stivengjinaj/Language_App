@@ -16,7 +16,7 @@ import com.stiven.languageapp.model.Word
 /**
  * Abstract class that will be used to create the database.
  * */
-@Database(entities = [Word::class, Student::class, Letter::class, LetterLearnt::class], version = 4, exportSchema = false)
+@Database(entities = [Word::class, Student::class, Letter::class, LetterLearnt::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun wordDao(): WordDao
     abstract fun studentDao(): StudentDao

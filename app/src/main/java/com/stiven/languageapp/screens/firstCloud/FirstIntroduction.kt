@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
-import com.stiven.languageapp.navigation.FirstCloudGraph
+import com.stiven.languageapp.navigation.FirstCloudRoutes
 import com.stiven.languageapp.navigation.Graph
 import com.stiven.languageapp.view.LogoBannerNavigation
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -51,7 +51,7 @@ import kotlinx.coroutines.delay
  * @param studentId Student's id.
  * */
 @Composable
-fun Introduction(
+fun FirstIntroduction(
     navController: NavHostController,
     rootNavController: NavHostController,
     textToSpeechViewModel: TextToSpeechViewModel,
@@ -145,7 +145,7 @@ fun Introduction(
                             focusIndex.intValue += 1
                         }
                         2 -> {
-                            navController.navigate(FirstCloudGraph.ALPHABET_PRONOUNCING)
+                            navController.navigate(FirstCloudRoutes.ALPHABET_PRONOUNCING)
                         }
                     }
             }) {

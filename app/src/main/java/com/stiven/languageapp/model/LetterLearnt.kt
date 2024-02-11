@@ -3,6 +3,7 @@ package com.stiven.languageapp.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.stiven.languageapp.utils.LearningType
 
 /**
  * Entity that keeps track of learnt letters by students.
@@ -14,5 +15,7 @@ data class LetterLearnt (
     @ColumnInfo(name = "letterLearnt")
     val letterLearnt: String,
     @ColumnInfo(name = "studentId")
-    val studentId: String
+    val studentId: String,
+    @ColumnInfo(name = "learningType")
+    val learningType: LearningType
 )

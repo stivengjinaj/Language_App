@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.stiven.languageapp.R
-import com.stiven.languageapp.view.LetterView
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 
@@ -56,7 +55,6 @@ fun Alphabet(letterViewModel: LetterViewModel, speechToTextViewModel: SpeechToTe
         }
         Spacer(modifier = Modifier.height((screenSize).dp))
         for(letter in alphabet){
-            LetterView(letter = letter, speechToTextViewModel, letterModels)
             Spacer(modifier = Modifier.height(30.dp))
         }
         Spacer(modifier = Modifier.height((screenSize + 10).dp))

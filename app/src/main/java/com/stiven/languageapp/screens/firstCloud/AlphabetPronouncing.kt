@@ -1,7 +1,6 @@
 package com.stiven.languageapp.screens.firstCloud
 
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +42,7 @@ import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.model.LetterLearnt
 import com.stiven.languageapp.navigation.Graph
+import com.stiven.languageapp.utils.LearningType
 import com.stiven.languageapp.view.LogoBannerNavigation
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.SpeechActions
@@ -84,9 +84,8 @@ fun AlphabetPronouncing(
             }
         )
         Spacer(modifier = Modifier.height((screenSize / 6).dp))
-        Log.d("STUDENT", studentId)
         LetterView(
-            studentId,
+            studentId = studentId,
             studentViewModel = studentViewModel,
             textToSpeechViewModel = textToSpeechViewModel,
             speechToTextViewModel = speechToTextViewModel,
@@ -153,7 +152,8 @@ fun LetterView(
                     lettersLearntViewModel.insertLetterLearnt(
                         LetterLearnt(
                             letterLearnt = currentLetter.uppercase(),
-                            studentId = studentId
+                            studentId = studentId,
+                            learningType = LearningType.PRONOUNCING
                         )
                     )
                 }

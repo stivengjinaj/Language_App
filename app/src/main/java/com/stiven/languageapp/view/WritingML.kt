@@ -3,8 +3,10 @@ package com.stiven.languageapp.view
 import android.graphics.Bitmap
 import android.graphics.Picture
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -40,6 +43,7 @@ import androidx.compose.ui.graphics.drawscope.draw
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.mlkit.common.model.LocalModel
@@ -53,11 +57,11 @@ import kotlinx.coroutines.delay
  * is clicked, a tflite model recognizes the letter.
  * */
 @Composable
-fun DrawingCanvas(letterToDraw: Char){
+fun WritingML(letterToDraw: Char){
+    val screenSize = LocalConfiguration.current.screenWidthDp
     val letterRecognizer = LocalModel.Builder()
         .setAssetFilePath("lettersModel.tflite")
         .build()
-
     val customImageLabelerOptions = CustomImageLabelerOptions.Builder(letterRecognizer)
         .setConfidenceThreshold(0.5f)
         .setMaxResultCount(3)
@@ -84,9 +88,10 @@ fun DrawingCanvas(letterToDraw: Char){
         if(!cameraDraw.value){
             Row(
                 modifier = Modifier
-                    .width(300.dp)
-                    .height(300.dp)
+                    .width((screenSize / 2 + 50).dp)
+                    .height((screenSize / 2 + 50).dp)
                     .clip(RoundedCornerShape(20.dp))
+                    .border(BorderStroke(1.dp, MaterialTheme.colorScheme.inversePrimary))
                     .background(Color.White)
             ){
                 Canvas(
@@ -136,7 +141,7 @@ fun DrawingCanvas(letterToDraw: Char){
                 }
             }
         }else{
-            Camera(onPhotoCaptured = {
+            CameraML(onPhotoCaptured = {
                 bitmapPhoto.value = it
             })
             if (bitmapPhoto.value != null){
@@ -162,8 +167,12 @@ fun DrawingCanvas(letterToDraw: Char){
             }
         }
     }else{
-        LetterCorrect(letterRecognized)
+        LetterCorrect(
+            letterRecognized = letterRecognized,
+            screenSize = screenSize
+        )
     }
+    Spacer(modifier = Modifier.height((screenSize/12).dp))
     //CONTROL PANEL
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -196,6 +205,7 @@ fun DrawingCanvas(letterToDraw: Char){
                                     Log.d("LABEL", labelMap(label.index).toString())
                                     if (labelMap(label.index) == letterToDraw) {
                                         letterRecognized.value = true
+                                        lines.clear()
                                         break
                                     }
                                 }
@@ -206,10 +216,17 @@ fun DrawingCanvas(letterToDraw: Char){
                         }
                 }
             }) {
+                Box(
+                    modifier = Modifier
+                        .size((screenSize / 6 + 10).dp)
+                        .background(Color.Green)
+                        .clip(RoundedCornerShape(50))
+                )
                 Icon(
+                    modifier = Modifier.size((screenSize / 6).dp),
                     imageVector = Icons.Rounded.Check,
                     contentDescription = "Validate",
-                    tint = Color.Green
+                    tint = MaterialTheme.colorScheme.background
                 )
             }
             Spacer(modifier = Modifier.width(20.dp))
@@ -222,17 +239,20 @@ fun DrawingCanvas(letterToDraw: Char){
                 Icon(
                     imageVector = Icons.Rounded.CameraAlt,
                     contentDescription = "CAMERA CHECK",
-                    tint = Color.Blue
+                    tint = MaterialTheme.colorScheme.onSecondary
                 )
             }
         } else {
-            IconButton(onClick = {
+            IconButton(
+                modifier = Modifier.size((screenSize / 8).dp),
+                onClick = {
                 cameraDraw.value = false
             }) {
                 Icon(
+                    modifier = Modifier.size((screenSize/8).dp),
                     imageVector = Icons.AutoMirrored.Rounded.Undo,
                     contentDescription = "Go Back",
-                    tint = Color.Green
+                    tint = MaterialTheme.colorScheme.onSecondary
                 )
             }
         }
@@ -245,7 +265,10 @@ fun DrawingCanvas(letterToDraw: Char){
  * @param letterRecognized boolean that changes after 1 second
  * */
 @Composable
-fun LetterCorrect(letterRecognized: MutableState<Boolean>){
+fun LetterCorrect(
+    letterRecognized: MutableState<Boolean>,
+    screenSize: Int
+){
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -254,16 +277,16 @@ fun LetterCorrect(letterRecognized: MutableState<Boolean>){
             modifier = Modifier
                 .clip(RoundedCornerShape(100))
                 .background(Color.Green)
-                .width(300.dp)
-                .height(300.dp)
+                .width((screenSize / 2).dp)
+                .height((screenSize / 2).dp)
         ){
             Icon(
                 imageVector = Icons.Rounded.Check,
                 contentDescription = "CORRECT",
                 tint = Color.White,
                 modifier = Modifier
-                    .width(300.dp)
-                    .height(300.dp)
+                    .width((screenSize / 2 - 10).dp)
+                    .height((screenSize / 2 - 10).dp)
             )
         }
 
