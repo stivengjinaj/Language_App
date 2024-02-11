@@ -46,4 +46,8 @@
     <string name="play_walkthrough">Play initial walkthrough</string>
     <string name="alphabet">Alphabet</string>
     <string name="check">Check</string>
+    <string name="retry">Retry</string>
+    <string name="letterPronouncingText">This is the letter you have to pronounce.</string>
+    <string name="letterPronouncingPlay">Click this button to hear the correct pronouncing.</string>
+    <string name="letterPronouncingMic">Click this button, pronounce the letter and click again to check it is correct.</string>
 </resources>

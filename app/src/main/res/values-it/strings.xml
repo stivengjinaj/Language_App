@@ -46,5 +46,9 @@
     <string name="page_4">Questo è il tuo account studente. Clicca sul nome per aprire il tuo portfolio personalizzato.</string>
     <string name="play_walkthrough">Riproduci la guida iniziale</string>
     <string name="alphabet">Alfabeto</string>
-    <string name="check">Check</string>
+    <string name="check">Controlla</string>
+    <string name="retry">Prova di nuovo</string>
+    <string name="letterPronouncingText">Questa è la lettera da pronunciare.</string>
+    <string name="letterPronouncingPlay">Fare clic su questo pulsante per ascoltare la pronuncia corretta.</string>
+    <string name="letterPronouncingMic">Fare clic su questo pulsante, pronunciare la lettera e fare nuovamente clic per verificare che sia corretta.</string>
 </resources>
