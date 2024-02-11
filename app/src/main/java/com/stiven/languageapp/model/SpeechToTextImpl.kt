@@ -17,7 +17,6 @@ import java.util.Locale
  * */
 class SpeechToTextImpl(context: Context) : SpeechToText {
     override val text = MutableStateFlow("")
-
     private val speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context).apply {
         setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(p0: Bundle?) = Unit

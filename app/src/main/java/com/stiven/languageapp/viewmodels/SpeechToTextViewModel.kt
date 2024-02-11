@@ -38,17 +38,14 @@ class SpeechToTextViewModel(private val stt: SpeechToText) : ViewModel() {
             }
 
             SpeechActions.EndRecord -> {
-                //state.display = stt.text.value
                 state.spokenText = stt.text.value
-                    //state.copy()
-                    //spokenText = stt.text.value
-
                 stt.stop()
             }
             is SpeechActions.Update -> {
-                state = state.copy(
+                /*state = state.copy(
                     spokenText = state.spokenText + action.text
-                )
+                )*/
+                state.spokenText = stt.text.value
             }
         }
     }
