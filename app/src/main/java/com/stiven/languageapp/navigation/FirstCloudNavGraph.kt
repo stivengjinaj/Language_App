@@ -5,9 +5,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.stiven.languageapp.screens.firstCloud.AlphabetPronouncing
-import com.stiven.languageapp.screens.firstCloud.AlphabetWriting
+import com.stiven.languageapp.screens.secondCloud.AlphabetWriting
 import com.stiven.languageapp.screens.firstCloud.Introduction
 import com.stiven.languageapp.screens.firstCloud.Exercises
+import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -29,14 +30,15 @@ fun FirstCloudNavGraph(
     studentViewModel: StudentViewModel,
     navController: NavHostController,
     textToSpeechViewModel: TextToSpeechViewModel,
-    speechToTextViewModel: SpeechToTextViewModel
+    speechToTextViewModel: SpeechToTextViewModel,
+    lettersLearntViewModel: LettersLearntViewModel
 ){
     NavHost(
         navController = navController,
         startDestination = FirstCloudGraph.INTRODUCTION
     ){
         composable(route = FirstCloudGraph.INTRODUCTION){
-            Introduction(navController, rootNavController, studentId)
+            Introduction(navController, rootNavController, textToSpeechViewModel, studentId)
         }
         composable(route = FirstCloudGraph.ALPHABET_PRONOUNCING){
             AlphabetPronouncing(
@@ -45,6 +47,7 @@ fun FirstCloudNavGraph(
                 studentViewModel = studentViewModel,
                 speechToTextViewModel = speechToTextViewModel,
                 textToSpeechViewModel = textToSpeechViewModel,
+                lettersLearntViewModel = lettersLearntViewModel,
                 studentId = studentId
             )
         }

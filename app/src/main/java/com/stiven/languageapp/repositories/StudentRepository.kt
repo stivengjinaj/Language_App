@@ -24,6 +24,16 @@ class StudentRepository(private val studentDao: StudentDao) {
     }
 
     /**
+     * Function that updates a student's points.
+     *
+     * @param studentId student name to update.
+     * @param points new points value for student.
+     * */
+    suspend fun updateStudent(studentId: String, points: Int){
+        studentDao.updateStudent(studentId, points)
+    }
+
+    /**
      * Function that gets all students present in database.
      *
      * @param database application database.

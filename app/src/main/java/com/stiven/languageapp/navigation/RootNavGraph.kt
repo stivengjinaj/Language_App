@@ -9,6 +9,7 @@ import com.stiven.languageapp.screens.InitialTour
 import com.stiven.languageapp.screens.SplashScreen
 import com.stiven.languageapp.utils.PreferencesManager
 import com.stiven.languageapp.viewmodels.LetterViewModel
+import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -22,7 +23,8 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * @param textToSpeechViewModel view-model that handles text-to-speech operations.
  * @param preferencesManager manager for shared preferences.
  * @param speechToTextViewModel speech to text view-model.
- * @param letterViewModel letter's view-model.
+ * @param letterViewModel letter's ViewModel.
+ * @param lettersLearntViewModel letter's learnt ViewModel.
  * */
 @Composable
 fun RootNavGraph(
@@ -31,7 +33,8 @@ fun RootNavGraph(
     textToSpeechViewModel: TextToSpeechViewModel,
     preferencesManager: PreferencesManager,
     speechToTextViewModel: SpeechToTextViewModel,
-    letterViewModel: LetterViewModel
+    letterViewModel: LetterViewModel,
+    lettersLearntViewModel: LettersLearntViewModel
 ) {
     NavHost(
         navController = navController,
@@ -39,21 +42,48 @@ fun RootNavGraph(
         startDestination = Graph.SPLASH
     ){
         composable(Graph.SPLASH){
-            SplashScreen(navController, preferencesManager)
+            SplashScreen(
+                rootNavController = navController,
+                preferencesManager = preferencesManager
+            )
         }
         composable(Graph.TOUR){
-            InitialTour(navController, preferencesManager)
+            InitialTour(
+                rootNavController = navController,
+                preferencesManager = preferencesManager
+            )
         }
         composable(Graph.INITIAL){
-            InitialPage(navController, textToSpeechViewModel)
+            InitialPage(
+                navController = navController,
+                textToSpeechViewModel = textToSpeechViewModel
+            )
         }
         composable(Graph.MAIN+"/{screen}"){backStackEntry ->
             backStackEntry.arguments!!.getString("screen")
-                ?.let { MainPanel(navController, studentViewModel, textToSpeechViewModel, speechToTextViewModel, it) }
+                ?.let {
+                    MainPanel(
+                        rootNavController = navController,
+                        studentViewModel = studentViewModel,
+                        textToSpeechViewModel = textToSpeechViewModel,
+                        speechToTextViewModel = speechToTextViewModel,
+                        startingScreen = it
+                    )
+                }
         }
         composable(Graph.LESSONS+"/{studentId}"){backStackEntry ->
             backStackEntry.arguments!!.getString("studentId")
-                ?.let { StudentPanel(navController, studentViewModel, textToSpeechViewModel, it, speechToTextViewModel, letterViewModel) }
+                ?.let {
+                    StudentPanel(
+                        rootNavController = navController,
+                        studentViewModel = studentViewModel,
+                        textToSpeechViewModel = textToSpeechViewModel,
+                        studentId = it,
+                        speechToTextViewModel = speechToTextViewModel,
+                        letterViewModel = letterViewModel,
+                        lettersLearntViewModel = lettersLearntViewModel
+                    )
+                }
         }
     }
 }

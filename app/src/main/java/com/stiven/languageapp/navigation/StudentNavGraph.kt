@@ -9,6 +9,7 @@ import com.stiven.languageapp.screens.Lessons
 import com.stiven.languageapp.model.BottomBarScreens
 import com.stiven.languageapp.screens.Alphabet
 import com.stiven.languageapp.viewmodels.LetterViewModel
+import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -24,6 +25,7 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * @param studentId id used to get student's information in order to personalize StudentPanel.
  * @param speechToTextViewModel speech to text view-model.
  * @param letterViewModel letter's view-model.
+ * @param lettersLearntViewModel Letters learnt ViewModel.
  * */
 @Composable
 fun StudentNavGraph(
@@ -33,7 +35,8 @@ fun StudentNavGraph(
     textToSpeechViewModel: TextToSpeechViewModel,
     studentId: String,
     speechToTextViewModel: SpeechToTextViewModel,
-    letterViewModel: LetterViewModel
+    letterViewModel: LetterViewModel,
+    lettersLearntViewModel: LettersLearntViewModel
 ) {
     NavHost(
         navController = navController,
@@ -49,7 +52,8 @@ fun StudentNavGraph(
                 studentViewModel =studentViewModel ,
                 navController = rememberNavController(),
                 textToSpeechViewModel = textToSpeechViewModel,
-                speechToTextViewModel = speechToTextViewModel
+                speechToTextViewModel = speechToTextViewModel,
+                lettersLearntViewModel = lettersLearntViewModel
             )
         }
 

@@ -66,6 +66,18 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
     }
 
     /**
+     * Function that updates student's points.
+     *
+     * @param studentId student to update.
+     * @param points student's new points.
+     * */
+    fun updateStudent(studentId: String, points: Int){
+        viewModelScope.launch (Dispatchers.IO) {
+            repository.updateStudent(studentId, points)
+        }
+    }
+
+    /**
      * Function that deletes a student from database.
      *
      * @param studentName name of the student to be deleted.

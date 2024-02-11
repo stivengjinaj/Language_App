@@ -81,7 +81,13 @@ fun Lessons(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height((screenSize/6+30).dp))
-            RoadMap(screenSize, student!!.picture, navController)
+
+            RoadMap(
+                screenSize = screenSize,
+                picture = student!!.picture,
+                navController = navController,
+                studentPoints = student.points
+            )
         }
     }
 }
@@ -92,10 +98,17 @@ fun Lessons(
  *
  * @param screenSize The width of the screen used to scale the view.
  * @param picture Avatar image.
+ * @param navController Cloud navigation controller.
+ * @param studentPoints Student's points.
  *
  * */
 @Composable
-fun RoadMap(screenSize: Int, picture: Int, navController: NavHostController) {
+fun RoadMap(
+    screenSize: Int,
+    picture: Int,
+    navController: NavHostController,
+    studentPoints: Int
+) {
     val roadColor = MaterialTheme.colorScheme.primary
     val completedRoadColor = MaterialTheme.colorScheme.tertiary
     val undoneCloud = painterResource(id = R.drawable.undone_checkpoint)
@@ -140,12 +153,11 @@ fun RoadMap(screenSize: Int, picture: Int, navController: NavHostController) {
         //ROAD 12
         Pair(Offset(screenSize * 0.3f, screenSize * 3f), Offset(screenSize * 5f, screenSize * 3f))
     )
-    val point = 20
     val avatarCoordinates = listOf(
         //TO GET POINTS
-        pointsToPosition(point, roadCoordinates, cloudCoordinates).second
+        pointsToPosition(studentPoints, roadCoordinates, cloudCoordinates).second
     )
-    val completedRoads = pointsToPosition(point, roadCoordinates, cloudCoordinates).first
+    val completedRoads = pointsToPosition(studentPoints, roadCoordinates, cloudCoordinates).first
     val completedRoadsList = roadCoordinates
         .subList(0, completedRoads)
         .toList()

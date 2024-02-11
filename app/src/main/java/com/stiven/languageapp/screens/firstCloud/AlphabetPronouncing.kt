@@ -41,8 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
+import com.stiven.languageapp.model.LetterLearnt
 import com.stiven.languageapp.navigation.Graph
 import com.stiven.languageapp.view.LogoBannerNavigation
+import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.SpeechActions
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
@@ -58,6 +60,7 @@ import kotlinx.coroutines.delay
  * @param studentViewModel Student ViewModel.
  * @param speechToTextViewModel Speech-to-text ViewModel.
  * @param textToSpeechViewModel Text-to-speech ViewModel.
+ * @param lettersLearntViewModel Letters learnt ViewModel.
  * @param studentId Student's id.
  * */
 @Composable
@@ -67,6 +70,7 @@ fun AlphabetPronouncing(
     studentViewModel: StudentViewModel,
     speechToTextViewModel: SpeechToTextViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
+    lettersLearntViewModel: LettersLearntViewModel,
     studentId: String
 ){
     val screenSize = LocalConfiguration.current.screenWidthDp
@@ -80,10 +84,13 @@ fun AlphabetPronouncing(
             }
         )
         Spacer(modifier = Modifier.height((screenSize / 6).dp))
+        Log.d("STUDENT", studentId)
         LetterView(
+            studentId,
             studentViewModel = studentViewModel,
             textToSpeechViewModel = textToSpeechViewModel,
             speechToTextViewModel = speechToTextViewModel,
+            lettersLearntViewModel = lettersLearntViewModel,
             screenSize = screenSize
         )
     }
@@ -95,17 +102,21 @@ fun AlphabetPronouncing(
  * @param studentViewModel Student ViewModel.
  * @param textToSpeechViewModel Text-to-speech ViewModel.
  * @param speechToTextViewModel Speech-to-text ViewModel.
+ * @param lettersLearntViewModel Letters learnt ViewModel.
  * @param screenSize Screen width.
  * */
 @Composable
 fun LetterView(
+    studentId: String,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
     speechToTextViewModel: SpeechToTextViewModel,
+    lettersLearntViewModel: LettersLearntViewModel,
     screenSize: Int
 ){
     val context = LocalContext.current
     val letters = "abcdefghilmnopqrstuvz"
+    val lettersLearnt = lettersLearntViewModel.dataList.value
     val recording = remember {
         mutableStateOf(false)
     }
@@ -113,10 +124,10 @@ fun LetterView(
         mutableStateOf("")
     }
     val currentLetterIndex = remember {
-        mutableIntStateOf(0)
+        mutableIntStateOf(lettersLearnt?.size ?: 0)
     }
     val currentLetter = letters.getOrNull(currentLetterIndex.intValue)
-
+    val student = studentViewModel.dataList.value?.find { it.id.toString() == studentId }
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
@@ -135,6 +146,15 @@ fun LetterView(
                         imageVector = Icons.Rounded.Check,
                         contentDescription = "Correct",
                         tint = Color.White
+                    )
+                }
+                if (student != null) {
+                    studentViewModel.updateStudent(studentId, student.points + 1)
+                    lettersLearntViewModel.insertLetterLearnt(
+                        LetterLearnt(
+                            letterLearnt = currentLetter.uppercase(),
+                            studentId = studentId
+                        )
                     )
                 }
                 LaunchedEffect(Dispatchers.IO){
@@ -181,7 +201,6 @@ fun LetterView(
                 if(recording.value){
                     speechToTextViewModel.send(SpeechActions.EndRecord)
                     pronunciation.value = speechToTextViewModel.state.spokenText
-                    Log.d("SPOKEN", pronunciation.value)
                     recording.value = false
                 }else {
                     speechToTextViewModel.send(SpeechActions.StartRecord)
@@ -197,5 +216,4 @@ fun LetterView(
             )
         }
     }
-    Log.d("INDEX", currentLetterIndex.intValue.toString())
 }

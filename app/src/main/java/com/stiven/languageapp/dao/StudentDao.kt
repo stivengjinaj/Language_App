@@ -17,8 +17,11 @@ interface StudentDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertStudent(student: Student)
 
-    @Query("DELETE FROM Students WHERE name = :studentName AND course = :course")
-    fun deleteStudent(studentName: String, course: Languages)
+    @Query("UPDATE Students SET points = :points WHERE id = :studentName")
+    suspend fun updateStudent(studentName: String, points: Int)
+
+    @Query("DELETE FROM Students WHERE name = :studentId AND course = :course")
+    fun deleteStudent(studentId: String, course: Languages)
 
     @Query("DELETE FROM Students")
     fun deleteAll()

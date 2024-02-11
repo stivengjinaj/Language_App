@@ -1,4 +1,4 @@
-package com.stiven.languageapp.screens.firstCloud
+package com.stiven.languageapp.screens.secondCloud
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
