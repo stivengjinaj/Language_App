@@ -51,4 +51,9 @@
     <string name="letterPronouncingText">Questa è la lettera da pronunciare.</string>
     <string name="letterPronouncingPlay">Fare clic su questo pulsante per ascoltare la pronuncia corretta.</string>
     <string name="letterPronouncingMic">Fare clic su questo pulsante, pronunciare la lettera e fare nuovamente clic per verificare che sia corretta.</string>
+    <string name="letterWritingText">This is the letter you have to write.</string>
+    <string name="canvasIntro">In this space you can write the letter.</string>
+    <string name="validationIntro">After you have written the letter, click this button to validate.</string>
+    <string name="cameraWritingIntro">If you are uncomfortable writing in your phone, click this button to open the camera and verify a real writing.</string>
+    <string name="cancelIntro">If you need to retry, click this button to cancel the drawing.</string>
 </resources>
