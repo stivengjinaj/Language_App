@@ -55,7 +55,7 @@ android {
 }
 
 dependencies {
-    val navVersion = "2.7.6"
+    val navVersion = "2.7.7"
     val lifecycleVersion = "2.7.0"
     val roomVersion = "2.6.1"
     val coroutines = "1.7.1"
@@ -74,10 +74,10 @@ dependencies {
     implementation ("com.google.mlkit:image-labeling-custom:17.0.2")
     implementation ("androidx.appcompat:appcompat:1.7.0-alpha03")
     implementation ("com.google.accompanist:accompanist-permissions:$accompanistVersion")
-    implementation ("androidx.compose.material:material:1.6.0")
+    implementation ("androidx.compose.material:material:1.6.1")
     implementation ("com.github.ygorluizfrazao:compose-resources:1.0.0-alpha01")
     implementation ("com.airbnb.android:lottie-compose:4.0.0")
-    implementation ("androidx.compose.material:material-icons-extended:1.6.0")
+    implementation ("androidx.compose.material:material-icons-extended:1.6.1")
     implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.10")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines")
@@ -98,7 +98,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-core:1.6.0")
+    implementation("androidx.compose.material:material-icons-core:1.6.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
