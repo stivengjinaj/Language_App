@@ -26,6 +26,7 @@ import com.stiven.languageapp.ui.theme.LanguageAppTheme
 import com.stiven.languageapp.utils.PreferencesManager
 import com.stiven.languageapp.model.SpeechToTextImpl
 import com.stiven.languageapp.viewmodels.LetterViewModel
+import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -37,11 +38,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //val db = AppDatabase.getDatabase(this)
-        //val wordViewModel : WordViewModel by viewModels()
         val studentViewModel : StudentViewModel by viewModels()
         val textToSpeechViewModel: TextToSpeechViewModel by viewModels()
         val letterViewModel : LetterViewModel by viewModels()
+        val lettersLetterViewModel: LettersLearntViewModel by viewModels()
         val preferencesManager = PreferencesManager(this)
         setContent {
             var permission by remember {
@@ -75,7 +75,15 @@ class MainActivity : AppCompatActivity() {
                             launcher.launch(Manifest.permission.RECORD_AUDIO)
                         }
                     }
-                    RootNavGraph(navController = rememberNavController(), studentViewModel = studentViewModel, textToSpeechViewModel = textToSpeechViewModel, preferencesManager, speechToTextViewModel, letterViewModel)
+                    RootNavGraph(
+                        navController = rememberNavController(),
+                        studentViewModel = studentViewModel,
+                        textToSpeechViewModel = textToSpeechViewModel,
+                        preferencesManager = preferencesManager,
+                        speechToTextViewModel = speechToTextViewModel,
+                        letterViewModel = letterViewModel,
+                        lettersLearntViewModel = lettersLetterViewModel
+                    )
                 }
             }
         }
