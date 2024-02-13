@@ -65,7 +65,7 @@ class SpeechToTextImpl(context: Context) : SpeechToText {
         )
         putExtra(
             RecognizerIntent.EXTRA_LANGUAGE,
-            Locale.getDefault()
+            Locale.ITALIAN
         )
         putExtra(
             RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
