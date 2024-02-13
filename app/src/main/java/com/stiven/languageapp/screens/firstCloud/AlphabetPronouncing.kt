@@ -188,7 +188,7 @@ fun LetterView(
         IconButton(
             modifier = Modifier.size((screenSize/4).dp),
             onClick = {
-                textToSpeechViewModel.textToSpeech(context, currentLetter.toString())
+                textToSpeechViewModel.italianTextToSpeech(context, currentLetter.toString())
             }
         ) {
             Icon(

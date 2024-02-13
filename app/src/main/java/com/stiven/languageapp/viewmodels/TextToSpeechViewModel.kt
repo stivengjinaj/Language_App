@@ -10,7 +10,8 @@ import java.util.Locale
  * */
 class TextToSpeechViewModel : ViewModel(){
 
-    private  var  textToSpeech: TextToSpeech? = null
+    private var  textToSpeech: TextToSpeech? = null
+    private var italianTextToSpeech: TextToSpeech? = null
 
     /**
      * Function to be called in order to use text-to-speech
@@ -25,6 +26,23 @@ class TextToSpeechViewModel : ViewModel(){
                     textToSpeech.setLanguage(Locale.getDefault())
                     textToSpeech.setSpeechRate(1.0f)
                     textToSpeech.speak(text, TextToSpeech.QUEUE_ADD,null, null)
+                }
+            }
+        }
+    }
+    /**
+     * Function to be called in order to use italian only text-to-speech
+     *
+     * @param context application context
+     * @param text text to be spoken
+     * */
+    fun italianTextToSpeech(context: Context, text: String){
+        italianTextToSpeech = TextToSpeech(context) {
+            if (it == TextToSpeech.SUCCESS){
+                textToSpeech?.let { textToSpeech ->
+                    textToSpeech.setLanguage(Locale.ITALIAN)
+                    textToSpeech.setSpeechRate(1.0f)
+                    textToSpeech.speak(text, TextToSpeech.QUEUE_ADD, null, null)
                 }
             }
         }
