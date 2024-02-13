@@ -56,4 +56,6 @@
     <string name="validationIntro">After you have written the letter, click this button to validate.</string>
     <string name="cameraWritingIntro">If you are uncomfortable writing in your phone, click this button to open the camera and verify a real writing.</string>
     <string name="cancelIntro">If you need to retry, click this button to cancel the drawing.</string>
+    <string name="questionIntro">You have to find the meaning of this word.</string>
+    <string name="selectedOption">Click this to choose the first option as your answer</string>
 </resources>
