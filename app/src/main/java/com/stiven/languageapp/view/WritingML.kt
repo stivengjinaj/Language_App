@@ -57,16 +57,31 @@ import kotlinx.coroutines.delay
  * is clicked, a tflite model recognizes the letter.
  * */
 @Composable
-fun WritingML(letterToDraw: Char){
+fun WritingML(
+    letterToDraw: Char,
+    onCorrectWriting: () -> Unit,
+    correctness: MutableState<Boolean>,
+    onIncorrectWriting: () -> Unit
+){
     val screenSize = LocalConfiguration.current.screenWidthDp
+
     val letterRecognizer = LocalModel.Builder()
         .setAssetFilePath("lettersModel.tflite")
         .build()
+
+    val newLetterRecognizer = LocalModel.Builder()
+        .setAssetFilePath("lettersModelNew.tflite")
+        .build()
+
     val customImageLabelerOptions = CustomImageLabelerOptions.Builder(letterRecognizer)
         .setConfidenceThreshold(0.5f)
-        .setMaxResultCount(3)
+        .setMaxResultCount(2)
         .build()
-    val labeler = ImageLabeling.getClient(customImageLabelerOptions)
+
+    val newCustomImageLabelerOptions = CustomImageLabelerOptions.Builder(newLetterRecognizer)
+        .setConfidenceThreshold(0.5f)
+        .setMaxResultCount(1)
+        .build()
 
     val lines = remember {
         mutableStateListOf<Line>()
@@ -145,16 +160,20 @@ fun WritingML(letterToDraw: Char){
                 bitmapPhoto.value = it
             })
             if (bitmapPhoto.value != null){
+                val labeler = ImageLabeling.getClient(customImageLabelerOptions)
+                val newLabeler = ImageLabeling.getClient(newCustomImageLabelerOptions)
                 val imageToProcess = InputImage.fromBitmap(bitmapPhoto.value!!, 0)
                 labeler.process(imageToProcess)
                     .addOnSuccessListener { labels ->
                         for (label in labels) {
-                            if (label.confidence >= 0.8f) {
-                                Log.d("LABEL", labelMap(label.index).toString())
+                            if (label.confidence >= 0.7f) {
+                                Log.d("LABEL", "${labelMap(label.index)}, Conf: ${label.confidence}")
                                 if(labelMap(label.index) == letterToDraw){
-                                    Log.d("RECOGNIZED CAMERA", "TRUE")
+                                    onCorrectWriting()
+                                    correctness.value = true
                                     letterRecognized.value = true
                                     bitmapPhoto.value = null
+                                    labeler.close()
                                     break
                                 }
                             }
@@ -162,6 +181,22 @@ fun WritingML(letterToDraw: Char){
                     }
                     .addOnFailureListener { e ->
                         Log.d("ML ERROR", e.message.toString())
+                    }
+                newLabeler.process(imageToProcess)
+                    .addOnSuccessListener { labels ->
+                        for(label in labels){
+                            if(label.confidence >= 0.8f){
+                                if(labelMapNew(label.index) == letterToDraw){
+                                    Log.d("LABEL", "${labelMapNew(label.index)}, Conf: ${label.confidence}")
+                                    onCorrectWriting()
+                                    correctness.value = true
+                                    letterRecognized.value = true
+                                    bitmapPhoto.value = null
+                                    labeler.close()
+                                    break
+                                }
+                            }
+                        }
                     }
                 cameraDraw.value = false
             }
@@ -197,15 +232,20 @@ fun WritingML(letterToDraw: Char){
             IconButton(onClick = {
                 bitmapDrawing.value = createBitmapFromPicture(picture)
                 if (bitmapDrawing.value != null) {
+                    val newLabeler = ImageLabeling.getClient(newCustomImageLabelerOptions)
+                    val labeler = ImageLabeling.getClient(customImageLabelerOptions)
                     val imageToProcess = InputImage.fromBitmap(bitmapDrawing.value!!, 0)
                     labeler.process(imageToProcess)
                         .addOnSuccessListener { labels ->
                             for (label in labels) {
-                                if (label.confidence >= 0.8f) {
-                                    Log.d("LABEL", labelMap(label.index).toString())
+                                if (label.confidence >= 0.7f) {
+                                    Log.d("LABEL", "${labelMap(label.index)}, Conf: ${label.confidence}")
                                     if (labelMap(label.index) == letterToDraw) {
+                                        onCorrectWriting()
+                                        correctness.value = true
                                         letterRecognized.value = true
                                         lines.clear()
+                                        labeler.close()
                                         break
                                     }
                                 }
@@ -213,6 +253,22 @@ fun WritingML(letterToDraw: Char){
                         }
                         .addOnFailureListener { e ->
                             Log.d("ML ERROR", e.message.toString())
+                        }
+                    newLabeler.process(imageToProcess)
+                        .addOnSuccessListener { labels ->
+                            for(label in labels){
+                                if(label.confidence >= 0.8f){
+                                    Log.d("LABEL", "${labelMapNew(label.index)}, Conf: ${label.confidence}")
+                                    if(labelMapNew(label.index) == letterToDraw){
+                                        onCorrectWriting()
+                                        correctness.value = true
+                                        letterRecognized.value = true
+                                        bitmapPhoto.value = null
+                                        labeler.close()
+                                        break
+                                    }
+                                }
+                            }
                         }
                 }
             }) {
@@ -310,9 +366,19 @@ fun LetterCorrect(
 private fun labelMap(labelIndex: Int): Char{
     require(labelIndex in 0..20) { "Number should be between 0 and 20 inclusive" }
 
-    val alphabet = "ABCDEFGHILMNOPQRSTUVXYZ"
+    val alphabet = "ABCDEFGHILMNOPQRSTUVZ"
 
     return alphabet[labelIndex]
+}
+
+/**
+ * Function that maps tflite number indexes to their letters.
+ *
+ * @param labelIndex Index of label.
+ * @return The letter in the index.
+ * */
+private fun labelMapNew(labelIndex: Int): Char{
+    return if(labelIndex == 0) 'C' else 'O'
 }
 
 /**
@@ -342,5 +408,5 @@ data class Line(
     val start: Offset,
     val end: Offset,
     val color: Color = Color.Black,
-    val strokeWidth: Dp = 1.dp
+    val strokeWidth: Dp = 10.dp
 )

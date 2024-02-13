@@ -1,5 +1,6 @@
 package com.stiven.languageapp.screens.secondCloud
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,13 +25,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.google.mlkit.common.model.LocalModel
+import com.stiven.languageapp.R
+import com.stiven.languageapp.model.LetterLearnt
 import com.stiven.languageapp.navigation.Graph
+import com.stiven.languageapp.utils.LearningType
 import com.stiven.languageapp.view.LogoBannerNavigation
 import com.stiven.languageapp.view.WritingML
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun AlphabetWriting(
@@ -70,15 +76,28 @@ fun WritingView(
     screenSize: Int
 ){
     val context = LocalContext.current
-    val letterRecognizer = LocalModel.Builder()
-        .setAssetFilePath("lettersModel.tflite")
-        .build()
-
+    val student = studentViewModel.dataList.value?.find { it.id.toString() == studentId }
     val letters = "ABCDEFGHILMNOPQRSTUVZ"
-    val currentLetterIndex = remember {
-        mutableIntStateOf(0)
+    val allLettersLearnt = remember {
+        lettersLearntViewModel.dataList.value
     }
-    val currentLetter = letters[currentLetterIndex.intValue]
+    val writtenLetters = allLettersLearnt?.filter {
+        it.learningType == LearningType.WRITTEN &&
+                it.studentId == studentId
+    }?.toList()
+
+    val currentLetterIndex = remember {
+        mutableIntStateOf(writtenLetters?.size ?: 0)
+    }
+    val correctness = remember {
+        mutableStateOf(false)
+    }
+    val currentLetter =
+        if(currentLetterIndex.intValue < 21)
+            letters[currentLetterIndex.intValue]
+        else
+            letters[20]
+
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
@@ -94,7 +113,44 @@ fun WritingView(
         )
     }
     Spacer(modifier = Modifier.height(10.dp))
-    WritingML(letterToDraw = 'A')
+    if (allLettersLearnt != null) {
+        if (writtenLetters != null) {
+            if(writtenLetters.none { it.letterLearnt == currentLetter.toString() && currentLetterIndex.intValue < 21}){
+                WritingML(
+                    letterToDraw = currentLetter,
+                    onCorrectWriting = {
+                        if(student != null){
+                            lettersLearntViewModel.insertLetterLearnt(
+                                LetterLearnt(
+                                    studentId = studentId,
+                                    letterLearnt = currentLetter.uppercase(),
+                                    learningType = LearningType.WRITTEN
+                                )
+                            )
+                            studentViewModel.updateStudent(studentId, student.points + 1)
+                        }
+                    },
+                    correctness = correctness
+                ) {
+                    textToSpeechViewModel.textToSpeech(context, context.getString(R.string.retry))
+                }
+            }
+        }
+    }
+    if(correctness.value){
+        if(currentLetterIndex.intValue < 20){
+            LaunchedEffect(Dispatchers.IO){
+                MediaPlayer.create(context, R.raw.correct).start()
+                currentLetterIndex.intValue = currentLetterIndex.intValue + 1
+                correctness.value = false
+            }
+        }
+        else {
+            LaunchedEffect(Dispatchers.IO){
+                MediaPlayer.create(context, R.raw.finish).start()
+            }
+        }
+    }
 }
 
 

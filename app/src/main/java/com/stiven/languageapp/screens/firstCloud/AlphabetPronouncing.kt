@@ -115,7 +115,11 @@ fun LetterView(
 ){
     val context = LocalContext.current
     val letters = "abcdefghilmnopqrstuvz"
-    val lettersLearnt = lettersLearntViewModel.dataList.value
+    val allLettersLearnt = lettersLearntViewModel.dataList.value
+    val pronouncedLetters = allLettersLearnt?.filter {
+        it.learningType == LearningType.PRONOUNCING &&
+                it.studentId == studentId
+    }?.toList()
     val recording = remember {
         mutableStateOf(false)
     }
@@ -123,7 +127,7 @@ fun LetterView(
         mutableStateOf("")
     }
     val currentLetterIndex = remember {
-        mutableIntStateOf(lettersLearnt?.size ?: 0)
+        mutableIntStateOf(pronouncedLetters?.size ?: 0)
     }
     val currentLetter = letters.getOrNull(currentLetterIndex.intValue)
     val student = studentViewModel.dataList.value?.find { it.id.toString() == studentId }
