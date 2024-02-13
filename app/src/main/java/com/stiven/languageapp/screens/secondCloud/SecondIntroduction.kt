@@ -220,7 +220,7 @@ fun SecondIntroduction (
                     navController.navigate(SecondCloudNavGraph.ALPHABET_WRITING)
                 }
             ) {
-                androidx.compose.material.Icon(
+                Icon(
                     modifier = Modifier.size((screenSize / 6).dp),
                     imageVector = Icons.Rounded.DoubleArrow,
                     contentDescription = "Skip intro",

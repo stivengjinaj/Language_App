@@ -64,6 +64,13 @@ fun MainPanel(
             BottomBarView(navController = navController)
         }
     ) {
-        BottomNavGraph(rootNavController, navController, studentViewModel, textToSpeechViewModel, speechToTextViewModel, startingScreen)
+        BottomNavGraph(
+            rootNavController = rootNavController,
+            navController = navController,
+            studentViewModel = studentViewModel,
+            textToSpeechViewModel = textToSpeechViewModel,
+            speechToTextViewModel = speechToTextViewModel,
+            startingScreen = startingScreen
+        )
     }
 }

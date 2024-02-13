@@ -7,9 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.screens.Lessons
 import com.stiven.languageapp.model.BottomBarScreens
-import com.stiven.languageapp.screens.Alphabet
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
+import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -36,7 +36,8 @@ fun StudentNavGraph(
     studentId: String,
     speechToTextViewModel: SpeechToTextViewModel,
     letterViewModel: LetterViewModel,
-    lettersLearntViewModel: LettersLearntViewModel
+    lettersLearntViewModel: LettersLearntViewModel,
+    quizViewModel: QuizViewModel
 ) {
     NavHost(
         navController = navController,
@@ -66,8 +67,18 @@ fun StudentNavGraph(
                 lettersLearntViewModel = lettersLearntViewModel
             )
         }
+        composable(route = ThirdCloudNavGraph.THIRD_CLOUD){
+            ThirdCloudNavGraph(
+                studentId = studentId,
+                rootNavController = rootNavController,
+                studentViewModel = studentViewModel,
+                navController = rememberNavController(),
+                textToSpeechViewModel = textToSpeechViewModel,
+                quizViewModel = quizViewModel
+            )
+        }
         composable(route = BottomBarScreens.Exercises.route){
-            Alphabet(letterViewModel, speechToTextViewModel)
+
         }
 
         composable(route = BottomBarScreens.Dictionary.route){

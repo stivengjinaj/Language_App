@@ -27,6 +27,7 @@ import com.stiven.languageapp.utils.PreferencesManager
 import com.stiven.languageapp.model.SpeechToTextImpl
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
+import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         val textToSpeechViewModel: TextToSpeechViewModel by viewModels()
         val letterViewModel : LetterViewModel by viewModels()
         val lettersLetterViewModel: LettersLearntViewModel by viewModels()
+        val quizViewModel: QuizViewModel by viewModels()
         val preferencesManager = PreferencesManager(this)
         setContent {
             var permission by remember {
@@ -82,7 +84,8 @@ class MainActivity : AppCompatActivity() {
                         preferencesManager = preferencesManager,
                         speechToTextViewModel = speechToTextViewModel,
                         letterViewModel = letterViewModel,
-                        lettersLearntViewModel = lettersLetterViewModel
+                        lettersLearntViewModel = lettersLetterViewModel,
+                        quizViewModel = quizViewModel
                     )
                 }
             }

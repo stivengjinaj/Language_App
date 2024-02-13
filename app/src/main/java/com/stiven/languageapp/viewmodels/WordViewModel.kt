@@ -43,15 +43,6 @@ class WordViewModel(application: Application): AndroidViewModel(application) {
     }
 
     /**
-     * Function that returns a word object from database.
-     *
-     * @param word the word to search.
-     * */
-    fun getSingleWord(word: String): Word? {
-        return dataList.value?.find { it.word == word }
-    }
-
-    /**
      * Function that inserts a word in database.
      *
      * @param word word object to be inserted.

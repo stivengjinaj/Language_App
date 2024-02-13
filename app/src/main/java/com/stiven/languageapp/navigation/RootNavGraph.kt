@@ -10,6 +10,7 @@ import com.stiven.languageapp.screens.SplashScreen
 import com.stiven.languageapp.utils.PreferencesManager
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
+import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -34,7 +35,8 @@ fun RootNavGraph(
     preferencesManager: PreferencesManager,
     speechToTextViewModel: SpeechToTextViewModel,
     letterViewModel: LetterViewModel,
-    lettersLearntViewModel: LettersLearntViewModel
+    lettersLearntViewModel: LettersLearntViewModel,
+    quizViewModel: QuizViewModel
 ) {
     NavHost(
         navController = navController,
@@ -81,7 +83,8 @@ fun RootNavGraph(
                         studentId = it,
                         speechToTextViewModel = speechToTextViewModel,
                         letterViewModel = letterViewModel,
-                        lettersLearntViewModel = lettersLearntViewModel
+                        lettersLearntViewModel = lettersLearntViewModel,
+                        quizViewModel = quizViewModel
                     )
                 }
         }

@@ -11,9 +11,11 @@ import androidx.room.PrimaryKey
  * @param similarTo similarity of the letter.
  * @param letter the single letter.
  * */
-@Entity(tableName = "Letters")
-data class Letter(
-    @PrimaryKey
+@Entity(tableName = "letters")
+data class Letter (
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    @ColumnInfo(name = "similarTo")
     val similarTo: String,
     @ColumnInfo(name = "letter")
     val letter: String

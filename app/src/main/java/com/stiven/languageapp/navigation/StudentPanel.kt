@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.view.StudentBottomBar
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
+import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -32,7 +33,8 @@ fun StudentPanel(
     studentId: String,
     speechToTextViewModel: SpeechToTextViewModel,
     letterViewModel: LetterViewModel,
-    lettersLearntViewModel: LettersLearntViewModel
+    lettersLearntViewModel: LettersLearntViewModel,
+    quizViewModel: QuizViewModel
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -48,7 +50,8 @@ fun StudentPanel(
             studentId = studentId,
             speechToTextViewModel = speechToTextViewModel,
             letterViewModel = letterViewModel,
-            lettersLearntViewModel = lettersLearntViewModel
+            lettersLearntViewModel = lettersLearntViewModel,
+            quizViewModel = quizViewModel
         )
     }
 }
