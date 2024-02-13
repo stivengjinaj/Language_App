@@ -19,6 +19,7 @@ import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.DoubleArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -203,6 +204,26 @@ fun SecondIntroduction (
                         .rotate(-90f),
                     imageVector = Icons.Rounded.ArrowDownward,
                     contentDescription = "Next page.",
+                    tint = MaterialTheme.colorScheme.onSecondary
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height((screenSize / 6 - 20).dp))
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            IconButton(
+                modifier = Modifier.size((screenSize/6 - 10).dp),
+                onClick = {
+                    navController.navigate(SecondCloudNavGraph.ALPHABET_WRITING)
+                }
+            ) {
+                androidx.compose.material.Icon(
+                    modifier = Modifier.size((screenSize / 6).dp),
+                    imageVector = Icons.Rounded.DoubleArrow,
+                    contentDescription = "Skip intro",
                     tint = MaterialTheme.colorScheme.onSecondary
                 )
             }

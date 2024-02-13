@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDownward
+import androidx.compose.material.icons.rounded.DoubleArrow
 import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.IconButton
@@ -155,6 +156,26 @@ fun FirstIntroduction(
                         .rotate(-90f),
                     imageVector = Icons.Rounded.ArrowDownward,
                     contentDescription = "Next page",
+                    tint = MaterialTheme.colorScheme.onSecondary
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height((screenSize / 6 - 20).dp))
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            IconButton(
+                modifier = Modifier.size((screenSize/6 - 10).dp),
+                onClick = {
+                    navController.navigate(FirstCloudRoutes.ALPHABET_PRONOUNCING)
+                }
+            ) {
+                Icon(
+                    modifier = Modifier.size((screenSize / 6).dp),
+                    imageVector = Icons.Rounded.DoubleArrow,
+                    contentDescription = "Skip intro",
                     tint = MaterialTheme.colorScheme.onSecondary
                 )
             }
