@@ -47,7 +47,7 @@ class QuizViewModel(application: Application): AndroidViewModel(application) {
      * */
     fun updateQuizQuestion(quizQuestion: Quiz){
         viewModelScope.launch (Dispatchers.IO){
-            repository.updateQuizQuestion(quizQuestion)
+            repository.updateQuestion(quizQuestion)
         }
     }
     /**

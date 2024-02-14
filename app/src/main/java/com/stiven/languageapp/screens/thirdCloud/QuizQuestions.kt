@@ -1,7 +1,6 @@
 package com.stiven.languageapp.screens.thirdCloud
 
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,9 +38,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.model.Quiz
+import com.stiven.languageapp.model.QuizAnswer
 import com.stiven.languageapp.model.SingleQuestion
 import com.stiven.languageapp.navigation.Graph
+import com.stiven.languageapp.navigation.ThirdCloudNavGraph
+import com.stiven.languageapp.utils.QuestionType
 import com.stiven.languageapp.view.LogoBannerNavigation
+import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
 import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -51,6 +54,7 @@ import java.util.Locale
  * Composable that contains the page where the quiz is.
  *
  * @param studentId student's id.
+ * @param navController third cloud navigation controller.
  * @param rootNavController root navigation controller.
  * @param studentViewModel student's view-model.
  * @param textToSpeechViewModel text-to-speech view-model
@@ -59,10 +63,12 @@ import java.util.Locale
 @Composable
 fun QuizQuestions(
     studentId: String,
+    navController: NavHostController,
     rootNavController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
-    quizViewModel: QuizViewModel
+    quizViewModel: QuizViewModel,
+    quizAnswerViewModel: QuizAnswerViewModel
 ){
     val screenSize = LocalConfiguration.current.screenWidthDp
     Column(
@@ -77,16 +83,20 @@ fun QuizQuestions(
         )
         Spacer(modifier = Modifier.height((screenSize / 6).dp))
         QuestionView(
+            navController = navController,
             studentId = studentId,
             quizViewModel = quizViewModel,
             studentViewModel = studentViewModel,
-            screenSize = screenSize
+            screenSize = screenSize,
+            quizAnswerViewModel = quizAnswerViewModel
         )
     }
 }
 
 /**
  * Composable containing the logics and the view behind every question.
+ *
+ * @param navController third cloud navigation controller.
  * @param studentId student's id.
  * @param studentViewModel student's view-model.
  * @param quizViewModel quiz questions view-model.
@@ -94,16 +104,19 @@ fun QuizQuestions(
  * */
 @Composable
 fun QuestionView(
+    navController: NavHostController,
     studentId: String,
     quizViewModel: QuizViewModel,
     studentViewModel: StudentViewModel,
-    screenSize: Int
+    screenSize: Int,
+    quizAnswerViewModel: QuizAnswerViewModel
 ) {
     val context = LocalContext.current
     val student = studentViewModel.dataList.value?.find { it.id.toString() == studentId }
     val questions = remember {
         mutableStateOf(quizViewModel.dataList.value?.map { prepareQuestion(it) }?.shuffled())
     }
+    val answeredQuestions = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId }
     val questionIndex = remember {
         mutableIntStateOf(0)
     }
@@ -237,6 +250,18 @@ fun QuestionView(
                 onClick = {
                     if(selectedAnswer.intValue == currentQuestion.answer){
                         MediaPlayer.create(context, R.raw.correct).start()
+                        if (answeredQuestions != null) {
+                            if(!questionAnswered(answeredQuestions, currentQuestion, studentId)){
+                                quizAnswerViewModel.insertQuizAnswer(
+                                    QuizAnswer(
+                                        id = 0,
+                                        studentId = studentId,
+                                        question = currentQuestion.question,
+                                        questionType = QuestionType.TRANSLATE
+                                    )
+                                )
+                            }
+                        }
                         questionIndex.intValue += 1
                         selectedAnswer.intValue = 0
                         if(questionIndex.intValue >= questions.value?.size!!){
@@ -245,8 +270,8 @@ fun QuestionView(
                             if(incorrectAnswers.isNotEmpty()){
                                 incorrectAnswers.clear()
                             }else {
+                                navController.navigate(ThirdCloudNavGraph.FINISHED_CLOUD)
                                 MediaPlayer.create(context, R.raw.finish).start()
-
                             }
                         }
                     }else{
@@ -254,9 +279,6 @@ fun QuestionView(
                         questionIndex.intValue += 1
                         selectedAnswer.intValue = 0
                     }
-                    Log.d("INDEX", "${questionIndex.intValue}")
-                    Log.d("QUESTIONS", "${questions.value!!.size}")
-                    Log.d("INCORRECT", "${incorrectAnswers.size}")
                 }
             ) {
                 Icon(
@@ -273,6 +295,25 @@ fun QuestionView(
 }
 
 /**
+ * Function that checks if a question has already
+ * been answered.
+ *
+ * @param answeredQuestions list of all answered questions.
+ * @param
+ * */
+fun questionAnswered(
+    answeredQuestions: List<QuizAnswer>,
+    currentQuestion: SingleQuestion,
+    studentId: String
+): Boolean{
+    return answeredQuestions.find {
+                it.question == currentQuestion.question &&
+                it.studentId == studentId &&
+                it.questionType == QuestionType.TRANSLATE
+    } != null
+}
+
+/**
  * Function that organized a question from database.
  *
  * @param quizQuestion question to organize.
@@ -283,6 +324,7 @@ fun prepareQuestion(quizQuestion: Quiz): SingleQuestion{
     when(Locale.getDefault()){
         Locale.ENGLISH -> {
             return SingleQuestion(
+                quizQuestion.id,
                 quizQuestion.question,
                 listOf(
                     quizQuestion.firstEn,
@@ -294,6 +336,7 @@ fun prepareQuestion(quizQuestion: Quiz): SingleQuestion{
         }
         Locale.FRENCH -> {
             return SingleQuestion(
+                quizQuestion.id,
                 quizQuestion.question,
                 listOf(
                     quizQuestion.firstFr,
@@ -305,6 +348,7 @@ fun prepareQuestion(quizQuestion: Quiz): SingleQuestion{
         }
         else -> {
             return SingleQuestion(
+                quizQuestion.id,
                 quizQuestion.question,
                 listOf(
                     quizQuestion.firstEn,

@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.stiven.languageapp.screens.FinishedCloud
 import com.stiven.languageapp.screens.thirdCloud.QuizQuestions
 import com.stiven.languageapp.screens.thirdCloud.ThirdIntroduction
+import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
 import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
@@ -27,8 +29,10 @@ fun ThirdCloudNavGraph(
     studentViewModel: StudentViewModel,
     navController: NavHostController,
     textToSpeechViewModel: TextToSpeechViewModel,
-    quizViewModel: QuizViewModel
+    quizViewModel: QuizViewModel,
+    quizAnswerViewModel: QuizAnswerViewModel
 ) {
+    val student = studentViewModel.dataList.value?.find { it.id.toString() == studentId }
     NavHost(
         navController = navController,
         startDestination = ThirdCloudNavGraph.THIRD_INTRODUCTION
@@ -44,11 +48,23 @@ fun ThirdCloudNavGraph(
         composable(route = ThirdCloudNavGraph.QUIZ_QUESTIONS){
             QuizQuestions(
                 studentId = studentId,
+                navController = navController,
                 rootNavController = rootNavController,
                 studentViewModel = studentViewModel,
                 textToSpeechViewModel = textToSpeechViewModel,
-                quizViewModel = quizViewModel
+                quizViewModel = quizViewModel,
+                quizAnswerViewModel = quizAnswerViewModel
             )
+        }
+        composable(route = ThirdCloudNavGraph.FINISHED_CLOUD){
+            if (student != null) {
+                FinishedCloud(
+                    studentPicture = student.picture,
+                    studentPoints = student.points,
+                    studentId = studentId,
+                    rootNavController = rootNavController
+                )
+            }
         }
     }
 }
@@ -60,4 +76,5 @@ object ThirdCloudNavGraph {
     const val THIRD_CLOUD = "thirdCloud"
     const val THIRD_INTRODUCTION = "thirdIntroduction"
     const val QUIZ_QUESTIONS = "quizQuestions"
+    const val FINISHED_CLOUD = "finishedCloud"
 }

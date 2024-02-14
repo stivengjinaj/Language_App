@@ -32,10 +32,10 @@ class QuizRepository(private val quizDao: QuizDao) {
     /**
      * Function that updates a quiz question.
      *
-     * @param quizQuestion new updated question.
+     * @param quizQuestion question to update.
      * */
-    suspend fun updateQuizQuestion(quizQuestion: Quiz){
-        quizDao.updateQuizQuestion(quizQuestion)
+    suspend fun updateQuestion(quizQuestion: Quiz){
+        quizDao.updateQuestion(quizQuestion)
     }
     /**
      * Function that deletes a quiz question.

@@ -5,6 +5,7 @@ package com.stiven.languageapp.model
  * a single question contains.
  * */
 data class SingleQuestion (
+    val id: Int,
     val question: String,
     val options: List<String>,
     val answer: Int

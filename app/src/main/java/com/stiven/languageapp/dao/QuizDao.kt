@@ -16,7 +16,7 @@ interface QuizDao {
     @Insert
     suspend fun insertQuizQuestion(quizQuestion: Quiz)
     @Update
-    suspend fun updateQuizQuestion(quizQuestion: Quiz)
+    suspend fun updateQuestion(quizQuestion: Quiz)
     @Query("DELETE FROM quiz WHERE question = :quizQuestion")
     fun deleteQuizQuestion(quizQuestion: String)
     @Query("SELECT * FROM quiz")

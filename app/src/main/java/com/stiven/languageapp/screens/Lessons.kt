@@ -35,6 +35,7 @@ import com.stiven.languageapp.R
 import com.stiven.languageapp.model.Cloud
 import com.stiven.languageapp.navigation.FirstCloudRoutes
 import com.stiven.languageapp.navigation.SecondCloudNavGraph
+import com.stiven.languageapp.navigation.ThirdCloudNavGraph
 import com.stiven.languageapp.utils.CloudType
 import com.stiven.languageapp.view.LogoBanner
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
@@ -114,12 +115,26 @@ fun RoadMap(
     val completedRoadColor = MaterialTheme.colorScheme.tertiary
     val undoneCloud = painterResource(id = R.drawable.undone_checkpoint)
     val doneCloud = painterResource(id = R.drawable.done_checkpoint)
+    val crown = when(studentPoints) {
+        in 50..99 -> {
+            painterResource(id = R.drawable.firstcrown)
+        }
+        in 100..149 -> {
+            painterResource(id = R.drawable.seconcrown)
+        }
+        in 150..199 -> {
+            painterResource(id = R.drawable.thirdcrown)
+        }
+        else -> {
+            painterResource(id = R.drawable.fourthcrown)
+        }
+    }
     val avatar = painterResource(id = picture)
     val cloudCoordinates = listOf(
-        Cloud(CloudType.CLOUD1, Pair(screenSize * 2f, screenSize * 0.01f), checkCloudStatus(), 50),
-        Cloud(CloudType.CLOUD2, Pair(screenSize * 0.7f, screenSize * 0.75f), checkCloudStatus(), 100),
-        Cloud(CloudType.CLOUD3, Pair(screenSize * 1.27f, screenSize * 1.3f), checkCloudStatus(), 150),
-        Cloud(CloudType.CLOUD4, Pair(screenSize * 0.55f, screenSize * 2.1f), checkCloudStatus(), 200)
+        Cloud(CloudType.CLOUD1, Pair(screenSize * 2f, screenSize * 0.01f), checkCloudStatus(studentPoints, CloudType.CLOUD1), 50),
+        Cloud(CloudType.CLOUD2, Pair(screenSize * 0.7f, screenSize * 0.75f), checkCloudStatus(studentPoints, CloudType.CLOUD2), 100),
+        Cloud(CloudType.CLOUD3, Pair(screenSize * 1.27f, screenSize * 1.3f), checkCloudStatus(studentPoints, CloudType.CLOUD3), 150),
+        Cloud(CloudType.CLOUD4, Pair(screenSize * 0.55f, screenSize * 2.1f), checkCloudStatus(studentPoints, CloudType.CLOUD4), 200)
     )
     val cloudOffsets = remember {
         cloudCoordinates.map { Animatable(it.position.second) }
@@ -155,7 +170,6 @@ fun RoadMap(
         Pair(Offset(screenSize * 0.3f, screenSize * 3f), Offset(screenSize * 5f, screenSize * 3f))
     )
     val avatarCoordinates = listOf(
-        //TO GET POINTS
         pointsToPosition(studentPoints, roadCoordinates, cloudCoordinates).second
     )
     val completedRoads = pointsToPosition(studentPoints, roadCoordinates, cloudCoordinates).first
@@ -220,15 +234,21 @@ fun RoadMap(
                             }
 
                             CloudType.CLOUD2 -> {
-                                navController.navigate(SecondCloudNavGraph.SECOND_CLOUD)
+                                if (studentPoints >= 50) {
+                                    navController.navigate(SecondCloudNavGraph.SECOND_CLOUD)
+                                }
                             }
 
                             CloudType.CLOUD3 -> {
-
+                                if (studentPoints >= 0) {
+                                    navController.navigate(ThirdCloudNavGraph.THIRD_CLOUD)
+                                }
                             }
 
                             CloudType.CLOUD4 -> {
-
+                                if (studentPoints >= 150) {
+                                    //TODO
+                                }
                             }
                         }
                     }
@@ -264,9 +284,17 @@ fun RoadMap(
                     draw(size = Size(200f, 200f))
                 }
             }
+            if(studentPoints >= 50){
+                with(crown){
+                    translate (left = avatarCoordinates[0].first + 45, top = offset.value - 130f) {
+                        draw(size = Size(120f, 100f))
+                    }
+                }
+            }
         }
     }
 }
+
 /**
  * Function that calculates the position of the avatar and the road he has
  * completed. If the avatar has not completed the entire road, it returns the
@@ -506,7 +534,19 @@ fun customDraw(
  *
  * @return true if the student has learnt the lesson, false otherwise.
  * */
-private fun checkCloudStatus(): Boolean{
-
-    return false
+private fun checkCloudStatus(studentPoints: Int, cloudType: CloudType): Boolean{
+    return when(cloudType){
+        CloudType.CLOUD1 -> {
+            studentPoints >= 50
+        }
+        CloudType.CLOUD2 -> {
+            studentPoints >= 100
+        }
+        CloudType.CLOUD3 -> {
+            studentPoints >= 150
+        }
+        CloudType.CLOUD4 -> {
+            studentPoints >= 200
+        }
+    }
 }
