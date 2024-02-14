@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.stiven.languageapp.screens.FinishedCloud
 import com.stiven.languageapp.screens.secondCloud.AlphabetWriting
 import com.stiven.languageapp.screens.secondCloud.SecondIntroduction
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
@@ -28,6 +29,7 @@ fun SecondCloudNavGraph(
     textToSpeechViewModel: TextToSpeechViewModel,
     lettersLearntViewModel: LettersLearntViewModel
 ){
+    val student = studentViewModel.dataList.value?.find { it.id.toString() == studentId }
     NavHost(
         navController = navController,
         startDestination = SecondCloudNavGraph.SECOND_INTRODUCTION
@@ -51,7 +53,14 @@ fun SecondCloudNavGraph(
             )
         }
         composable(route = SecondCloudNavGraph.EXERCISES){
-
+            if (student != null) {
+                FinishedCloud(
+                    studentPicture = student.picture,
+                    studentPoints = student.points,
+                    studentId = studentId,
+                    rootNavController = rootNavController
+                )
+            }
         }
     }
 }

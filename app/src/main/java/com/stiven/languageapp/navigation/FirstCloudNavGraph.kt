@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.stiven.languageapp.screens.FinishedCloud
 import com.stiven.languageapp.screens.firstCloud.AlphabetPronouncing
 import com.stiven.languageapp.screens.firstCloud.FirstIntroduction
-import com.stiven.languageapp.screens.firstCloud.Exercises
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
@@ -32,6 +32,7 @@ fun FirstCloudNavGraph(
     speechToTextViewModel: SpeechToTextViewModel,
     lettersLearntViewModel: LettersLearntViewModel
 ){
+    val student = studentViewModel.dataList.value?.find { it.id.toString() == studentId }
     NavHost(
         navController = navController,
         startDestination = FirstCloudRoutes.FIRST_INTRODUCTION
@@ -55,8 +56,15 @@ fun FirstCloudNavGraph(
                 studentId = studentId
             )
         }
-        composable(route = FirstCloudRoutes.EXERCISES){
-            Exercises(navController)
+        composable(route = FirstCloudRoutes.FINISHED_CLOUD){
+            if (student != null) {
+                FinishedCloud(
+                    studentPicture = student.picture,
+                    studentPoints = student.points,
+                    studentId = studentId,
+                    rootNavController = rootNavController
+                )
+            }
         }
     }
 }
@@ -68,5 +76,5 @@ object FirstCloudRoutes {
     const val FIRST_CLOUD = "firstCloud"
     const val FIRST_INTRODUCTION = "firstCloudIntro"
     const val ALPHABET_PRONOUNCING = "alphabetPronouncing"
-    const val EXERCISES = "firstCloudExercises"
+    const val FINISHED_CLOUD = "finishedCloud"
 }

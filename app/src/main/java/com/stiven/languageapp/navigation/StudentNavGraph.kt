@@ -9,6 +9,7 @@ import com.stiven.languageapp.screens.Lessons
 import com.stiven.languageapp.model.BottomBarScreens
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
+import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
 import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
@@ -37,14 +38,28 @@ fun StudentNavGraph(
     speechToTextViewModel: SpeechToTextViewModel,
     letterViewModel: LetterViewModel,
     lettersLearntViewModel: LettersLearntViewModel,
-    quizViewModel: QuizViewModel
+    quizViewModel: QuizViewModel,
+    quizAnswerViewModel: QuizAnswerViewModel
 ) {
+    insertStudentPoints(
+        studentId = studentId,
+        lettersLearntViewModel = lettersLearntViewModel,
+        quizAnswerViewModel = quizAnswerViewModel,
+        studentViewModel = studentViewModel
+    )
     NavHost(
         navController = navController,
         startDestination = BottomBarScreens.Lessons.route
     ){
         composable(route = BottomBarScreens.Lessons.route){
-            Lessons(rootNavController, navController, studentViewModel, textToSpeechViewModel, speechToTextViewModel, studentId)
+            Lessons(
+                rootNavController = rootNavController,
+                navController = navController,
+                studentViewModel = studentViewModel,
+                textToSpeechViewModel = textToSpeechViewModel,
+                speechToTextViewModel = speechToTextViewModel,
+                studentId = studentId
+            )
         }
         composable(route = FirstCloudRoutes.FIRST_CLOUD){
             FirstCloudNavGraph(
@@ -74,7 +89,8 @@ fun StudentNavGraph(
                 studentViewModel = studentViewModel,
                 navController = rememberNavController(),
                 textToSpeechViewModel = textToSpeechViewModel,
-                quizViewModel = quizViewModel
+                quizViewModel = quizViewModel,
+                quizAnswerViewModel = quizAnswerViewModel
             )
         }
         composable(route = BottomBarScreens.Exercises.route){
@@ -89,5 +105,18 @@ fun StudentNavGraph(
             rootNavController.popBackStack()
             rootNavController.navigate(Graph.MAIN+"/classroom")
         }
+    }
+}
+
+fun insertStudentPoints(
+    studentId: String,
+    lettersLearntViewModel: LettersLearntViewModel,
+    quizAnswerViewModel: QuizAnswerViewModel,
+    studentViewModel: StudentViewModel
+){
+    val lettersPoints = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId }?.size
+    val quizAnsweredPoints = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId }?.size
+    if(lettersPoints != null && quizAnsweredPoints != null){
+        studentViewModel.updateStudent(studentId, lettersPoints+quizAnsweredPoints)
     }
 }
