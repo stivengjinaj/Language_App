@@ -57,4 +57,5 @@
     <string name="cancelIntro">If you need to retry, click this button to cancel the drawing.</string>
     <string name="questionIntro">You have to find the meaning of this word.</string>
     <string name="selectedOption">Click the answer you think is correct.</string>
+    <string name="fill_blank">You have to find the correct word to fill in the blank space</string>
 </resources>
