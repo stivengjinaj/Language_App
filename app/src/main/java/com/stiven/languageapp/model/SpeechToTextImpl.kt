@@ -24,7 +24,7 @@ class SpeechToTextImpl(context: Context) : SpeechToText {
             override fun onRmsChanged(p0: Float) = Unit
             override fun onBufferReceived(p0: ByteArray?) = Unit
             override fun onEndOfSpeech() = Unit
-            override fun onResults(results: Bundle?) = Unit
+            override fun onResults(results: Bundle?) {}
             override fun onEvent(p0: Int, p1: Bundle?) = Unit
 
             override fun onPartialResults(results: Bundle?) {
@@ -65,7 +65,7 @@ class SpeechToTextImpl(context: Context) : SpeechToText {
         )
         putExtra(
             RecognizerIntent.EXTRA_LANGUAGE,
-            Locale.ITALIAN
+            Locale.ITALY
         )
         putExtra(
             RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,

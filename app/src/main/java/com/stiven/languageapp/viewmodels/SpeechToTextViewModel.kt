@@ -1,8 +1,6 @@
 package com.stiven.languageapp.viewmodels
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stiven.languageapp.model.SpeechToText
@@ -13,8 +11,8 @@ import kotlinx.coroutines.launch
  * captures the spoken text.
  * */
 class SpeechToTextViewModel(private val stt: SpeechToText) : ViewModel() {
-    var state by mutableStateOf(AppState())
-        private set
+    var state = mutableStateOf("")
+
 
     init {
         viewModelScope.launch {
@@ -38,25 +36,15 @@ class SpeechToTextViewModel(private val stt: SpeechToText) : ViewModel() {
             }
 
             SpeechActions.EndRecord -> {
-                state.spokenText = stt.text.value
                 stt.stop()
+                state.value = stt.text.value
             }
             is SpeechActions.Update -> {
-                /*state = state.copy(
-                    spokenText = state.spokenText + action.text
-                )*/
-                state.spokenText = stt.text.value
+                state.value = action.text
             }
         }
     }
 }
-
-/**
- * Data class that contains the spoken text
- * */
-data class AppState(
-    var spokenText: String = ""
-)
 
 /**
  * Sealed class that contains the operations the engine is capable of.

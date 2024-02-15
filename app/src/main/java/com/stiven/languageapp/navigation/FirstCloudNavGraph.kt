@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import com.stiven.languageapp.screens.FinishedCloud
 import com.stiven.languageapp.screens.firstCloud.AlphabetPronouncing
 import com.stiven.languageapp.screens.firstCloud.FirstIntroduction
+import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
@@ -30,7 +31,8 @@ fun FirstCloudNavGraph(
     navController: NavHostController,
     textToSpeechViewModel: TextToSpeechViewModel,
     speechToTextViewModel: SpeechToTextViewModel,
-    lettersLearntViewModel: LettersLearntViewModel
+    lettersLearntViewModel: LettersLearntViewModel,
+    letterViewModel: LetterViewModel
 ){
     val student = studentViewModel.dataList.value?.find { it.id.toString() == studentId }
     NavHost(
@@ -53,7 +55,8 @@ fun FirstCloudNavGraph(
                 speechToTextViewModel = speechToTextViewModel,
                 textToSpeechViewModel = textToSpeechViewModel,
                 lettersLearntViewModel = lettersLearntViewModel,
-                studentId = studentId
+                studentId = studentId,
+                letterViewModel = letterViewModel
             )
         }
         composable(route = FirstCloudRoutes.FINISHED_CLOUD){

@@ -69,7 +69,8 @@ fun StudentNavGraph(
                 navController = rememberNavController(),
                 textToSpeechViewModel = textToSpeechViewModel,
                 speechToTextViewModel = speechToTextViewModel,
-                lettersLearntViewModel = lettersLearntViewModel
+                lettersLearntViewModel = lettersLearntViewModel,
+                letterViewModel = letterViewModel
             )
         }
         composable(route = SecondCloudNavGraph.SECOND_CLOUD){

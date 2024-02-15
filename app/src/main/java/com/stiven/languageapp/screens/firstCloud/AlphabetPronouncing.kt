@@ -1,5 +1,6 @@
 package com.stiven.languageapp.screens.firstCloud
 
+
 import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,9 +42,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.model.LetterLearnt
+import com.stiven.languageapp.navigation.FirstCloudRoutes
 import com.stiven.languageapp.navigation.Graph
 import com.stiven.languageapp.utils.LearningType
 import com.stiven.languageapp.view.LogoBannerNavigation
+import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.SpeechActions
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
@@ -71,6 +74,7 @@ fun AlphabetPronouncing(
     speechToTextViewModel: SpeechToTextViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
     lettersLearntViewModel: LettersLearntViewModel,
+    letterViewModel: LetterViewModel,
     studentId: String
 ){
     val screenSize = LocalConfiguration.current.screenWidthDp
@@ -86,10 +90,11 @@ fun AlphabetPronouncing(
         Spacer(modifier = Modifier.height((screenSize / 6).dp))
         LetterView(
             studentId = studentId,
-            studentViewModel = studentViewModel,
+            navController = navController,
             textToSpeechViewModel = textToSpeechViewModel,
             speechToTextViewModel = speechToTextViewModel,
             lettersLearntViewModel = lettersLearntViewModel,
+            letterViewModel = letterViewModel,
             screenSize = screenSize
         )
     }
@@ -98,84 +103,80 @@ fun AlphabetPronouncing(
 /**
  * Function that connects the logics and the view of letter controller.
  *
- * @param studentViewModel Student ViewModel.
+ * @param studentId Student's id.
+ * @param navController First cloud navigation controller.
  * @param textToSpeechViewModel Text-to-speech ViewModel.
  * @param speechToTextViewModel Speech-to-text ViewModel.
  * @param lettersLearntViewModel Letters learnt ViewModel.
+ * @param letterViewModel Letters similarities ViewModel.
  * @param screenSize Screen width.
  * */
 @Composable
 fun LetterView(
     studentId: String,
-    studentViewModel: StudentViewModel,
+    navController: NavHostController,
     textToSpeechViewModel: TextToSpeechViewModel,
     speechToTextViewModel: SpeechToTextViewModel,
     lettersLearntViewModel: LettersLearntViewModel,
+    letterViewModel: LetterViewModel,
     screenSize: Int
 ){
     val context = LocalContext.current
     val letters = "abcdefghilmnopqrstuvz"
-    val allLettersLearnt = lettersLearntViewModel.dataList.value
-    val pronouncedLetters = allLettersLearnt?.filter {
-        it.learningType == LearningType.PRONOUNCING &&
-                it.studentId == studentId
-    }?.toList()
+    val mappedLetters = remember {
+        letterViewModel.dataList.value
+    }
     val recording = remember {
         mutableStateOf(false)
     }
     val pronunciation = remember {
-        mutableStateOf("")
+        mutableStateOf(speechToTextViewModel.state.value)
     }
     val currentLetterIndex = remember {
-        mutableIntStateOf(pronouncedLetters?.size ?: 0)
+        mutableIntStateOf( 0)
     }
-    val currentLetter = letters.getOrNull(currentLetterIndex.intValue)
-    val student = studentViewModel.dataList.value?.find { it.id.toString() == studentId }
+    val validation = remember {
+        mutableStateOf(false)
+    }
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ){
-        if (currentLetter != null) {
-            if(pronunciation.value == currentLetter.lowercase()){
-                Box (
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50))
-                        .size((screenSize / 2).dp)
-                        .background(Color.Green)
-                ){
-                    Icon(
-                        modifier = Modifier.size((screenSize / 2 - 10).dp),
-                        imageVector = Icons.Rounded.Check,
-                        contentDescription = "Correct",
-                        tint = Color.White
-                    )
-                }
-                if (student != null) {
-                    studentViewModel.updateStudent(studentId, student.points + 1)
-                    lettersLearntViewModel.insertLetterLearnt(
-                        LetterLearnt(
-                            letterLearnt = currentLetter.uppercase(),
-                            studentId = studentId,
-                            learningType = LearningType.PRONOUNCING
-                        )
-                    )
-                }
-                LaunchedEffect(Dispatchers.IO){
-                    MediaPlayer.create(context, R.raw.correct).start()
-                    delay(2000)
-                    currentLetterIndex.intValue = currentLetterIndex.intValue + 1
-                    pronunciation.value = ""
-                }
-            }else {
-                Text(
-                    text = currentLetter.uppercase(),
-                    color = MaterialTheme.colorScheme.inversePrimary,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = (screenSize / 2).sp,
-                    fontStyle = FontStyle.Italic,
-                    fontFamily = FontFamily.SansSerif
+        if(validation.value){
+            Box (
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .size((screenSize / 2).dp)
+                    .background(Color.Green)
+            ){
+                Icon(
+                    modifier = Modifier.size((screenSize / 2 - 10).dp),
+                    imageVector = Icons.Rounded.Check,
+                    contentDescription = "Correct",
+                    tint = Color.White
                 )
+            }
+            LaunchedEffect(Dispatchers.IO){
+                if(validation.value){
+                    delay(1000)
+                    validation.value = false
+                }
+            }
+        }else{
+            Text(
+                text = letters[currentLetterIndex.intValue].uppercase(),
+                color = MaterialTheme.colorScheme.inversePrimary,
+                fontWeight = FontWeight.Bold,
+                fontSize = (screenSize / 2).sp,
+                fontStyle = FontStyle.Italic,
+                fontFamily = FontFamily.SansSerif
+            )
+        }
+        LaunchedEffect(Dispatchers.IO){
+            if(validation.value){
+                delay(1000)
+                validation.value = false
             }
         }
     }
@@ -188,7 +189,7 @@ fun LetterView(
         IconButton(
             modifier = Modifier.size((screenSize/4).dp),
             onClick = {
-                textToSpeechViewModel.italianTextToSpeech(context, currentLetter.toString())
+                textToSpeechViewModel.italianTextToSpeech(context, letters[currentLetterIndex.intValue].toString())
             }
         ) {
             Icon(
@@ -204,7 +205,6 @@ fun LetterView(
             onClick = {
                 if(recording.value){
                     speechToTextViewModel.send(SpeechActions.EndRecord)
-                    pronunciation.value = speechToTextViewModel.state.spokenText
                     recording.value = false
                 }else {
                     speechToTextViewModel.send(SpeechActions.StartRecord)
@@ -219,5 +219,51 @@ fun LetterView(
                 tint = MaterialTheme.colorScheme.onSecondary
             )
         }
+    }
+    pronunciation.value = speechToTextViewModel.state.value
+    if(mappedLetters?.isNotEmpty() == true){
+        for(letter in mappedLetters){
+            if(letter.similarTo.lowercase() == pronunciation.value.lowercase() && letter.letter.lowercase() == letters[currentLetterIndex.intValue].lowercase()
+                || letters[currentLetterIndex.intValue].lowercase() == pronunciation.value.lowercase()){
+                learntLetter(lettersLearntViewModel,studentId,letters[currentLetterIndex.intValue].uppercase())
+                LaunchedEffect(Dispatchers.IO){
+                    MediaPlayer.create(context, R.raw.correct).start()
+                }
+                validation.value = true
+                if(currentLetterIndex.intValue == 20){
+                    MediaPlayer.create(context, R.raw.finish).start()
+                    navController.navigate(FirstCloudRoutes.FINISHED_CLOUD)
+                }else{
+                    currentLetterIndex.intValue += 1
+                }
+                break
+            }
+        }
+    }
+}
+/**
+ * Function that check if the letter has already been registered.
+ *
+ * @param lettersLearntViewModel learnt letters viewModel.
+ * @param studentId student's id.
+ * @param letter letter to check/insert.
+ * */
+fun learntLetter(
+    lettersLearntViewModel: LettersLearntViewModel,
+    studentId: String,
+    letter: String
+){
+    if(
+        lettersLearntViewModel.dataList.value?.find {
+            it.letterLearnt.uppercase() == letter && it.learningType == LearningType.PRONOUNCING && it.studentId == studentId
+        } == null
+    ){
+        lettersLearntViewModel.insertLetterLearnt(
+            LetterLearnt(
+                letterLearnt = letter,
+                studentId = studentId,
+                learningType = LearningType.PRONOUNCING
+            )
+        )
     }
 }
