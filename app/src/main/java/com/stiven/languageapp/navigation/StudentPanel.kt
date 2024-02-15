@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.view.StudentBottomBar
+import com.stiven.languageapp.viewmodels.BlankQuizViewModel
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
@@ -36,7 +37,8 @@ fun StudentPanel(
     letterViewModel: LetterViewModel,
     lettersLearntViewModel: LettersLearntViewModel,
     quizViewModel: QuizViewModel,
-    quizAnswerViewModel: QuizAnswerViewModel
+    quizAnswerViewModel: QuizAnswerViewModel,
+    blankQuizViewModel: BlankQuizViewModel
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -54,7 +56,8 @@ fun StudentPanel(
             letterViewModel = letterViewModel,
             lettersLearntViewModel = lettersLearntViewModel,
             quizViewModel = quizViewModel,
-            quizAnswerViewModel = quizAnswerViewModel
+            quizAnswerViewModel = quizAnswerViewModel,
+            blankQuizViewModel = blankQuizViewModel
         )
     }
 }

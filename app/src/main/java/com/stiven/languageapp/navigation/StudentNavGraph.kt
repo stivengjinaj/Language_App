@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.screens.Lessons
 import com.stiven.languageapp.model.BottomBarScreens
+import com.stiven.languageapp.viewmodels.BlankQuizViewModel
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
@@ -39,7 +40,8 @@ fun StudentNavGraph(
     letterViewModel: LetterViewModel,
     lettersLearntViewModel: LettersLearntViewModel,
     quizViewModel: QuizViewModel,
-    quizAnswerViewModel: QuizAnswerViewModel
+    quizAnswerViewModel: QuizAnswerViewModel,
+    blankQuizViewModel: BlankQuizViewModel
 ) {
     insertStudentPoints(
         studentId = studentId,
@@ -91,6 +93,17 @@ fun StudentNavGraph(
                 navController = rememberNavController(),
                 textToSpeechViewModel = textToSpeechViewModel,
                 quizViewModel = quizViewModel,
+                quizAnswerViewModel = quizAnswerViewModel
+            )
+        }
+        composable(route = FourthCloudNavGraph.FOURTH_CLOUD){
+            FourthCloudNavGraph(
+                studentId = studentId,
+                rootNavController = rootNavController,
+                studentViewModel = studentViewModel,
+                navController = rememberNavController(),
+                textToSpeechViewModel = textToSpeechViewModel,
+                blankQuizViewModel = blankQuizViewModel,
                 quizAnswerViewModel = quizAnswerViewModel
             )
         }

@@ -1,6 +1,7 @@
-package com.stiven.languageapp.screens.thirdCloud
+package com.stiven.languageapp.screens.fourthCloud
 
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,8 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.rounded.ArrowDownward
-import androidx.compose.material.icons.rounded.RadioButtonUnchecked
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,42 +34,42 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
-import com.stiven.languageapp.model.Quiz
+import com.stiven.languageapp.model.BlankQuiz
 import com.stiven.languageapp.model.QuizAnswer
-import com.stiven.languageapp.model.SingleQuestion
+import com.stiven.languageapp.navigation.FourthCloudNavGraph
 import com.stiven.languageapp.navigation.Graph
-import com.stiven.languageapp.navigation.ThirdCloudNavGraph
 import com.stiven.languageapp.utils.QuestionType
 import com.stiven.languageapp.view.LogoBannerNavigation
+import com.stiven.languageapp.viewmodels.BlankQuizViewModel
 import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
-import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
-import java.util.Locale
 
 /**
- * Composable that contains the page where the quiz is.
+ * View function for blank question quiz.
  *
- * @param studentId student's id.
- * @param navController third cloud navigation controller.
- * @param rootNavController root navigation controller.
- * @param studentViewModel student's view-model.
- * @param textToSpeechViewModel text-to-speech view-model
- * @param quizViewModel quiz questions view-model.
+ * @param studentId Student's id.
+ * @param navController Fourth cloud navigation controller.
+ * @param rootNavController Root navigation controller.
+ * @param studentViewModel Student's ViewModel.
+ * @param textToSpeechViewModel Text-to-speech ViewModel.
+ * @param quizAnswerViewModel Quiz answers ViewModel.
+ * @param blankQuizViewModel Blank questions ViewModel.
  * */
 @Composable
-fun QuizQuestions(
+fun BlankQuizQuestions(
     studentId: String,
     navController: NavHostController,
     rootNavController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
-    quizViewModel: QuizViewModel,
-    quizAnswerViewModel: QuizAnswerViewModel
+    quizAnswerViewModel: QuizAnswerViewModel,
+    blankQuizViewModel: BlankQuizViewModel
 ){
     val screenSize = LocalConfiguration.current.screenWidthDp
     Column(
@@ -82,10 +83,10 @@ fun QuizQuestions(
             }
         )
         Spacer(modifier = Modifier.height((screenSize / 6).dp))
-        QuestionView(
+        BlankQuestionView(
             navController = navController,
             studentId = studentId,
-            quizViewModel = quizViewModel,
+            blankQuizViewModel = blankQuizViewModel,
             screenSize = screenSize,
             quizAnswerViewModel = quizAnswerViewModel
         )
@@ -93,26 +94,26 @@ fun QuizQuestions(
 }
 
 /**
- * Composable containing the logics and the view behind every question.
- *
- * @param navController third cloud navigation controller.
- * @param studentId student's id.
- * @param quizViewModel quiz questions view-model.
- * @param screenSize screen size.
+ * View-logics for blank questions quiz.
+
+ * @param navController Fourth cloud navigation controller.
+ * @param studentId Student's id.
+ * @param blankQuizViewModel Blank questions ViewModel.
+ * @param screenSize Screen size.
+ * @param quizAnswerViewModel Quiz answers ViewModel.
  * */
 @Composable
-fun QuestionView(
+fun BlankQuestionView(
     navController: NavHostController,
     studentId: String,
-    quizViewModel: QuizViewModel,
+    blankQuizViewModel: BlankQuizViewModel,
     screenSize: Int,
     quizAnswerViewModel: QuizAnswerViewModel
-) {
+){
     val context = LocalContext.current
     val questions = remember {
-        mutableStateOf(quizViewModel.dataList.value?.map { prepareQuestion(it) }?.shuffled())
+        mutableStateOf(blankQuizViewModel.dataList.value?.map { it }?.shuffled())
     }
-    val answeredQuestions = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId }
     val questionIndex = remember {
         mutableIntStateOf(0)
     }
@@ -120,7 +121,7 @@ fun QuestionView(
         mutableIntStateOf(0)
     }
     val incorrectAnswers = remember {
-        mutableListOf<SingleQuestion>()
+        mutableListOf<BlankQuiz>()
     }
     val currentQuestion = if(questions.value?.isNotEmpty() == true || incorrectAnswers.isNotEmpty()){
         questions.value?.get(questionIndex.intValue)
@@ -133,16 +134,18 @@ fun QuestionView(
             horizontalArrangement = Arrangement.Center
         ){
             Text(
-                text = currentQuestion.question,
+                text = formatQuestion(currentQuestion.question)+".",
+                maxLines = 2,
+                overflow = TextOverflow.Clip,
                 color = MaterialTheme.colorScheme.inversePrimary,
                 fontWeight = FontWeight.Bold,
-                fontSize = (screenSize / 6 - 20).sp,
+                fontSize = (screenSize / 6 - 40).sp,
                 fontStyle = FontStyle.Italic,
                 fontFamily = FontFamily.SansSerif
             )
         }
         Spacer(modifier = Modifier.height((screenSize/6).dp))
-        Row (
+        Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
@@ -153,14 +156,14 @@ fun QuestionView(
             }) {
                 Icon(
                     imageVector = if(selectedAnswer.intValue == 1) Icons.Filled.Circle
-                                    else Icons.Rounded.RadioButtonUnchecked,
+                    else Icons.Filled.RadioButtonUnchecked,
                     contentDescription = "Option1",
                     tint = MaterialTheme.colorScheme.inversePrimary
                 )
             }
             Spacer(modifier = Modifier.width((screenSize/6 - 20).dp))
             ClickableText(
-                text = AnnotatedString(currentQuestion.options[0]),
+                text = AnnotatedString(currentQuestion.first),
                 onClick = {
                     selectedAnswer.intValue = 1
                 },
@@ -173,8 +176,8 @@ fun QuestionView(
                 )
             )
         }
-        Spacer(modifier = Modifier.height((screenSize/6 - 20).dp))
-        Row (
+        Spacer(modifier = Modifier.height((screenSize/6).dp))
+        Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
@@ -185,14 +188,14 @@ fun QuestionView(
             }) {
                 Icon(
                     imageVector = if(selectedAnswer.intValue == 2) Icons.Filled.Circle
-                                    else Icons.Rounded.RadioButtonUnchecked,
+                    else Icons.Filled.RadioButtonUnchecked,
                     contentDescription = "Option2",
                     tint = MaterialTheme.colorScheme.inversePrimary
                 )
             }
             Spacer(modifier = Modifier.width((screenSize/6 - 20).dp))
             ClickableText(
-                text = AnnotatedString(currentQuestion.options[1]),
+                text = AnnotatedString(currentQuestion.second),
                 onClick = {
                     selectedAnswer.intValue = 2
                 },
@@ -205,8 +208,8 @@ fun QuestionView(
                 )
             )
         }
-        Spacer(modifier = Modifier.height((screenSize/6 - 20).dp))
-        Row (
+        Spacer(modifier = Modifier.height((screenSize/6).dp))
+        Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
@@ -217,14 +220,14 @@ fun QuestionView(
             }) {
                 Icon(
                     imageVector = if(selectedAnswer.intValue == 3) Icons.Filled.Circle
-                                    else Icons.Rounded.RadioButtonUnchecked,
+                    else Icons.Filled.RadioButtonUnchecked,
                     contentDescription = "Option3",
                     tint = MaterialTheme.colorScheme.inversePrimary
                 )
             }
             Spacer(modifier = Modifier.width((screenSize/6 - 20).dp))
             ClickableText(
-                text = AnnotatedString(currentQuestion.options[2]),
+                text = AnnotatedString(currentQuestion.third),
                 onClick = {
                     selectedAnswer.intValue = 3
                 },
@@ -244,37 +247,27 @@ fun QuestionView(
         ){
             IconButton(
                 onClick = {
-                    if(selectedAnswer.intValue == currentQuestion.answer){
+                    Log.d("QUESTIONS", questions.value?.size.toString())
+                    if(validation(currentQuestion, selectedAnswer.intValue)){
+                        insertAnswer(quizAnswerViewModel, currentQuestion, studentId)
                         MediaPlayer.create(context, R.raw.correct).start()
-                        if (answeredQuestions != null) {
-                            if(!questionAnswered(answeredQuestions, currentQuestion, studentId)){
-                                quizAnswerViewModel.insertQuizAnswer(
-                                    QuizAnswer(
-                                        id = 0,
-                                        studentId = studentId,
-                                        question = currentQuestion.question,
-                                        questionType = QuestionType.TRANSLATE
-                                    )
-                                )
-                            }
-                        }
                         questionIndex.intValue += 1
-                        selectedAnswer.intValue = 0
-                        if(questionIndex.intValue >= questions.value?.size!!){
-                            questionIndex.intValue = 0
-                            questions.value = incorrectAnswers.map { it }.shuffled()
-                            if(incorrectAnswers.isNotEmpty()){
-                                incorrectAnswers.clear()
-                            }else {
-                                navController.navigate(ThirdCloudNavGraph.FINISHED_CLOUD)
-                                MediaPlayer.create(context, R.raw.finish).start()
-                            }
-                        }
                     }else{
                         incorrectAnswers.add(currentQuestion)
                         questionIndex.intValue += 1
-                        selectedAnswer.intValue = 0
                     }
+                    if(questionIndex.intValue >= questions.value?.size!!){
+                        questionIndex.intValue -= 1
+                        if(incorrectAnswers.isNotEmpty()){
+                            questionIndex.intValue = 0
+                            questions.value = incorrectAnswers.map { it }.shuffled()
+                            incorrectAnswers.clear()
+                        }else{
+                            navController.navigate(FourthCloudNavGraph.FINISHED_CLOUD)
+                            MediaPlayer.create(context, R.raw.finish).start()
+                        }
+                    }
+                    selectedAnswer.intValue = 0
                 }
             ) {
                 Icon(
@@ -289,85 +282,63 @@ fun QuestionView(
         }
     }
 }
-
 /**
- * Function that checks if a question has already
- * been answered.
+ * Question answer validation.
  *
- * @param answeredQuestions list of all answered questions.
- * @param
+ * @param question Question to validate.
+ * @param selectedAnswer Selected option.
+ *
+ * @return True if answer is correct, false otherwise.
  * */
-private fun questionAnswered(
-    answeredQuestions: List<QuizAnswer>,
-    currentQuestion: SingleQuestion,
-    studentId: String
-): Boolean{
-    return answeredQuestions.find {
-                it.question == currentQuestion.question &&
-                it.studentId == studentId &&
-                it.questionType == QuestionType.TRANSLATE
-    } != null
-}
-
-/**
- * Function that organized a question from database.
- *
- * @param quizQuestion question to organize.
- *
- * @return returns a SingleQuestion object.
- * */
-private fun prepareQuestion(quizQuestion: Quiz): SingleQuestion{
-    when(Locale.getDefault()){
-        Locale.ENGLISH -> {
-            return SingleQuestion(
-                quizQuestion.id,
-                quizQuestion.question,
-                listOf(
-                    quizQuestion.firstEn,
-                    quizQuestion.secondEn,
-                    quizQuestion.thirdEn
-                ),
-                getQuestionAnswerIndex(quizQuestion)
-            )
+private fun validation(question: BlankQuiz, selectedAnswer: Int): Boolean{
+    return when(question.answer){
+        "first" -> {
+            selectedAnswer == 1
         }
-        Locale.FRENCH -> {
-            return SingleQuestion(
-                quizQuestion.id,
-                quizQuestion.question,
-                listOf(
-                    quizQuestion.firstFr,
-                    quizQuestion.secondFr,
-                    quizQuestion.thirdFr
-                ),
-                getQuestionAnswerIndex(quizQuestion)
-            )
+        "second" -> {
+            selectedAnswer == 2
+        }
+        "third" -> {
+            selectedAnswer == 3
         }
         else -> {
-            return SingleQuestion(
-                quizQuestion.id,
-                quizQuestion.question,
-                listOf(
-                    quizQuestion.firstEn,
-                    quizQuestion.secondEn,
-                    quizQuestion.thirdEn
-                ),
-                getQuestionAnswerIndex(quizQuestion)
-            )
+            selectedAnswer == 0
         }
     }
 }
 /**
- * Function that maps the answer data from database to integer.
+ * Question string formatter.
  *
- * @param quizQuestion question to check for answer.
+ * @param question Question to format.
  *
- * @return an integer representing the answer's index.
+ * @return A formatted string.
  * */
-private fun getQuestionAnswerIndex(quizQuestion: Quiz): Int{
-    return when(quizQuestion.answer){
-        "first" -> 1
-        "second" -> 2
-        "third" -> 3
-        else -> 0
+private fun formatQuestion(question: String): String{
+    return question.replace("--","_____")
+}
+/**
+ * Function that checks if student already answered this question.
+ * If not, the answer is registered.
+ *
+ * @param quizAnswerViewModel Answered Question view-model-
+ * @param currentQuestion Answered question.
+ * @param studentId Student's id.
+ * */
+private fun insertAnswer(
+    quizAnswerViewModel: QuizAnswerViewModel,
+    currentQuestion: BlankQuiz,
+    studentId: String
+){
+    if (quizAnswerViewModel.dataList.value?.find {
+        it.questionType == QuestionType.FILL_BLANK && it.studentId == studentId && it.question ==  currentQuestion.question
+    } == null) {
+        quizAnswerViewModel.insertQuizAnswer(
+            QuizAnswer(
+                id = 0,
+                studentId = studentId,
+                question = currentQuestion.question,
+                questionType = QuestionType.FILL_BLANK
+            )
+        )
     }
 }

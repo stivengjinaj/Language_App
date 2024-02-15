@@ -34,6 +34,7 @@ import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.model.Cloud
 import com.stiven.languageapp.navigation.FirstCloudRoutes
+import com.stiven.languageapp.navigation.FourthCloudNavGraph
 import com.stiven.languageapp.navigation.SecondCloudNavGraph
 import com.stiven.languageapp.navigation.ThirdCloudNavGraph
 import com.stiven.languageapp.utils.CloudType
@@ -232,22 +233,19 @@ fun RoadMap(
                             CloudType.CLOUD1 -> {
                                 navController.navigate(FirstCloudRoutes.FIRST_CLOUD)
                             }
-
                             CloudType.CLOUD2 -> {
                                 if (studentPoints >= 50) {
                                     navController.navigate(SecondCloudNavGraph.SECOND_CLOUD)
                                 }
                             }
-
                             CloudType.CLOUD3 -> {
                                 if (studentPoints >= 0) {
                                     navController.navigate(ThirdCloudNavGraph.THIRD_CLOUD)
                                 }
                             }
-
                             CloudType.CLOUD4 -> {
-                                if (studentPoints >= 150) {
-                                    //TODO
+                                if (studentPoints >= 0) {
+                                    navController.navigate(FourthCloudNavGraph.FOURTH_CLOUD)
                                 }
                             }
                         }
