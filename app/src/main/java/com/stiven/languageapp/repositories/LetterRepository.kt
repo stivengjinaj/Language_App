@@ -21,7 +21,14 @@ class LetterRepository(private val letterDao: LetterDao) {
     suspend fun insertLetter(letter: Letter){
         letterDao.insertLetter(letter)
     }
-
+    /**
+     * Function that updates a letter and its similarity.
+     *
+     * @param letter letter to update
+     * */
+    suspend fun updateLetter(letter: Letter){
+        letterDao.updateLetter(letter)
+    }
     /**
      * Function that gets all letters present in database.
      *

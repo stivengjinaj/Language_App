@@ -7,6 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.screens.Lessons
 import com.stiven.languageapp.model.BottomBarScreens
+import com.stiven.languageapp.screens.Dictionary
+import com.stiven.languageapp.utils.LearningType
+import com.stiven.languageapp.utils.QuestionType
 import com.stiven.languageapp.viewmodels.BlankQuizViewModel
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
@@ -15,6 +18,7 @@ import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import com.stiven.languageapp.viewmodels.WordViewModel
 
 /**
  * Navigation graph for StudentPanel. Contains pages like: Lessons,
@@ -41,7 +45,8 @@ fun StudentNavGraph(
     lettersLearntViewModel: LettersLearntViewModel,
     quizViewModel: QuizViewModel,
     quizAnswerViewModel: QuizAnswerViewModel,
-    blankQuizViewModel: BlankQuizViewModel
+    blankQuizViewModel: BlankQuizViewModel,
+    wordViewModel: WordViewModel
 ) {
     insertStudentPoints(
         studentId = studentId,
@@ -112,7 +117,7 @@ fun StudentNavGraph(
         }
 
         composable(route = BottomBarScreens.Dictionary.route){
-
+            Dictionary(wordViewModel = wordViewModel)
         }
 
         composable(route = BottomBarScreens.Logout.route){
@@ -128,9 +133,47 @@ fun insertStudentPoints(
     quizAnswerViewModel: QuizAnswerViewModel,
     studentViewModel: StudentViewModel
 ){
-    val lettersPoints = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId }?.size
-    val quizAnsweredPoints = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId }?.size
-    if(lettersPoints != null && quizAnsweredPoints != null){
-        studentViewModel.updateStudent(studentId, lettersPoints+quizAnsweredPoints)
+    val lettersPronounced = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId && it.learningType == LearningType.PRONOUNCING }?.size?.let {
+        if(it != 0){
+            mapValue(it, 1.0, 22.0, 1.0, 50.0)
+        }else 0
+    }?.toInt()
+    val lettersWritten = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId && it.learningType == LearningType.WRITTEN }?.size?.let {
+        if(it != 0){
+            mapValue(it, 1.0, 21.0, 1.0, 50.0)
+        }else 0
+    }?.toInt()
+    val quizAnswered = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId && it.questionType == QuestionType.TRANSLATE }?.size?.let {
+        if(it != 0){
+            mapValue(it, 1.0, 12.0, 1.0, 50.0)
+        }else 0
+    }?.toInt()
+    val blankAnswered = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId && it.questionType == QuestionType.FILL_BLANK }?.size?.let {
+        if(it != 0){
+            mapValue(it, 1.0, 1.0, 5.0, 100.0)
+        }else 0
+    }?.toInt()
+    //val lettersPoints = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId }?.size
+    //val lettersPoints = lettersWritten?.let { lettersPronounced?.plus(it) }
+    if(lettersPronounced != null && lettersWritten != null && quizAnswered != null && blankAnswered != null){
+        studentViewModel.updateStudent(studentId, lettersPronounced+lettersWritten+quizAnswered+blankAnswered)
     }
+}
+
+fun mapValue(
+    value: Int,
+    fromIntervalStart: Double,
+    fromIntervalEnd: Double,
+    toIntervalStart: Double,
+    toIntervalEnd: Double
+): Double {
+    // Check if the value is within the fromInterval
+    if (value < fromIntervalStart || value > fromIntervalEnd) {
+        throw IllegalArgumentException("Value is not within the fromInterval")
+    }
+    // Calculate the proportion of the value within the fromInterval
+    val proportion = (value - fromIntervalStart) / (fromIntervalEnd - fromIntervalStart)
+
+    // Map the proportion to the toInterval
+    return toIntervalStart + proportion * (toIntervalEnd - toIntervalStart)
 }

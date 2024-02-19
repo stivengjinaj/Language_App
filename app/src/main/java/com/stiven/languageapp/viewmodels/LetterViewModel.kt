@@ -44,6 +44,16 @@ class LetterViewModel(application: Application): AndroidViewModel(application) {
             repository.insertLetter(letter)
         }
     }
+    /**
+     * Function that updates a letter and its similarity.
+     *
+     * @param letter letter to update.
+     * */
+    fun updateLetter(letter: Letter){
+        viewModelScope.launch (Dispatchers.IO){
+            repository.updateLetter(letter)
+        }
+    }
 
     /**
      * Function that deletes a similarity.

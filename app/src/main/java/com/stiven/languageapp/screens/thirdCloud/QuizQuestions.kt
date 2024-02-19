@@ -271,6 +271,7 @@ fun QuestionView(
                             }
                         }
                     }else{
+                        MediaPlayer.create(context, R.raw.incorrect).start()
                         incorrectAnswers.add(currentQuestion)
                         questionIndex.intValue += 1
                         selectedAnswer.intValue = 0

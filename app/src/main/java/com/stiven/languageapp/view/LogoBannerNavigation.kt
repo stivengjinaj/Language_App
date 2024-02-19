@@ -46,7 +46,7 @@ fun LogoBannerNavigation(screenSize: Int, onBackButtonClick: () -> Unit){
         }
         Text(
             modifier = Modifier.weight(0.3f),
-            text = "TrioLingo",
+            text = "LinguaLearn",
             textAlign = TextAlign.Center,
             style = TextStyle(
                 color = MaterialTheme.colorScheme.secondary,

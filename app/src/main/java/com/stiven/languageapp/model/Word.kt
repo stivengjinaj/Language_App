@@ -15,9 +15,9 @@ import androidx.room.PrimaryKey
 data class Word(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    @ColumnInfo(name = "italian")
-    val english: String,
     @ColumnInfo(name = "english")
+    val english: String,
+    @ColumnInfo(name = "italian")
     val italian: String,
     @ColumnInfo(name = "french")
     val french: String

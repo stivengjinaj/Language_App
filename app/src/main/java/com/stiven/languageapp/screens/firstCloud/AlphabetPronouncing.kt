@@ -253,8 +253,7 @@ fun learntLetter(
     studentId: String,
     letter: String
 ){
-    if(
-        lettersLearntViewModel.dataList.value?.find {
+    if(lettersLearntViewModel.dataList.value?.find {
             it.letterLearnt.uppercase() == letter && it.learningType == LearningType.PRONOUNCING && it.studentId == studentId
         } == null
     ){

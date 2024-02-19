@@ -14,6 +14,7 @@ import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import com.stiven.languageapp.viewmodels.WordViewModel
 
 /**
  * Starting point of the personalized part of the student. Contains
@@ -38,7 +39,8 @@ fun StudentPanel(
     lettersLearntViewModel: LettersLearntViewModel,
     quizViewModel: QuizViewModel,
     quizAnswerViewModel: QuizAnswerViewModel,
-    blankQuizViewModel: BlankQuizViewModel
+    blankQuizViewModel: BlankQuizViewModel,
+    wordViewModel: WordViewModel
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -57,7 +59,8 @@ fun StudentPanel(
             lettersLearntViewModel = lettersLearntViewModel,
             quizViewModel = quizViewModel,
             quizAnswerViewModel = quizAnswerViewModel,
-            blankQuizViewModel = blankQuizViewModel
+            blankQuizViewModel = blankQuizViewModel,
+            wordViewModel
         )
     }
 }

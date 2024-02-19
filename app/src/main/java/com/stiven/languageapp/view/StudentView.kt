@@ -100,7 +100,7 @@ fun StudentView(
         Spacer(modifier = Modifier.width((screenSize/6-50).dp))
         Image(
             painter = painterResource(id = R.drawable.delete),
-            contentDescription = "Student memoji",
+            contentDescription = "Delete student",
             modifier = Modifier.size((LocalConfiguration.current.screenWidthDp/12-5).dp).combinedClickable(
                 onClick = {
                     studentViewModel.deleteStudent(student.name, student.course)

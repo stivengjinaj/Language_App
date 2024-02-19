@@ -16,6 +16,7 @@ import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import com.stiven.languageapp.viewmodels.WordViewModel
 
 /**
  * The root (starting point) navigation graph. It contains SplashScreen, The first
@@ -38,6 +39,7 @@ fun RootNavGraph(
     speechToTextViewModel: SpeechToTextViewModel,
     letterViewModel: LetterViewModel,
     lettersLearntViewModel: LettersLearntViewModel,
+    wordViewModel: WordViewModel,
     quizViewModel: QuizViewModel,
     quizAnswerViewModel: QuizAnswerViewModel,
     blankQuizViewModel: BlankQuizViewModel
@@ -73,6 +75,10 @@ fun RootNavGraph(
                         studentViewModel = studentViewModel,
                         textToSpeechViewModel = textToSpeechViewModel,
                         speechToTextViewModel = speechToTextViewModel,
+                        letterViewModel = letterViewModel,
+                        wordViewModel = wordViewModel,
+                        quizViewModel = quizViewModel,
+                        blankQuizViewModel = blankQuizViewModel,
                         startingScreen = it
                     )
                 }
@@ -90,7 +96,8 @@ fun RootNavGraph(
                         lettersLearntViewModel = lettersLearntViewModel,
                         quizViewModel = quizViewModel,
                         quizAnswerViewModel = quizAnswerViewModel,
-                        blankQuizViewModel = blankQuizViewModel
+                        blankQuizViewModel = blankQuizViewModel,
+                        wordViewModel = wordViewModel
                     )
                 }
         }

@@ -1,7 +1,6 @@
 package com.stiven.languageapp.screens.fourthCloud
 
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -247,12 +246,12 @@ fun BlankQuestionView(
         ){
             IconButton(
                 onClick = {
-                    Log.d("QUESTIONS", questions.value?.size.toString())
                     if(validation(currentQuestion, selectedAnswer.intValue)){
                         insertAnswer(quizAnswerViewModel, currentQuestion, studentId)
                         MediaPlayer.create(context, R.raw.correct).start()
                         questionIndex.intValue += 1
                     }else{
+                        MediaPlayer.create(context, R.raw.incorrect).start()
                         incorrectAnswers.add(currentQuestion)
                         questionIndex.intValue += 1
                     }

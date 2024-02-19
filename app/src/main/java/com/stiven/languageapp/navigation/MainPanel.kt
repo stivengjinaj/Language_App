@@ -16,9 +16,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.view.BottomBarView
+import com.stiven.languageapp.viewmodels.BlankQuizViewModel
+import com.stiven.languageapp.viewmodels.LetterViewModel
+import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import com.stiven.languageapp.viewmodels.WordViewModel
 
 /**
  * Function that creates a Scaffold with a bottom bar and a navigation host
@@ -37,6 +41,10 @@ fun MainPanel(
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
     speechToTextViewModel: SpeechToTextViewModel,
+    letterViewModel: LetterViewModel,
+    wordViewModel: WordViewModel,
+    quizViewModel: QuizViewModel,
+    blankQuizViewModel: BlankQuizViewModel,
     startingScreen: String,
 ) {
     val navController = rememberNavController()
@@ -46,7 +54,7 @@ fun MainPanel(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "Triolingo",
+                        "LinguaLearn",
                         style = TextStyle(
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.secondary,
@@ -70,6 +78,10 @@ fun MainPanel(
             studentViewModel = studentViewModel,
             textToSpeechViewModel = textToSpeechViewModel,
             speechToTextViewModel = speechToTextViewModel,
+            letterViewModel = letterViewModel,
+            wordViewModel = wordViewModel,
+            quizViewModel = quizViewModel,
+            blankQuizViewModel = blankQuizViewModel,
             startingScreen = startingScreen
         )
     }

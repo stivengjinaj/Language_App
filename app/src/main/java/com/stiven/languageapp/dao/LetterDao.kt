@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.stiven.languageapp.model.Letter
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +16,9 @@ import kotlinx.coroutines.flow.Flow
 interface LetterDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLetter(letter: Letter)
+
+    @Update
+    suspend fun updateLetter(letter: Letter)
 
     @Query("DELETE FROM Letters WHERE similarTo = :similarTo")
     fun deleteSimilarTo(similarTo: String)

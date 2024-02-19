@@ -24,10 +24,7 @@ class WordViewModel(application: Application): AndroidViewModel(application) {
     private val app = application
     private val repository: WordRepository
     private val _dataList = MutableLiveData<List<Word>>()
-    private val _singleWord = MutableLiveData<Word>()
     val dataList: LiveData<List<Word>> = _dataList
-    val singleWord: LiveData<Word> = _singleWord
-
     /**
      * Function called when the view-model is called. Initializer.
      * */
@@ -41,7 +38,6 @@ class WordViewModel(application: Application): AndroidViewModel(application) {
                 }
         }
     }
-
     /**
      * Function that inserts a word in database.
      *
@@ -52,7 +48,6 @@ class WordViewModel(application: Application): AndroidViewModel(application) {
             repository.insertWord(word)
         }
     }
-
     /**
      * Function that updates a word in database.
      *
@@ -63,7 +58,6 @@ class WordViewModel(application: Application): AndroidViewModel(application) {
             repository.updateWord(word)
         }
     }
-
     /**
      * Function that updates Word's table in database.
      *
@@ -74,7 +68,6 @@ class WordViewModel(application: Application): AndroidViewModel(application) {
             repository.updateAll(words)
         }
     }
-
     /**
      * Function that deletes a word from database.
      *

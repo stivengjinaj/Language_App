@@ -11,9 +11,13 @@ import com.stiven.languageapp.screens.Classroom
 import com.stiven.languageapp.screens.Emergency
 import com.stiven.languageapp.screens.NewCourse
 import com.stiven.languageapp.screens.Settings
+import com.stiven.languageapp.viewmodels.BlankQuizViewModel
+import com.stiven.languageapp.viewmodels.LetterViewModel
+import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import com.stiven.languageapp.viewmodels.WordViewModel
 
 /**
  * A navigation graph inside the root navigation graph containing the general
@@ -33,6 +37,10 @@ fun BottomNavGraph(
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
     speechToTextViewModel: SpeechToTextViewModel,
+    letterViewModel: LetterViewModel,
+    wordViewModel: WordViewModel,
+    quizViewModel: QuizViewModel,
+    blankQuizViewModel: BlankQuizViewModel,
     startingScreen: String
 ) {
     val startingDestination = when(startingScreen){
@@ -110,7 +118,15 @@ fun BottomNavGraph(
                 )
             }
         ){
-            Settings(rootNavController, studentViewModel, textToSpeechViewModel)
+            Settings(
+                rootNavController = rootNavController,
+                studentViewModel = studentViewModel,
+                textToSpeechViewModel = textToSpeechViewModel,
+                letterViewModel = letterViewModel,
+                wordViewModel = wordViewModel,
+                quizViewModel = quizViewModel,
+                blankQuizViewModel = blankQuizViewModel
+            )
         }
 
         composable(
