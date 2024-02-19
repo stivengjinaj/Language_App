@@ -47,4 +47,27 @@ class TextToSpeechViewModel : ViewModel(){
             }
         }
     }
+
+    /**
+     * Function to be called in order to use custom language text-to-speech
+     *
+     * @param context application context
+     * @param text text to be spoken.
+     * @param language to use.
+     * */
+    fun customTextToSpeech(
+        context: Context,
+        text: String,
+        language: Locale
+    ){
+        italianTextToSpeech = TextToSpeech(context) {
+            if (it == TextToSpeech.SUCCESS){
+                textToSpeech?.let { textToSpeech ->
+                    textToSpeech.setLanguage(language)
+                    textToSpeech.setSpeechRate(1.0f)
+                    textToSpeech.speak(text, TextToSpeech.QUEUE_ADD, null, null)
+                }
+            }
+        }
+    }
 }

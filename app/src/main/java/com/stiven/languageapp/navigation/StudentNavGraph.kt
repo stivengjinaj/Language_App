@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.screens.Lessons
 import com.stiven.languageapp.model.BottomBarScreens
 import com.stiven.languageapp.screens.Dictionary
+import com.stiven.languageapp.screens.Exercises
 import com.stiven.languageapp.utils.LearningType
 import com.stiven.languageapp.utils.QuestionType
 import com.stiven.languageapp.viewmodels.BlankQuizViewModel
@@ -32,6 +33,10 @@ import com.stiven.languageapp.viewmodels.WordViewModel
  * @param speechToTextViewModel speech to text view-model.
  * @param letterViewModel letter's view-model.
  * @param lettersLearntViewModel Letters learnt ViewModel.
+ * @param quizViewModel Quiz ViewModel.
+ * @param quizAnswerViewModel Quiz answer ViewModel.
+ * @param blankQuizViewModel Fill in quiz ViewModel.
+ * @param wordViewModel Words ViewModel.
  * */
 @Composable
 fun StudentNavGraph(
@@ -113,11 +118,16 @@ fun StudentNavGraph(
             )
         }
         composable(route = BottomBarScreens.Exercises.route){
-
+            Exercises(
+                studentNavController = navController
+            )
         }
 
         composable(route = BottomBarScreens.Dictionary.route){
-            Dictionary(wordViewModel = wordViewModel)
+            Dictionary(
+                wordViewModel = wordViewModel,
+                textToSpeechViewModel = textToSpeechViewModel
+            )
         }
 
         composable(route = BottomBarScreens.Logout.route){

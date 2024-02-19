@@ -59,4 +59,9 @@
     <string name="selectedOption">Click the answer you think is correct.</string>
     <string name="fill_blank">You have to find the correct word to fill in the blank space</string>
     <string name="search">Search</string>
+    <string name="alphabetPronouncing">Alphabet pronouncing</string>
+    <string name="allExercises">All Exercises</string>
+    <string name="alphabetWriting">Alphabet Writing</string>
+    <string name="translationQuiz">Translation Quiz</string>
+    <string name="fillInQuiz">Fill-in Quiz</string>
 </resources>
