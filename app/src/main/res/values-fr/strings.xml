@@ -65,4 +65,8 @@
     <string name="alphabetWriting">Alphabet Writing</string>
     <string name="translationQuiz">Translation Quiz</string>
     <string name="fillInQuiz">Fill-in Quiz</string>
+    <string name="interaction">Conversations</string>
+    <string name="hospital">Hospital</string>
+    <string name="school">School</string>
+    <string name="police">Police</string>
 </resources>
