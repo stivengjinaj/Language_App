@@ -26,6 +26,7 @@ import com.stiven.languageapp.ui.theme.LanguageAppTheme
 import com.stiven.languageapp.utils.PreferencesManager
 import com.stiven.languageapp.model.SpeechToTextImpl
 import com.stiven.languageapp.viewmodels.BlankQuizViewModel
+import com.stiven.languageapp.viewmodels.EmergencyPhraseViewModel
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         val quizAnswerViewModel: QuizAnswerViewModel by viewModels()
         val blankQuizViewModel: BlankQuizViewModel by viewModels()
         val wordViewModel: WordViewModel by viewModels()
+        val emergencyPhraseViewModel: EmergencyPhraseViewModel by viewModels()
         val preferencesManager = PreferencesManager(this)
         setContent {
             var permission by remember {
@@ -94,7 +96,8 @@ class MainActivity : AppCompatActivity() {
                         wordViewModel = wordViewModel,
                         quizViewModel = quizViewModel,
                         quizAnswerViewModel = quizAnswerViewModel,
-                        blankQuizViewModel = blankQuizViewModel
+                        blankQuizViewModel = blankQuizViewModel,
+                        emergencyPhraseViewModel = emergencyPhraseViewModel
                     )
                 }
             }
