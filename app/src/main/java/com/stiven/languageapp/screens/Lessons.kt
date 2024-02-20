@@ -64,8 +64,7 @@ fun Lessons(
     speechToTextViewModel: SpeechToTextViewModel,
     studentId: String
 ) {
-    val id = studentId.toInt()
-    val student = studentViewModel.dataList.value!!.find { it.id == id }
+    val student = studentViewModel.dataList.value!!.find { it.id == studentId.toInt() }
     val screenSize = LocalConfiguration.current.screenWidthDp
     val background = if(isSystemInDarkTheme()) R.drawable.cloudybackgrounddark else R.drawable.cloudybackgroundlight
     Column (
@@ -234,7 +233,7 @@ fun RoadMap(
                                 navController.navigate(FirstCloudRoutes.FIRST_CLOUD)
                             }
                             CloudType.CLOUD2 -> {
-                                if (studentPoints >= 50) {
+                                if (studentPoints >= 0) {
                                     navController.navigate(SecondCloudNavGraph.SECOND_CLOUD)
                                 }
                             }
@@ -351,9 +350,13 @@ fun partiallyCompletedRoad(
  * @param roadCoordinates road coordinates.
  * @param clouds cloud coordinates.
  *
- * @return Pair<Float,Float> the new position of the avatar.
+ * @return Pair<Int,Pair<Float,Float>> the new position of the avatar.
  * */
-private fun pointsToPosition(points: Int, roadCoordinates: List<Pair<Offset, Offset>>, clouds: List<Cloud>): Pair<Int,Pair<Float,Float>>{
+private fun pointsToPosition(
+    points: Int,
+    roadCoordinates: List<Pair<Offset, Offset>>,
+    clouds: List<Cloud>
+): Pair<Int,Pair<Float,Float>>{
     val pointsRange: Pair<Int, Int>
     val segmentIndex: Int
     val completedRoads: Int
@@ -474,13 +477,10 @@ private fun mapValue(value: Int, fromRange: Pair<Int, Int>, toRange: Pair<Float,
     val (fromMin, fromMax) = fromRange
     val (toMin, toMax) = toRange
 
-    // Make sure value is within the fromRange
     val clampedValue = value.coerceIn(fromMin, fromMax)
 
-    // Calculate the ratio of how far along the fromRange the value is
     val ratio = (clampedValue - fromMin).toFloat() / (fromMax - fromMin)
 
-    // Map the ratio to the toRange
     return toMin + ratio * (toMax - toMin)
 }
 

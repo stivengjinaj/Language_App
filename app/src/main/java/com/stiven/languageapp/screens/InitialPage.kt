@@ -68,7 +68,7 @@ fun InitialPage(navController: NavHostController, textToSpeechViewModel: TextToS
             Text(
                 context.getString(R.string.welcome_message),
                 style = TextStyle(color = MaterialTheme.colorScheme.secondary,
-                    fontSize = (currentSize/12).sp,
+                    fontSize = (currentSize/12 - 5).sp,
                     fontWeight = FontWeight.Bold)
             )
         }

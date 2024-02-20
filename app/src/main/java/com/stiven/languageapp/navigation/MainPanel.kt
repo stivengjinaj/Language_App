@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.stiven.languageapp.view.BottomBarView
 import com.stiven.languageapp.viewmodels.BlankQuizViewModel
+import com.stiven.languageapp.viewmodels.EmergencyPhraseViewModel
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
@@ -31,7 +32,13 @@ import com.stiven.languageapp.viewmodels.WordViewModel
  * @param rootNavController root navigation controller to shift to another navigation host.
  * @param studentViewModel student's view-model.
  * @param textToSpeechViewModel text to speech view-model.
+ * @param speechToTextViewModel speech to text view-model.
+ * @param letterViewModel letter's ViewModel.
+ * @param wordViewModel words ViewModel.
+ * @param quizViewModel translate quiz ViewModel.
+ * @param blankQuizViewModel blank quiz ViewModel.
  * @param startingScreen the first screen to appear in BottomNavGraph based on user's choice.
+ * @param emergencyPhraseViewModel emergency phrases ViewModel.
  * */
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -46,6 +53,7 @@ fun MainPanel(
     quizViewModel: QuizViewModel,
     blankQuizViewModel: BlankQuizViewModel,
     startingScreen: String,
+    emergencyPhraseViewModel: EmergencyPhraseViewModel
 ) {
     val navController = rememberNavController()
     val screenSize = LocalConfiguration.current.screenWidthDp
@@ -82,7 +90,8 @@ fun MainPanel(
             wordViewModel = wordViewModel,
             quizViewModel = quizViewModel,
             blankQuizViewModel = blankQuizViewModel,
-            startingScreen = startingScreen
+            startingScreen = startingScreen,
+            emergencyPhraseViewModel = emergencyPhraseViewModel
         )
     }
 }

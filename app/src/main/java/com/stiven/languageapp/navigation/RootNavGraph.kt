@@ -9,6 +9,7 @@ import com.stiven.languageapp.screens.InitialTour
 import com.stiven.languageapp.screens.SplashScreen
 import com.stiven.languageapp.utils.PreferencesManager
 import com.stiven.languageapp.viewmodels.BlankQuizViewModel
+import com.stiven.languageapp.viewmodels.EmergencyPhraseViewModel
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
@@ -29,6 +30,11 @@ import com.stiven.languageapp.viewmodels.WordViewModel
  * @param speechToTextViewModel speech to text view-model.
  * @param letterViewModel letter's ViewModel.
  * @param lettersLearntViewModel letter's learnt ViewModel.
+ * @param wordViewModel words ViewModel.
+ * @param quizViewModel translate quiz ViewModel.
+ * @param quizAnswerViewModel quiz answers ViewModel.
+ * @param blankQuizViewModel blank quiz ViewModel.
+ * @param emergencyPhraseViewModel emergency phrases ViewModel.
  * */
 @Composable
 fun RootNavGraph(
@@ -42,7 +48,8 @@ fun RootNavGraph(
     wordViewModel: WordViewModel,
     quizViewModel: QuizViewModel,
     quizAnswerViewModel: QuizAnswerViewModel,
-    blankQuizViewModel: BlankQuizViewModel
+    blankQuizViewModel: BlankQuizViewModel,
+    emergencyPhraseViewModel: EmergencyPhraseViewModel
 ) {
     NavHost(
         navController = navController,
@@ -79,7 +86,8 @@ fun RootNavGraph(
                         wordViewModel = wordViewModel,
                         quizViewModel = quizViewModel,
                         blankQuizViewModel = blankQuizViewModel,
-                        startingScreen = it
+                        startingScreen = it,
+                        emergencyPhraseViewModel = emergencyPhraseViewModel
                     )
                 }
         }

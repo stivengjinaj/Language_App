@@ -86,7 +86,11 @@ fun WordView(
             IconButton(onClick = {
                 textToSpeechViewModel.textToSpeech(context, word.italian)
             }) {
-                Icon(imageVector = Icons.Rounded.PlayArrow, contentDescription = "Listen")
+                Icon(
+                    imageVector = Icons.Rounded.PlayArrow,
+                    contentDescription = "Listen",
+                    tint = MaterialTheme.colorScheme.secondary
+                )
             }
         }
         if (expanded.value) {

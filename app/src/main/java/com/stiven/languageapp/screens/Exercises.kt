@@ -48,7 +48,7 @@ fun Exercises(
         Row {
             Text(
                 text = context.getString(R.string.allExercises),
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontWeight = FontWeight.Bold,
                 fontSize = (screenSize/6 - 40).sp
             )

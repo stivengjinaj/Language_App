@@ -12,6 +12,7 @@ import com.stiven.languageapp.screens.Emergency
 import com.stiven.languageapp.screens.NewCourse
 import com.stiven.languageapp.screens.Settings
 import com.stiven.languageapp.viewmodels.BlankQuizViewModel
+import com.stiven.languageapp.viewmodels.EmergencyPhraseViewModel
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.QuizViewModel
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
@@ -28,7 +29,13 @@ import com.stiven.languageapp.viewmodels.WordViewModel
  * @param navController navigation Host Controller.
  * @param studentViewModel view-model that handles operations in Students database.
  * @param textToSpeechViewModel view-model that handles text-to-speech operations.
+ * @param speechToTextViewModel view-model that handles speech-to-text.
+ * @param letterViewModel letter's ViewModel.
+ * @param wordViewModel words ViewModel.
+ * @param quizViewModel translate quiz ViewModel.
+ * @param blankQuizViewModel blank quiz ViewModel.
  * @param startingScreen the first screen selected in bottom navigation bar after user chooses it in Initial Screen.
+ * @param emergencyPhraseViewModel emergency phrases ViewModel.
  * */
 @Composable
 fun BottomNavGraph(
@@ -41,7 +48,8 @@ fun BottomNavGraph(
     wordViewModel: WordViewModel,
     quizViewModel: QuizViewModel,
     blankQuizViewModel: BlankQuizViewModel,
-    startingScreen: String
+    startingScreen: String,
+    emergencyPhraseViewModel: EmergencyPhraseViewModel
 ) {
     val startingDestination = when(startingScreen){
         "classroom" -> BottomBarScreens.Classroom
@@ -144,7 +152,10 @@ fun BottomNavGraph(
                 )
             }
         ){
-            Emergency()
+            Emergency(
+                emergencyPhraseViewModel = emergencyPhraseViewModel,
+                textToSpeechViewModel = textToSpeechViewModel
+            )
         }
     }
 }
