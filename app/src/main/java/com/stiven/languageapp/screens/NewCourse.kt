@@ -430,7 +430,14 @@ fun NewCourse(
         )
     }
 }
-
+/**
+ * Composable view that creates the rotation effect.
+ *
+ * @param avatars list of avatars.
+ * @param screenSize screen size.
+ * @param triggerError boolean that triggers an error effect.
+ * @param onClick function callback that to invoke when an avatar is clicked.
+ * */
 @Composable
 fun RotatingAvatars(
     avatars: List<Int>,
