@@ -1,57 +1,59 @@
 package com.stiven.languageapp.screens
 
 import android.util.Log
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
@@ -62,7 +64,9 @@ import com.stiven.languageapp.model.Student
 import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
-import java.util.Locale
+import kotlinx.coroutines.delay
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * Displays the page that prompts the user to start
@@ -80,17 +84,22 @@ import java.util.Locale
  * @param studentViewModel view-model that handles student's data
  * @param textToSpeechViewModel view-model for text-to-speech accessibility
  * */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToSpeechViewModel, navController: NavHostController) {
+fun NewCourse(
+    studentViewModel: StudentViewModel,
+    textToSpeechViewModel: TextToSpeechViewModel,
+    navController: NavHostController
+) {
     var studentName by rememberSaveable { mutableStateOf("") }
     var studentNameError by rememberSaveable { mutableStateOf(false) }
-    val errorMessage = stringResource(R.string.errorMessage)
-    val interactionSource = remember { MutableInteractionSource() }
+    val noAvatarError = remember {
+        mutableStateOf(false)
+    }
     val chosenCourse by rememberSaveable { mutableStateOf((Languages.ITALIAN)) }
     var existingStudentDialog by rememberSaveable { mutableStateOf(false) }
     var maxStudentDialog by rememberSaveable { mutableStateOf(false) }
-    val screenHeight = LocalConfiguration.current.screenHeightDp / 20
+    val screenSize = LocalConfiguration.current.screenWidthDp
     val context = LocalContext.current
     val iconsList = listOf(
         R.raw.bella,
@@ -109,14 +118,13 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     )
     val showDialog = remember { mutableStateOf(false) }
     // Default selected icon
-    val selectedIcon = remember { mutableIntStateOf(iconsList[1]) }
-
+    val selectedIcon = remember { mutableIntStateOf(-1) }
     Column (
         modifier = Modifier
             .alpha(if (showDialog.value) 0.3f else 1.0f)
             .fillMaxWidth()
     ){
-        Spacer(modifier = Modifier.height((screenHeight+50).dp))
+        Spacer(modifier = Modifier.height((screenSize/6 + 20).dp))
         //Row containing the title of the page
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -133,99 +141,88 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 text = stringResource(R.string.new_course_title),
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.inversePrimary),
-                fontSize = (screenHeight-10).sp,
+                fontSize = (screenSize/6 - 30).sp,
                 fontWeight = FontWeight.Bold
             )
         }
-        Spacer(modifier = Modifier.height((screenHeight).dp))
-        //Row containing the text field for for the student's name
-        Row(
+        Spacer(modifier = Modifier.height((screenSize/6 - 30).dp))
+        //Row containing the names for the students.
+        Row (
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .background(Color.Transparent)
-                    .width((screenHeight+300).dp)
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onLongPress = {
-                                textToSpeechViewModel.textToSpeech(
-                                    context,
-                                    context.getString(R.string.student_name_speech)
-                                )
-                            }
-                        )
-                    },
-                value = studentName,
-                onValueChange = {
-                    studentName = it
-                    if (studentName.isNotEmpty()) {
-                        studentNameError = false
-                    }
-                },
-                label = {
-                    Text(
-                        text = stringResource(R.string.student_name),
-                        style = TextStyle(
-                            color = if (studentNameError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary
-                        ),
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                isError = studentNameError,
-                supportingText = {
-                    if (studentNameError) {
-                        Text(text = errorMessage, style = TextStyle(color = MaterialTheme.colorScheme.error))
-                    }
-                },
-                shape = RoundedCornerShape(50),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done
-                )
+            horizontalArrangement = Arrangement.SpaceAround
+        ){
+            StudentButton(
+                name = "Tiffany",
+                screenSize = screenSize,
+                borderColor = if(studentNameError)
+                    MaterialTheme.colorScheme.error
+                else if(studentName == "Tiffany") Color.Green else MaterialTheme.colorScheme.primary,
+                onClick = {
+                    studentName = "Tiffany"
+                    studentNameError = false
+                }
+            )
+            StudentButton(
+                name = "Bella",
+                screenSize = screenSize,
+                borderColor = if(studentNameError)
+                    MaterialTheme.colorScheme.error
+                else if(studentName == "Bella") Color.Green else MaterialTheme.colorScheme.primary,
+                onClick = {
+                    studentName = "Bella"
+                    studentNameError = false
+                }
+            )
+            StudentButton(
+                name = "Priyanka",
+                screenSize = screenSize,
+                borderColor = if(studentNameError)
+                    MaterialTheme.colorScheme.error
+                else if(studentName == "Priyanka") Color.Green else MaterialTheme.colorScheme.primary,
+                onClick = {
+                    studentName = "Priyanka"
+                    studentNameError = false
+                }
             )
         }
-        Spacer(modifier = Modifier.height((screenHeight).dp))
-        //Row containing the italian button
-        Row(
+        Spacer(modifier = Modifier.height((screenSize/6 - 60).dp))
+        Row (
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Box(modifier = Modifier.size((screenHeight * 5).dp)) {
-                Image(
-                    painter = painterResource(id = R.drawable.it),
-                    "ITALIAN FLAG",
-                    modifier = Modifier
-                        .size((screenHeight * 5).dp)
-                        .combinedClickable(
-                            interactionSource = interactionSource,
-                            indication = null,
-                            onClick = {
-
-                            },
-                            onLongClick = {
-                                textToSpeechViewModel.textToSpeech(
-                                    context,
-                                    context.getString(R.string.italian_button_speech)
-                                )
-                            }
-                        )
-                )
-            }
+            StudentButton(
+                name = "Chris",
+                screenSize = screenSize,
+                borderColor = if(studentNameError)
+                    MaterialTheme.colorScheme.error
+                else if(studentName == "Chris") Color.Green else MaterialTheme.colorScheme.primary,
+                onClick = {
+                    studentName = "Chris"
+                    studentNameError = false
+                }
+            )
+            StudentButton(
+                name = "Mattew",
+                screenSize = screenSize,
+                borderColor = if(studentNameError)
+                    MaterialTheme.colorScheme.error
+                else if(studentName == "Mattew") Color.Green else MaterialTheme.colorScheme.primary,
+                onClick = {
+                    studentName = "Mattew"
+                    studentNameError = false
+                }
+            )
         }
-        Spacer(modifier = Modifier.height(screenHeight.dp))
+        Spacer(modifier = Modifier.height((screenSize/6 + 50).dp))
         //Row containing the list of icons for student's account
-        Row {
-            IconSelector(icons = iconsList) { icon ->
-                selectedIcon.intValue = icon
-            }
+        RotatingAvatars(
+            avatars = iconsList,
+            screenSize = screenSize,
+            triggerError = noAvatarError
+        ) {
+            selectedIcon.intValue = it
         }
-        Spacer(modifier = Modifier.height((screenHeight-10).dp))
+        Spacer(modifier = Modifier.height(((screenSize/3)).dp))
         //Row containing confirm button to create the account
         Row(
             modifier = Modifier
@@ -234,10 +231,13 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     onClick = {
                         if (studentName.isEmpty()) {
                             studentNameError = true
+                        }
+                        if (selectedIcon.intValue == -1) {
+                            noAvatarError.value = true
                         } else {
                             //STUDENT DATA
                             val studentToInsert = Student(
-                                name = formatString(studentName),
+                                name = studentName,
                                 course = chosenCourse,
                                 picture = selectedIcon.intValue,
                                 points = 0
@@ -264,14 +264,20 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                 ),
             horizontalArrangement = Arrangement.Center
         ) {
-            OutlinedButton(
+            IconButton(
+                modifier = Modifier.size((screenSize/6).dp),
                 onClick = {
                     if (studentName.isEmpty()) {
                         studentNameError = true
-                    } else {
+                    }
+                    if (selectedIcon.intValue < 0){
+                        Log.d("NO AVATAR", "YES")
+                        noAvatarError.value = true
+                    }
+                    else {
                         //STUDENT DATA
                         val studentToInsert = Student(
-                            name = formatString(studentName),
+                            name = studentName,
                             course = chosenCourse,
                             picture = selectedIcon.intValue,
                             points = 0
@@ -287,23 +293,15 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                             existingStudentDialog = true
                         }
                     }
-                },
-                shape = RoundedCornerShape(50),
-                border = BorderStroke(2.dp,
-                    MaterialTheme.colorScheme.primary
-                ),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
+                }
             ) {
-                Text(
-                    text = stringResource(R.string.next),
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(
-                        color = MaterialTheme.colorScheme.secondary,
-                        fontSize = (screenHeight - 25).sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                Icon(
+                    modifier = Modifier
+                        .rotate(90f)
+                        .size((screenSize / 6 - 10).dp),
+                    imageVector = Icons.Rounded.ArrowUpward,
+                    contentDescription = "Next",
+                    tint = MaterialTheme.colorScheme.inversePrimary
                 )
             }
         }
@@ -328,7 +326,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                         onClick = {
                             existingStudentDialog = false
                             val studentToInsert = Student(
-                                name = formatString(studentName),
+                                name = studentName,
                                 course = chosenCourse,
                                 picture = selectedIcon.intValue,
                                 points = 0
@@ -344,7 +342,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     onClick = {
                         existingStudentDialog = false
                         val studentToInsert = Student(
-                            name = formatString(studentName),
+                            name = studentName,
                             course = chosenCourse,
                             picture = selectedIcon.intValue,
                             points = 0
@@ -405,6 +403,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     modifier = Modifier.combinedClickable(
                         onClick = {
                             maxStudentDialog = false
+                            showDialog.value = false
                         },
                         onLongClick = {
                             textToSpeechViewModel.textToSpeech(context,context.getString(R.string.confirm_button_speech))
@@ -412,6 +411,7 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
                     ),
                     onClick = {
                         maxStudentDialog = false
+                        showDialog.value = false
                     },
                     border = BorderStroke(2.dp,
                         MaterialTheme.colorScheme.primary
@@ -431,77 +431,123 @@ fun NewCourse(studentViewModel: StudentViewModel, textToSpeechViewModel: TextToS
     }
 }
 
-/**
- * Composable function that contains a LazyRow with icons to choose
- *
- * @param icons a list of icons to choose
- * @param onIconSelected callback function when the item is selected
- * */
 @Composable
-fun IconSelector(
-    icons: List<Int>,
-    onIconSelected: (Int) -> Unit
-) {
-    val currentSize = LocalConfiguration.current.screenWidthDp
-    var selectedIcon by remember { mutableIntStateOf(icons[1]) }
-    Row (
-        modifier = Modifier
-            .padding((currentSize/12).dp,0.dp)
-    ){
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
+fun RotatingAvatars(
+    avatars: List<Int>,
+    screenSize: Int,
+    triggerError: MutableState<Boolean>,
+    onClick: (Int) -> Unit
+){
+    val someAvatars = remember {
+        mutableStateOf(avatars.shuffled().subList(0, 8))
+    }
+    val centerAvatar = remember {
+        mutableIntStateOf(-1)
+    }
+    val radius = (screenSize/5 + 50).dp
+    val rotationAnimation = rememberInfiniteTransition(label = "")
+    val rotationAngle by rotationAnimation.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 30000,
+                easing = LinearEasing
+            )
+        ),
+        label = ""
+    )
+    val errorRotation by rotationAnimation.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 2000,
+                easing = LinearOutSlowInEasing
+            )
+        ),
+        label = ""
+    )
+    LaunchedEffect(triggerError.value){
+        if(triggerError.value){
+            delay(2000)
+            triggerError.value = false
+        }
+    }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .graphicsLayer(
+                    rotationZ = if(triggerError.value) errorRotation else rotationAngle
+                ),
+            contentAlignment = Alignment.Center
         ) {
-            items(icons) { icon ->
-                val isSelected = icon == selectedIcon
-                IconItem(
-                    icon = icon,
-                    isSelected = isSelected,
-                    onIconSelected = {
-                        selectedIcon = it
-                        onIconSelected(it)
-                    }
+            val angleStep = 360f / someAvatars.value.size
+            someAvatars.value.forEachIndexed { index, avatar ->
+                val angle = angleStep * index
+                val x = cos(Math.toRadians(angle.toDouble())) * radius.value
+                val y = sin(Math.toRadians(angle.toDouble())) * radius.value
+
+                Image(
+                    painter = painterResource(id = avatar),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .offset(x.dp, y.dp)
+                        .rotate(-rotationAngle)
+                        .size((screenSize / 6).dp)
+                        .clickable {
+                            centerAvatar.intValue = avatar
+                            onClick(avatar)
+                        },
+                    contentScale = ContentScale.Crop
                 )
+                if(centerAvatar.intValue >= 0){
+                    Image(
+                        painter = painterResource(centerAvatar.intValue),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size((screenSize / 6 + 50).dp)
+                            .rotate(if(triggerError.value) -errorRotation else -rotationAngle),
+                        contentScale = ContentScale.Crop
+                    )
+                }else{
+                    Box(
+                        modifier = Modifier.size((screenSize/6 + 50).dp)
+                    )
+                }
             }
         }
     }
 }
 
 /**
- * Composable function that creates an icon profile picture for user
+ * Customized outlined button containing student names.
  *
- * @param icon icon path
- * @param isSelected whether the item is selected
- * @param onIconSelected callback function when item is selected
+ * @param name Student name.
+ * @param screenSize Screen size.
+ * @param onClick function callback when clicked.
  * */
 @Composable
-fun IconItem(
-    icon: Int,
-    isSelected: Boolean,
-    onIconSelected: (Int) -> Unit
-) {
-    val alpha = if (isSelected) 1f else 0.5f
-
-    Image(
-        painter = painterResource(id = icon),
-        contentDescription = null,
-        modifier = Modifier
-            .padding(8.dp, 0.dp, 8.dp, 0.dp)
-            .size((LocalConfiguration.current.screenWidthDp / 6).dp)
-            .alpha(alpha)
-            .clickable { onIconSelected(icon) }
-    )
-}
-
-/**
- * Function that formats a string. It removes blank spaces
- * and it capitalizes the string
- *
- * @param string Unformatted string
- * @return a trimmed string without blank spaces
- * */
-fun formatString(string: String): String {
-    // Trim leading and trailing spaces and convert to lowercase
-    val trimmedString = string.trim().lowercase(Locale.ROOT)
-
-    return trimmedString.substring(0, 1).uppercase(Locale.ROOT) + trimmedString.substring(1)
+fun StudentButton(
+    name: String,
+    screenSize: Int,
+    borderColor: Color,
+    onClick: () -> Unit
+){
+    OutlinedButton(
+        border = BorderStroke(2.dp, borderColor),
+        onClick = onClick,
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
+    ) {
+        Text(
+            text = name,
+            color = MaterialTheme.colorScheme.secondary,
+            fontSize = (screenSize/6 - 50).sp
+        )
+    }
 }
