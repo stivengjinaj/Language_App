@@ -43,7 +43,7 @@
     <string name="page_1">Fare clic su questo pulsante per andare dove si trova l\'aula e dove sono tutti gli studenti. Se hai creato uno studente per te stesso, lo troverai qui. Cliccandolo accederai al tuo portfolio personalizzato.</string>
     <string name="page_2">Fai clic su questo pulsante per creare uno studente per te con la lingua che desideri imparare.</string>
     <string name="page_3">Fare clic su questo pulsante per utilizzare il dizionario per casi di emergenza.</string>
-    <string name="page_4">Questo è il tuo account studente. Clicca sul nome per aprire il tuo portfolio personalizzato.</string>
+    <string name="classroom_guide">Questo è il tuo account studente. Clicca sul nome per aprire il tuo portfolio personalizzato.</string>
     <string name="play_walkthrough">Riproduci la guida iniziale</string>
     <string name="alphabet">Alfabeto</string>
     <string name="check">Controlla</string>
@@ -69,4 +69,9 @@
     <string name="hospital">Hospital</string>
     <string name="school">School</string>
     <string name="police">Police</string>
+    <string name="roadmap_guide">This is your learning journey. For every cloud you have to learn the lesson in order to move on to the other clouds and reach the finish line</string>
+    <string name="dictionary_guide">Here you will find the dictionary. This is the search bar where you can find the word you need.</string>
+    <string name="searched_word">This is the word in italian.</string>
+    <string name="listen_word">Clicking this icon, you can listen the pronounciation.</string>
+    <string name="translate_word">Clicking the card, a translation in english and french will appear.</string>
 </resources>
