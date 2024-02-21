@@ -31,7 +31,7 @@ fun LogoBanner(screenSize: Int){
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "LinguaLearn",
+            text = "ItaLearn",
             style = TextStyle(
                 color = MaterialTheme.colorScheme.secondary,
                 fontSize = (screenSize / 12).sp,

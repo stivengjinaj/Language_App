@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Language App</string>
-    <string name="welcome_message">Benvenuto su LinguaLearn</string>
+    <string name="welcome_message">Benvenuto su ItaLearn</string>
     <string name="errorMessage">Inserisci il nome dello studente.</string>
     <string name="student_name_speech">Inserisci il nome dello studente</string>
     <string name="new_course_title">Inizia il corso</string>
@@ -60,12 +60,12 @@
     <string name="selectedOption">Click this to choose the first option as your answer</string>
     <string name="fill_blank">You have to find the correct word to fill in the blank space</string>
     <string name="search">Search</string>
-    <string name="alphabetPronouncing">Alphabet pronouncing</string>
-    <string name="allExercises">All Exercises</string>
-    <string name="alphabetWriting">Alphabet Writing</string>
-    <string name="translationQuiz">Translation Quiz</string>
-    <string name="fillInQuiz">Fill-in Quiz</string>
-    <string name="interaction">Conversations</string>
+    <string name="alphabetPronouncing">Pronuncia</string>
+    <string name="allExercises">Tutti gli esercizi</string>
+    <string name="alphabetWriting">Scrittura</string>
+    <string name="translationQuiz">Quiz Traduzione</string>
+    <string name="fillInQuiz">Quiz Spazi Vuoti</string>
+    <string name="interaction">Conversazioni</string>
     <string name="hospital">Hospital</string>
     <string name="school">School</string>
     <string name="police">Police</string>

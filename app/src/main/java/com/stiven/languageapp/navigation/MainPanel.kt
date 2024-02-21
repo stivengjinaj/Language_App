@@ -62,7 +62,7 @@ fun MainPanel(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "LinguaLearn",
+                        "ItaLearn",
                         style = TextStyle(
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.secondary,
