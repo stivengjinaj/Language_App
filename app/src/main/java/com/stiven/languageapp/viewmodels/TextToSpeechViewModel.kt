@@ -70,4 +70,10 @@ class TextToSpeechViewModel : ViewModel(){
             }
         }
     }
+    /**
+     * Function that stops. text to speech
+     * */
+    fun stopTextToSpeech(){
+        textToSpeech?.stop()
+    }
 }

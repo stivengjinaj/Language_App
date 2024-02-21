@@ -168,6 +168,7 @@ fun FourthIntroduction(
             IconButton(
                 onClick = {
                     if(alphaIndex.intValue == 0){
+                        textToSpeechViewModel.stopTextToSpeech()
                         textToSpeechViewModel.textToSpeech(context, context.getString(R.string.selectedOption))
                         questionAlpha.floatValue = 0.3f
                         optionsAlpha.floatValue = 1f
@@ -208,6 +209,7 @@ fun FourthIntroduction(
     }
     LaunchedEffect(Dispatchers.IO){
         if(alphaIndex.intValue == 0){
+            textToSpeechViewModel.stopTextToSpeech()
             textToSpeechViewModel.textToSpeech(context, context.getString(R.string.fill_blank))
         }
     }

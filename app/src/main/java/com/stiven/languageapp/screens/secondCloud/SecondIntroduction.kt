@@ -172,21 +172,25 @@ fun SecondIntroduction (
                 onClick = {
                     when(focusIndex.intValue){
                         0 -> {
+                            textToSpeechViewModel.stopTextToSpeech()
                             textAlpha.floatValue = 0.2f
                             canvasAlpha.floatValue = 1f
                             textToSpeechViewModel.textToSpeech(context, context.getString(R.string.canvasIntro))
                         }
                         1 -> {
+                            textToSpeechViewModel.stopTextToSpeech()
                             canvasAlpha.floatValue = 0.2f
                             cancelAlpha.floatValue = 1f
                             textToSpeechViewModel.textToSpeech(context, context.getString(R.string.cancelIntro))
                         }
                         2 -> {
+                            textToSpeechViewModel.stopTextToSpeech()
                             cancelAlpha.floatValue = 0.2f
                             validationAlpha.floatValue = 1f
                             textToSpeechViewModel.textToSpeech(context, context.getString(R.string.validationIntro))
                         }
                         3 -> {
+                            textToSpeechViewModel.stopTextToSpeech()
                             validationAlpha.floatValue = 0.2f
                             cameraAlpha.floatValue = 1f
                             textToSpeechViewModel.textToSpeech(context, context.getString(R.string.cameraWritingIntro))
@@ -231,6 +235,7 @@ fun SecondIntroduction (
         LaunchedEffect(Dispatchers.IO){
             if(focusIndex.intValue == 0){
                 delay(500)
+                textToSpeechViewModel.stopTextToSpeech()
                 textToSpeechViewModel.textToSpeech(context,context.getString(R.string.letterWritingText))
             }
         }

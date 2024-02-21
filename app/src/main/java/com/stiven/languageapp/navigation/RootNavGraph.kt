@@ -65,7 +65,8 @@ fun RootNavGraph(
         composable(Graph.TOUR){
             InitialTour(
                 rootNavController = navController,
-                preferencesManager = preferencesManager
+                preferencesManager = preferencesManager,
+                textToSpeechViewModel = textToSpeechViewModel
             )
         }
         composable(Graph.INITIAL){

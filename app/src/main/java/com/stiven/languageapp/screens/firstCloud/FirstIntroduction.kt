@@ -133,12 +133,14 @@ fun FirstIntroduction(
                 onClick = {
                     when(focusIndex.intValue){
                         0 -> {
+                            textToSpeechViewModel.stopTextToSpeech()
                             textToSpeechViewModel.textToSpeech(context, context.getString(R.string.letterPronouncingPlay))
                             textAlpha.floatValue = 0.2f
                             playAlpha.floatValue = 1f
                             focusIndex.intValue += 1
                         }
                         1 -> {
+                            textToSpeechViewModel.stopTextToSpeech()
                             textToSpeechViewModel.textToSpeech(context, context.getString(R.string.letterPronouncingMic))
                             textAlpha.floatValue = 0.2f
                             playAlpha.floatValue = 0.2f

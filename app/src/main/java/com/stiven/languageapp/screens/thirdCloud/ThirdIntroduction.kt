@@ -175,6 +175,7 @@ fun ThirdIntroduction(
                 onClick = {
                     when (alphaIndex.intValue) {
                         1 -> {
+                            textToSpeechViewModel.stopTextToSpeech()
                             textToSpeechViewModel
                                 .textToSpeech(
                                     context,
@@ -220,6 +221,7 @@ fun ThirdIntroduction(
     LaunchedEffect(Dispatchers.IO){
         if(alphaIndex.intValue == 0){
             delay(500)
+            textToSpeechViewModel.stopTextToSpeech()
             textToSpeechViewModel.textToSpeech(context, context.getString(R.string.questionIntro))
             alphaIndex.intValue += 1
         }
