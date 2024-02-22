@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.model.LetterLearnt
 import com.stiven.languageapp.navigation.Graph
+import com.stiven.languageapp.navigation.SecondCloudNavGraph
 import com.stiven.languageapp.utils.LearningType
 import com.stiven.languageapp.view.LogoBannerNavigation
 import com.stiven.languageapp.view.WritingML
@@ -58,6 +59,7 @@ fun AlphabetWriting(
         )
         Spacer(modifier = Modifier.height((screenSize / 6).dp))
         WritingView(
+            navController = navController,
             studentId = studentId,
             studentViewModel = studentViewModel,
             textToSpeechViewModel = textToSpeechViewModel,
@@ -69,6 +71,7 @@ fun AlphabetWriting(
 
 @Composable
 fun WritingView(
+    navController: NavHostController,
     studentId: String,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
@@ -127,7 +130,6 @@ fun WritingView(
                                     learningType = LearningType.WRITTEN
                                 )
                             )
-                            studentViewModel.updateStudent(studentId, student.points + 1)
                         }
                     },
                     correctness = correctness
@@ -148,6 +150,7 @@ fun WritingView(
         else {
             LaunchedEffect(Dispatchers.IO){
                 MediaPlayer.create(context, R.raw.finish).start()
+                navController.navigate(SecondCloudNavGraph.CHANGE_NAME)
             }
         }
     }

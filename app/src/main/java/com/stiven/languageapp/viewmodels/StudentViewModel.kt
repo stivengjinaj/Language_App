@@ -76,6 +76,17 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
             repository.updateStudent(studentId, points)
         }
     }
+    /**
+     * Function that updates the name of the student.
+     *
+     * @param studentId student to be updated ID.
+     * @param newName new name to be assigned.
+     * */
+    fun updateName(studentId: String, newName: String){
+        viewModelScope.launch (Dispatchers.IO){
+            repository.updateName(studentId, newName)
+        }
+    }
 
     /**
      * Function that deletes a student from database.

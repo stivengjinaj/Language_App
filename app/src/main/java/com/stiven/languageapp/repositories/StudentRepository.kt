@@ -32,6 +32,15 @@ class StudentRepository(private val studentDao: StudentDao) {
     suspend fun updateStudent(studentId: String, points: Int){
         studentDao.updateStudent(studentId, points)
     }
+    /**
+     * Function that updates student name.
+     *
+     * @param studentId student id to update.
+     * @param newName name to be assigned.
+     * */
+    suspend fun updateName(studentId: String, newName: String){
+        studentDao.updateName(studentId, newName)
+    }
 
     /**
      * Function that gets all students present in database.

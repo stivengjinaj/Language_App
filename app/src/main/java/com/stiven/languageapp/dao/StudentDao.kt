@@ -20,6 +20,9 @@ interface StudentDao {
     @Query("UPDATE Students SET points = :points WHERE id = :studentName")
     suspend fun updateStudent(studentName: String, points: Int)
 
+    @Query("UPDATE Students SET name = :newName WHERE id = :studentId")
+    suspend fun updateName(studentId: String, newName: String)
+
     @Query("DELETE FROM Students WHERE name = :studentId AND course = :course")
     fun deleteStudent(studentId: String, course: Languages)
 

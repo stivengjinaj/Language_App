@@ -73,4 +73,6 @@
     <string name="searched_word">This is the word in italian.</string>
     <string name="listen_word">Clicking this icon, you can listen the pronunciation.</string>
     <string name="translate_word">Clicking the card, a translation in english and french will appear.</string>
+    <string name="name">Name…</string>
+    <string name="insert_name">Change student\'s name</string>
 </resources>

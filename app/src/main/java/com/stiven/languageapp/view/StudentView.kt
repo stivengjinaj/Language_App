@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -72,11 +73,12 @@ fun StudentView(
             contentDescription = "Student memoji",
             modifier = Modifier.size((LocalConfiguration.current.screenWidthDp/4).dp)
         )
-        Spacer(modifier = Modifier.width((screenSize/6-15).dp))
+        Spacer(modifier = Modifier.width((screenSize/6-30).dp))
         Column (
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             ClickableText(
+                modifier = Modifier.width((screenSize/6 + 50).dp),
                 onClick = {
                     rootNavController.navigate(Graph.LESSONS+"/${student.id}")
                 },
@@ -85,10 +87,12 @@ fun StudentView(
                     color = MaterialTheme.colorScheme.inversePrimary,
                     fontSize = (screenSize/12-10).sp,
                     fontWeight = FontWeight.Bold
-                )
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
-        Spacer(modifier = Modifier.width((screenSize/6-20).dp))
+        Spacer(modifier = Modifier.width((screenSize/6-50).dp))
         Text(
             text = student.points.toString()+ " " + if(student.points == 1) context.getString(R.string.point) else context.getString(R.string.points),
             style = TextStyle(

@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.stiven.languageapp.screens.FinishedCloud
 import com.stiven.languageapp.screens.secondCloud.AlphabetWriting
+import com.stiven.languageapp.screens.secondCloud.ChangeName
 import com.stiven.languageapp.screens.secondCloud.SecondIntroduction
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
@@ -52,7 +53,14 @@ fun SecondCloudNavGraph(
                 studentId = studentId
             )
         }
-        composable(route = SecondCloudNavGraph.EXERCISES){
+        composable(route = SecondCloudNavGraph.CHANGE_NAME){
+            ChangeName(
+                studentId = studentId,
+                studentViewModel = studentViewModel,
+                navController = navController
+            )
+        }
+        composable(route = SecondCloudNavGraph.FINISHED_CLOUD){
             if (student != null) {
                 FinishedCloud(
                     studentPicture = student.picture,
@@ -72,5 +80,6 @@ object SecondCloudNavGraph {
     const val SECOND_CLOUD = "secondCloud"
     const val SECOND_INTRODUCTION = "secondCloudIntro"
     const val ALPHABET_WRITING = "alphabetWriting"
-    const val EXERCISES = "secondCloudExercises"
+    const val FINISHED_CLOUD = "finishedSecondCloud"
+    const val CHANGE_NAME = "changeName"
 }
