@@ -1,6 +1,8 @@
 package com.stiven.languageapp.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +42,7 @@ import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.view.EmergencyPhraseView
 import com.stiven.languageapp.viewmodels.EmergencyPhraseViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import java.util.Locale
 
 /**
  * Composable for emergency page.
@@ -47,6 +50,7 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * @param emergencyPhraseViewModel emergency phrases ViewModel.
  * @param textToSpeechViewModel text to speech ViewModel.
  * */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Emergency(
     emergencyPhraseViewModel: EmergencyPhraseViewModel,
@@ -90,6 +94,16 @@ fun Emergency(
             ) {
                 Text(
                     text = context.getString(R.string.english),
+                    modifier = Modifier.combinedClickable(
+                        onClick = {},
+                        onLongClick = {
+                            textToSpeechViewModel.customTextToSpeech(
+                                context,
+                                context.getString(R.string.english_words),
+                                Locale.getDefault()
+                            )
+                        }
+                    ),
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
@@ -110,6 +124,16 @@ fun Emergency(
             ) {
                 Text(
                     text = context.getString(R.string.italian),
+                    modifier = Modifier.combinedClickable(
+                        onClick = {},
+                        onLongClick = {
+                            textToSpeechViewModel.customTextToSpeech(
+                                context,
+                                context.getString(R.string.italian_words),
+                                Locale.getDefault()
+                            )
+                        }
+                    ),
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
@@ -130,6 +154,16 @@ fun Emergency(
             ) {
                 Text(
                     text = context.getString(R.string.french),
+                    modifier = Modifier.combinedClickable(
+                        onClick = {},
+                        onLongClick = {
+                            textToSpeechViewModel.customTextToSpeech(
+                                context,
+                                context.getString(R.string.french_words),
+                                Locale.getDefault()
+                            )
+                        }
+                    ),
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
@@ -140,7 +174,16 @@ fun Emergency(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Icon(
-                modifier = Modifier.size((screenSize/6 + 40).dp),
+                modifier = Modifier.size((screenSize/6 + 40).dp).combinedClickable(
+                    onClick = {},
+                    onLongClick = {
+                        textToSpeechViewModel.customTextToSpeech(
+                            context,
+                            context.getString(R.string.interaction_tts),
+                            Locale.getDefault()
+                        )
+                    }
+                ),
                 imageVector = Icons.Rounded.Group,
                 contentDescription = "Interaction"
             )
@@ -169,7 +212,16 @@ fun Emergency(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Icon(
-                modifier = Modifier.size((screenSize/6 + 40).dp),
+                modifier = Modifier.size((screenSize/6 + 40).dp).combinedClickable(
+                    onClick = {},
+                    onLongClick = {
+                        textToSpeechViewModel.customTextToSpeech(
+                            context,
+                            context.getString(R.string.hospital_tts),
+                            Locale.getDefault()
+                        )
+                    }
+                ),
                 imageVector = Icons.Rounded.LocalHospital,
                 contentDescription = "Hospital"
             )
@@ -198,7 +250,16 @@ fun Emergency(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Icon(
-                modifier = Modifier.size((screenSize/6 + 40).dp),
+                modifier = Modifier.size((screenSize/6 + 40).dp).combinedClickable(
+                    onClick = {},
+                    onLongClick = {
+                        textToSpeechViewModel.customTextToSpeech(
+                            context,
+                            context.getString(R.string.school_tts),
+                            Locale.getDefault()
+                        )
+                    }
+                ),
                 imageVector = Icons.Rounded.School,
                 contentDescription = "School"
             )
@@ -227,7 +288,16 @@ fun Emergency(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Icon(
-                modifier = Modifier.size((screenSize/6 + 40).dp),
+                modifier = Modifier.size((screenSize/6 + 40).dp).combinedClickable(
+                    onClick = {},
+                    onLongClick = {
+                        textToSpeechViewModel.customTextToSpeech(
+                            context,
+                            context.getString(R.string.police_tts),
+                            Locale.getDefault()
+                        )
+                    }
+                ),
                 imageVector = Icons.Rounded.LocalPolice,
                 contentDescription = "Police"
             )

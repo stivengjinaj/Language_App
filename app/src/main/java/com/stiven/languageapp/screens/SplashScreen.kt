@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -19,6 +20,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.stiven.languageapp.R
 import com.stiven.languageapp.navigation.Graph
 import com.stiven.languageapp.utils.PreferencesManager
+import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import kotlinx.coroutines.delay
 
 /**
@@ -29,7 +31,12 @@ import kotlinx.coroutines.delay
  * @param preferencesManager manager for shared preferences.
  * */
 @Composable
-fun SplashScreen(rootNavController: NavHostController, preferencesManager: PreferencesManager) {
+fun SplashScreen(
+    rootNavController: NavHostController,
+    preferencesManager: PreferencesManager,
+    textToSpeechViewModel: TextToSpeechViewModel
+) {
+    val context = LocalContext.current
     val composition = rememberLottieComposition(LottieCompositionSpec.RawRes(if (isSystemInDarkTheme()) R.raw.lottieanimationdark else R.raw.lottieanimation))
     val progress by animateLottieCompositionAsState(
         composition = composition.value,
@@ -38,7 +45,7 @@ fun SplashScreen(rootNavController: NavHostController, preferencesManager: Prefe
 
     LaunchedEffect(key1 = true){
         delay(1500L)
-
+        textToSpeechViewModel.textToSpeech(context, "")
         rootNavController.popBackStack()
         if (!preferencesManager.getBooleanData("DoneInitialTour",false)){
             rootNavController.navigate(Graph.TOUR)

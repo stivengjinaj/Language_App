@@ -1,5 +1,6 @@
 package com.stiven.languageapp.screens
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -65,6 +67,7 @@ import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import kotlinx.coroutines.delay
+import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -157,6 +160,8 @@ fun NewCourse(
                 borderColor = if(studentNameError)
                     MaterialTheme.colorScheme.error
                 else if(studentName == "Tiffany") Color.Green else MaterialTheme.colorScheme.primary,
+                context = context,
+                textToSpeechViewModel = textToSpeechViewModel,
                 onClick = {
                     studentName = "Tiffany"
                     studentNameError = false
@@ -168,6 +173,8 @@ fun NewCourse(
                 borderColor = if(studentNameError)
                     MaterialTheme.colorScheme.error
                 else if(studentName == "Bella") Color.Green else MaterialTheme.colorScheme.primary,
+                context = context,
+                textToSpeechViewModel = textToSpeechViewModel,
                 onClick = {
                     studentName = "Bella"
                     studentNameError = false
@@ -179,6 +186,8 @@ fun NewCourse(
                 borderColor = if(studentNameError)
                     MaterialTheme.colorScheme.error
                 else if(studentName == "Priyanka") Color.Green else MaterialTheme.colorScheme.primary,
+                context = context,
+                textToSpeechViewModel = textToSpeechViewModel,
                 onClick = {
                     studentName = "Priyanka"
                     studentNameError = false
@@ -196,6 +205,8 @@ fun NewCourse(
                 borderColor = if(studentNameError)
                     MaterialTheme.colorScheme.error
                 else if(studentName == "Chris") Color.Green else MaterialTheme.colorScheme.primary,
+                context = context,
+                textToSpeechViewModel = textToSpeechViewModel,
                 onClick = {
                     studentName = "Chris"
                     studentNameError = false
@@ -207,6 +218,8 @@ fun NewCourse(
                 borderColor = if(studentNameError)
                     MaterialTheme.colorScheme.error
                 else if(studentName == "Mattew") Color.Green else MaterialTheme.colorScheme.primary,
+                context = context,
+                textToSpeechViewModel = textToSpeechViewModel,
                 onClick = {
                     studentName = "Mattew"
                     studentNameError = false
@@ -216,7 +229,7 @@ fun NewCourse(
         Spacer(modifier = Modifier.height((screenSize/6 + 50).dp))
         //Row containing the list of icons for student's account
         RotatingAvatars(
-            avatars = iconsList,
+            avatars = iconsList.shuffled(),
             screenSize = screenSize,
             triggerError = noAvatarError
         ) {
@@ -298,7 +311,17 @@ fun NewCourse(
                 Icon(
                     modifier = Modifier
                         .rotate(90f)
-                        .size((screenSize / 6 - 10).dp),
+                        .size((screenSize / 6 - 10).dp)
+                        .combinedClickable(
+                            onClick = {},
+                            onLongClick = {
+                                textToSpeechViewModel.customTextToSpeech(
+                                    context,
+                                    context.getString(R.string.next),
+                                    Locale.getDefault()
+                                )
+                            }
+                        ),
                     imageVector = Icons.Rounded.ArrowUpward,
                     contentDescription = "Next",
                     tint = MaterialTheme.colorScheme.inversePrimary
@@ -537,14 +560,17 @@ fun RotatingAvatars(
  * @param screenSize Screen size.
  * @param onClick function callback when clicked.
  * */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StudentButton(
     name: String,
     screenSize: Int,
     borderColor: Color,
+    context: Context,
+    textToSpeechViewModel: TextToSpeechViewModel,
     onClick: () -> Unit
 ){
-    OutlinedButton(
+    Button(
         border = BorderStroke(2.dp, borderColor),
         onClick = onClick,
         colors = ButtonDefaults.outlinedButtonColors(
@@ -553,6 +579,16 @@ fun StudentButton(
     ) {
         Text(
             text = name,
+            modifier = Modifier.combinedClickable(
+                onClick = onClick,
+                onLongClick = {
+                    textToSpeechViewModel.customTextToSpeech(
+                        context,
+                        context.getString(R.string.choose_name),
+                        Locale.getDefault()
+                    )
+                }
+            ),
             color = MaterialTheme.colorScheme.secondary,
             fontSize = (screenSize/6 - 50).sp
         )

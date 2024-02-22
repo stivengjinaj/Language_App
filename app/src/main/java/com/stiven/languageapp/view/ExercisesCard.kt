@@ -1,6 +1,8 @@
 package com.stiven.languageapp.view
 
-import androidx.compose.foundation.clickable
+import android.content.Context
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +22,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import java.util.Locale
 
 /**
  * Customized card view for exercises.
@@ -28,10 +32,13 @@ import androidx.compose.ui.unit.sp
  * @param trailingIcon trailing icon.
  * @param onClick function callback to execute when clicked.
  * */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExercisesCard(
     exercise: String,
     trailingIcon: ImageVector,
+    textToSpeechViewModel: TextToSpeechViewModel,
+    context: Context,
     onClick: () -> Unit
 ){
     val screenSize = LocalConfiguration.current.screenWidthDp
@@ -46,8 +53,15 @@ fun ExercisesCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable(
-                onClick = { onClick() }
+            .combinedClickable(
+                onClick = { onClick() },
+                onLongClick = {
+                    textToSpeechViewModel.customTextToSpeech(
+                        context,
+                        exercise,
+                        Locale.getDefault()
+                    )
+                }
             )
     ){
         Row (

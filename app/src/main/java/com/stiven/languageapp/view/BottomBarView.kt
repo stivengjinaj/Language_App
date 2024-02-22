@@ -1,5 +1,8 @@
 package com.stiven.languageapp.view
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,6 +15,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,6 +34,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.stiven.languageapp.model.BottomBarScreens
+import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import java.util.Locale
 
 /**
  * Function that creates the bottom navigation bar and
@@ -38,7 +44,10 @@ import com.stiven.languageapp.model.BottomBarScreens
  * @param navController navigation host controller
  * */
 @Composable
-fun BottomBarView(navController: NavHostController){
+fun BottomBarView(
+    navController: NavHostController,
+    textToSpeechViewModel: TextToSpeechViewModel
+){
     val screens = listOf(
         BottomBarScreens.Classroom,
         BottomBarScreens.NewCourse,
@@ -58,7 +67,8 @@ fun BottomBarView(navController: NavHostController){
             AddItem(
                 screen = screen,
                 currentDestination = currentDestination,
-                navController = navController
+                navController = navController,
+                textToSpeechViewModel = textToSpeechViewModel
             )
         }
     }
@@ -71,11 +81,13 @@ fun BottomBarView(navController: NavHostController){
  * @param currentDestination parameter used to check if the current screen is selected
  * @param navController navigation controller
  * */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RowScope.AddItem(
     screen: BottomBarScreens,
     currentDestination: NavDestination?,
-    navController: NavHostController
+    navController: NavHostController,
+    textToSpeechViewModel: TextToSpeechViewModel
 ) {
     val context = LocalContext.current
     val currentSize = LocalConfiguration.current.screenWidthDp
@@ -87,7 +99,24 @@ fun RowScope.AddItem(
             Icon(
                 modifier = Modifier
                     .size((currentSize / 11).dp)
-                    .padding(0.dp, 5.dp, 0.dp, 4.dp),
+                    .padding(0.dp, 5.dp, 0.dp, 4.dp)
+                    .combinedClickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.findStartDestination().id)
+                                launchSingleTop = true
+                            }
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.customTextToSpeech(
+                                context,
+                                screen.route,
+                                Locale.getDefault()
+                            )
+                        }
+                    ),
                 painter = painterResource(id = screen.icon),
                 contentDescription = context.getString(screen.title),
                 tint =

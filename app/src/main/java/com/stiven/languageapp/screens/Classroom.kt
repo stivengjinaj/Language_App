@@ -1,6 +1,8 @@
 package com.stiven.languageapp.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +30,7 @@ import com.stiven.languageapp.model.BottomBarScreens
 import com.stiven.languageapp.view.StudentView
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import java.util.Locale
 
 /**
  * Displays all the registered students and the languages
@@ -56,7 +59,9 @@ fun Classroom(
     ) {
         Spacer(modifier = Modifier.height((screenSize / 6).dp))
         if(studentViewModel.dataList.value?.isEmpty() == true){
-            NoStudentRegistered(navController)
+            NoStudentRegistered(
+                navController = navController,
+                textToSpeechViewModel = textToSpeechViewModel)
         }else{
             val courseStudent = studentViewModel.dataList.value
             if (courseStudent != null) {
@@ -71,8 +76,12 @@ fun Classroom(
  *
  * @param navController navigation controller
  * */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NoStudentRegistered(navController: NavHostController){
+fun NoStudentRegistered(
+    navController: NavHostController,
+    textToSpeechViewModel: TextToSpeechViewModel
+){
     val screenSize = LocalConfiguration.current.screenWidthDp
     val context = LocalContext.current
     Spacer(modifier = Modifier.height((screenSize/2).dp))
@@ -94,6 +103,18 @@ fun NoStudentRegistered(navController: NavHostController){
 
     Row {
         OutlinedButton(
+            modifier = Modifier.combinedClickable(
+                onClick = {
+                    navController.navigate(BottomBarScreens.NewCourse.route)
+                },
+                onLongClick = {
+                    textToSpeechViewModel.customTextToSpeech(
+                        context,
+                        context.getString(R.string.classroom),
+                        Locale.getDefault()
+                    )
+                }
+            ),
             onClick = {
                 navController.navigate(BottomBarScreens.NewCourse.route)
             },
@@ -107,6 +128,18 @@ fun NoStudentRegistered(navController: NavHostController){
             )
         ) {
             Text(
+                modifier = Modifier.combinedClickable(
+                    onClick = {
+                        navController.navigate(BottomBarScreens.NewCourse.route)
+                    },
+                    onLongClick = {
+                        textToSpeechViewModel.customTextToSpeech(
+                            context,
+                            context.getString(R.string.classroom),
+                            Locale.getDefault()
+                        )
+                    }
+                ),
                 text = context.getString(R.string.new_course),
                 style = TextStyle(
                     fontWeight = FontWeight.Bold

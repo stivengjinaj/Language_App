@@ -1,7 +1,9 @@
 package com.stiven.languageapp.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -35,6 +37,7 @@ import com.stiven.languageapp.view.LogoBanner
 import com.stiven.languageapp.view.WordView
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import com.stiven.languageapp.viewmodels.WordViewModel
+import java.util.Locale
 
 /**
  * Composable screen for all the words present and their meanings
@@ -43,7 +46,7 @@ import com.stiven.languageapp.viewmodels.WordViewModel
  * @param wordViewModel word's viewModel.
  * @param textToSpeechViewModel text-to-speech viewModel.
  * */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun Dictionary(
     wordViewModel: WordViewModel,
@@ -68,6 +71,15 @@ fun Dictionary(
                 .border(
                     BorderStroke(2.dp, MaterialTheme.colorScheme.inversePrimary),
                     RoundedCornerShape(30.dp)
+                ).combinedClickable(
+                    onClick = {},
+                    onLongClick = {
+                        textToSpeechViewModel.customTextToSpeech(
+                            context,
+                            context.getString(R.string.search_tts),
+                            Locale.getDefault()
+                        )
+                    }
                 ),
             value = queryState.value,
             onValueChange = {

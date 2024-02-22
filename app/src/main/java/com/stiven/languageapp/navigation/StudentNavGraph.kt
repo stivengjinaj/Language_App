@@ -119,7 +119,8 @@ fun StudentNavGraph(
         }
         composable(route = BottomBarScreens.Exercises.route){
             Exercises(
-                studentNavController = navController
+                studentNavController = navController,
+                textToSpeechViewModel = textToSpeechViewModel
             )
         }
 

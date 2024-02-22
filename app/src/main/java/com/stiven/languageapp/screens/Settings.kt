@@ -50,15 +50,14 @@ import com.stiven.languageapp.utils.Languages
 import com.stiven.languageapp.viewmodels.BlankQuizViewModel
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.QuizViewModel
-import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import com.stiven.languageapp.viewmodels.WordViewModel
+import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Settings(
     rootNavController: NavHostController,
-    studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
     letterViewModel: LetterViewModel,
     wordViewModel: WordViewModel,
@@ -87,17 +86,29 @@ fun Settings(
             horizontalArrangement = Arrangement.Center
         ){
             IconButton(
+                modifier = Modifier.size((screenSize + 40).dp),
                 onClick = {
                     rootNavController.popBackStack()
                     rootNavController.navigate(Graph.TOUR)
                 },
-                modifier = Modifier.size((screenSize + 40).dp)
             ) {
                 Icon(
                     Icons.Rounded.PlayArrow,
                     contentDescription = "PLAY",
                     tint = MaterialTheme.colorScheme.inversePrimary,
-                    modifier = Modifier.size((screenSize + 40).dp)
+                    modifier = Modifier.size((screenSize + 40).dp).combinedClickable(
+                        onClick = {
+                            rootNavController.popBackStack()
+                            rootNavController.navigate(Graph.TOUR)
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.customTextToSpeech(
+                                context,
+                                context.getString(R.string.play_walkthrough),
+                                Locale.getDefault()
+                            )
+                        }
+                    )
                 )
             }
         }
@@ -113,6 +124,16 @@ fun Settings(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
+                    modifier = Modifier.combinedClickable(
+                        onClick = {},
+                        onLongClick = {
+                            textToSpeechViewModel.customTextToSpeech(
+                                context,
+                                context.getString(R.string.change_language),
+                                Locale.getDefault()
+                            )
+                        }
+                    ),
                     text = context.getString(R.string.change_language),
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.inversePrimary,
@@ -168,7 +189,7 @@ fun Settings(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                modifier = Modifier.size((screenSize + 20).dp),
+                modifier = Modifier.size((screenSize + 30).dp),
                 onClick = {
                 onlineUpdate(
                     letterViewModel = letterViewModel,
@@ -178,8 +199,24 @@ fun Settings(
                 )
             }) {
                 Icon(
-                    modifier = Modifier.size((screenSize + 20).dp),
                     imageVector = Icons.Rounded.Update,
+                    modifier = Modifier.size((screenSize + 20).dp).combinedClickable(
+                        onClick = {
+                            onlineUpdate(
+                                letterViewModel = letterViewModel,
+                                wordViewModel = wordViewModel,
+                                quizViewModel = quizViewModel,
+                                blankQuizViewModel = blankQuizViewModel
+                            )
+                        },
+                        onLongClick = {
+                            textToSpeechViewModel.customTextToSpeech(
+                                context,
+                                context.getString(R.string.update_tts),
+                                Locale.getDefault()
+                            )
+                        }
+                    ),
                     contentDescription = "Update",
                     tint = MaterialTheme.colorScheme.inversePrimary
                 )

@@ -20,7 +20,6 @@ import com.stiven.languageapp.viewmodels.BlankQuizViewModel
 import com.stiven.languageapp.viewmodels.EmergencyPhraseViewModel
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.QuizViewModel
-import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import com.stiven.languageapp.viewmodels.WordViewModel
@@ -32,7 +31,6 @@ import com.stiven.languageapp.viewmodels.WordViewModel
  * @param rootNavController root navigation controller to shift to another navigation host.
  * @param studentViewModel student's view-model.
  * @param textToSpeechViewModel text to speech view-model.
- * @param speechToTextViewModel speech to text view-model.
  * @param letterViewModel letter's ViewModel.
  * @param wordViewModel words ViewModel.
  * @param quizViewModel translate quiz ViewModel.
@@ -47,7 +45,6 @@ fun MainPanel(
     rootNavController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
-    speechToTextViewModel: SpeechToTextViewModel,
     letterViewModel: LetterViewModel,
     wordViewModel: WordViewModel,
     quizViewModel: QuizViewModel,
@@ -77,7 +74,10 @@ fun MainPanel(
             )
         },
         bottomBar = {
-            BottomBarView(navController = navController)
+            BottomBarView(
+                navController = navController,
+                textToSpeechViewModel = textToSpeechViewModel
+            )
         }
     ) {
         BottomNavGraph(
@@ -85,7 +85,6 @@ fun MainPanel(
             navController = navController,
             studentViewModel = studentViewModel,
             textToSpeechViewModel = textToSpeechViewModel,
-            speechToTextViewModel = speechToTextViewModel,
             letterViewModel = letterViewModel,
             wordViewModel = wordViewModel,
             quizViewModel = quizViewModel,

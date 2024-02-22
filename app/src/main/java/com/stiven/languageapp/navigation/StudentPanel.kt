@@ -45,7 +45,10 @@ fun StudentPanel(
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
-            StudentBottomBar(navController = navController)
+            StudentBottomBar(
+                navController = navController,
+                textToSpeechViewModel = textToSpeechViewModel
+            )
         }
     ) {
         StudentNavGraph(

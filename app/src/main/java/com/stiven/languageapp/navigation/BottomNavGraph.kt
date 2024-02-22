@@ -15,7 +15,6 @@ import com.stiven.languageapp.viewmodels.BlankQuizViewModel
 import com.stiven.languageapp.viewmodels.EmergencyPhraseViewModel
 import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.QuizViewModel
-import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import com.stiven.languageapp.viewmodels.WordViewModel
@@ -29,7 +28,6 @@ import com.stiven.languageapp.viewmodels.WordViewModel
  * @param navController navigation Host Controller.
  * @param studentViewModel view-model that handles operations in Students database.
  * @param textToSpeechViewModel view-model that handles text-to-speech operations.
- * @param speechToTextViewModel view-model that handles speech-to-text.
  * @param letterViewModel letter's ViewModel.
  * @param wordViewModel words ViewModel.
  * @param quizViewModel translate quiz ViewModel.
@@ -43,7 +41,6 @@ fun BottomNavGraph(
     navController: NavHostController,
     studentViewModel: StudentViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
-    speechToTextViewModel: SpeechToTextViewModel,
     letterViewModel: LetterViewModel,
     wordViewModel: WordViewModel,
     quizViewModel: QuizViewModel,
@@ -128,7 +125,6 @@ fun BottomNavGraph(
         ){
             Settings(
                 rootNavController = rootNavController,
-                studentViewModel = studentViewModel,
                 textToSpeechViewModel = textToSpeechViewModel,
                 letterViewModel = letterViewModel,
                 wordViewModel = wordViewModel,

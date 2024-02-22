@@ -90,6 +90,10 @@ fun InitialPage(navController: NavHostController, textToSpeechViewModel: TextToS
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedButton(
+                onClick = {
+                    navController.popBackStack()
+                    navController.navigate(Graph.MAIN+"/classroom")
+                },
                 modifier = Modifier
                     .width((LocalConfiguration.current.screenWidthDp - 110).dp)
                     .combinedClickable(
@@ -103,10 +107,6 @@ fun InitialPage(navController: NavHostController, textToSpeechViewModel: TextToS
                             textToSpeechViewModel.textToSpeech(context, context.getString(R.string.classroom_speech))
                         }
                     ),
-                onClick = {
-                    navController.popBackStack()
-                    navController.navigate(Graph.MAIN+"/classroom")
-                },
                 shape = RoundedCornerShape(50),
                 border = BorderStroke(2.dp,Color.White)
             ) {

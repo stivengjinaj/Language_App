@@ -59,7 +59,8 @@ fun RootNavGraph(
         composable(Graph.SPLASH){
             SplashScreen(
                 rootNavController = navController,
-                preferencesManager = preferencesManager
+                preferencesManager = preferencesManager,
+                textToSpeechViewModel = textToSpeechViewModel
             )
         }
         composable(Graph.TOUR){
@@ -82,7 +83,6 @@ fun RootNavGraph(
                         rootNavController = navController,
                         studentViewModel = studentViewModel,
                         textToSpeechViewModel = textToSpeechViewModel,
-                        speechToTextViewModel = speechToTextViewModel,
                         letterViewModel = letterViewModel,
                         wordViewModel = wordViewModel,
                         quizViewModel = quizViewModel,

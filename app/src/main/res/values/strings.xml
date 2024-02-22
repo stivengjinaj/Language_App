@@ -75,4 +75,14 @@
     <string name="translate_word">Clicking the card, a translation in english and french will appear.</string>
     <string name="name">Name…</string>
     <string name="insert_name">Change student\'s name</string>
+    <string name="search_tts">Type the word you are looking for</string>
+    <string name="english_words">English phrases only</string>
+    <string name="italian_words">Italian words only</string>
+    <string name="french_words">French words only</string>
+    <string name="interaction_tts">Phrases to use to interact with people</string>
+    <string name="hospital_tts">Phrases to use in hospital.</string>
+    <string name="school_tts">Phrases to use in school</string>
+    <string name="police_tts">Phrases to use in a police station</string>
+    <string name="choose_name">Choose student\'s name.</string>
+    <string name="update_tts">Click this button to update the application through internet.</string>
 </resources>

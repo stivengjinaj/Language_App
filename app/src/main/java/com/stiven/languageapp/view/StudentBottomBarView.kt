@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.stiven.languageapp.model.BottomBarScreens
+import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
 /**
  * Custom bottom bar for StudentPanel.
@@ -20,7 +21,10 @@ import com.stiven.languageapp.model.BottomBarScreens
  * @param navController a navigation controller inside StudentPanel navigation graph.
  * */
 @Composable
-fun StudentBottomBar(navController: NavHostController) {
+fun StudentBottomBar(
+    navController: NavHostController,
+    textToSpeechViewModel: TextToSpeechViewModel
+) {
     val screens = listOf(
         BottomBarScreens.Lessons,
         BottomBarScreens.Exercises,
@@ -40,7 +44,8 @@ fun StudentBottomBar(navController: NavHostController) {
             AddItem(
                 screen = screen,
                 currentDestination = currentDestination,
-                navController = navController
+                navController = navController,
+                textToSpeechViewModel = textToSpeechViewModel
             )
         }
     }
