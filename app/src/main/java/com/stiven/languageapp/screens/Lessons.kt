@@ -16,9 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -36,7 +34,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
-import com.stiven.languageapp.model.BottomBarScreens
 import com.stiven.languageapp.model.Cloud
 import com.stiven.languageapp.navigation.FirstCloudRoutes
 import com.stiven.languageapp.navigation.FourthCloudNavGraph
@@ -49,7 +46,6 @@ import com.stiven.languageapp.view.LogoBanner
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.random.Random
@@ -127,13 +123,13 @@ fun RoadMap(
             painterResource(id = R.drawable.firstcrown)
         }
         in 100..149 -> {
-            painterResource(id = R.drawable.seconcrown)
+            painterResource(id = R.drawable.secondcrown)
         }
         in 150..199 -> {
             painterResource(id = R.drawable.thirdcrown)
         }
         else -> {
-            painterResource(id = R.drawable.fourthcrown)
+            painterResource(id = R.drawable.firstcrown)
         }
     }
     val avatar = painterResource(id = picture)

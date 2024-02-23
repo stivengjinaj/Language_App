@@ -33,9 +33,6 @@ fun FinishedCloud(
     val screenSize = LocalConfiguration.current.screenWidthDp
     LocalConfiguration.current.screenHeightDp
     val avatarOffset = Offset((screenSize - 150).toFloat(), screenSize.toFloat())
-    val fadeIn = remember {
-        mutableStateOf(false)
-    }
     val fadeAlpha = remember {
         mutableFloatStateOf(0f)
     }
@@ -86,11 +83,11 @@ fun getCoronaPicture(studentPoints: Int): Int{
             R.drawable.firstcrown
         }
         in 50..99 -> {
-            R.drawable.seconcrown
+            R.drawable.secondcrown
         }
         in 100..149 -> {
             R.drawable.thirdcrown
         }
-        else -> R.drawable.fourthcrown
+        else -> R.drawable.firstcrown
     }
 }
