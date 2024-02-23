@@ -48,7 +48,6 @@ fun SecondCloudNavGraph(
                 navController = navController,
                 rootNavController = rootNavController,
                 studentViewModel = studentViewModel,
-                textToSpeechViewModel = textToSpeechViewModel,
                 lettersLearntViewModel = lettersLearntViewModel,
                 studentId = studentId
             )
