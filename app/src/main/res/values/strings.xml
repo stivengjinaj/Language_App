@@ -1,16 +1,10 @@
 <resources>
-    <string name="app_name">Language App</string>
+    <string name="app_name">ItaLearn</string>
     <string name="welcome_message">Welcome to ItaLearn</string>
-    <string name="errorMessage">Please enter the student\'s name.</string>
     <string name="new_course_title">Start course</string>
-    <string name="student_name">Student\'s name…</string>
-    <string name="student_name_speech">Enter student\'s name</string>
     <string name="english">English</string>
-    <string name="english_button_speech">Course for english</string>
     <string name="italian">Italian</string>
-    <string name="italian_button_speech">Course for italian</string>
     <string name="french">French</string>
-    <string name="french_button_speech">Course for french</string>
     <string name="next">Next</string>
     <string name="next_button_speech">Click to register student</string>
     <string name="classroom">Classroom</string>
@@ -30,7 +24,7 @@
     <string name="exercises">Exercises</string>
     <string name="dictionary">Dictionary</string>
     <string name="logout">Logout</string>
-    <string name="student_account">Student\'s name and the language he or she is learning</string>
+    <string name="student_account">Student\'s name, the avatar and the points</string>
     <string name="classroom_speech">Go to the classroom</string>
     <string name="new_course_speech">Start learning a new language</string>
     <string name="emergency_speech">Emergency dictionary</string>
