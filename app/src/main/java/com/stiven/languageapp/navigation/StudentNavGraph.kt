@@ -73,11 +73,8 @@ fun StudentNavGraph(
     ){
         composable(route = BottomBarScreens.Lessons.route){
             Lessons(
-                rootNavController = rootNavController,
                 navController = navController,
                 studentViewModel = studentViewModel,
-                textToSpeechViewModel = textToSpeechViewModel,
-                speechToTextViewModel = speechToTextViewModel,
                 studentId = studentId
             )
         }

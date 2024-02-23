@@ -39,9 +39,7 @@ import com.stiven.languageapp.navigation.SecondCloudNavGraph
 import com.stiven.languageapp.navigation.ThirdCloudNavGraph
 import com.stiven.languageapp.utils.CloudType
 import com.stiven.languageapp.view.LogoBanner
-import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
-import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.random.Random
@@ -49,19 +47,14 @@ import kotlin.random.Random
 /**
  * Composable that contains the Roadmap an its logics.
  *
- * @param rootNavController Root navigation controller of the application.
  * @param navController Navigation controller for the student section.
  * @param studentViewModel ViewModel of the current student.
- * @param textToSpeechViewModel ViewModel that handles text-to-speech options.
  * @param studentId Current student's id.
  * */
 @Composable
 fun Lessons(
-    rootNavController: NavHostController,
     navController: NavHostController,
     studentViewModel: StudentViewModel,
-    textToSpeechViewModel: TextToSpeechViewModel,
-    speechToTextViewModel: SpeechToTextViewModel,
     studentId: String
 ) {
     val student = studentViewModel.dataList.value!!.find { it.id == studentId.toInt() }
@@ -120,7 +113,7 @@ fun RoadMap(
             painterResource(id = R.drawable.firstcrown)
         }
         in 100..149 -> {
-            painterResource(id = R.drawable.seconcrown)
+            painterResource(id = R.drawable.secondcrown)
         }
         in 150..199 -> {
             painterResource(id = R.drawable.thirdcrown)
@@ -528,7 +521,7 @@ fun customDraw(
 }
 
 /**
- * TODO. Function that checks if the lesson of the cloud has been learnt.
+ * Function that checks if the lesson of the cloud has been learnt.
  *
  * @return true if the student has learnt the lesson, false otherwise.
  * */

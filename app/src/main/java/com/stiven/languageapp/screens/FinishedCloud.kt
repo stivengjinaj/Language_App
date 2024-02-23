@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,11 +30,8 @@ fun FinishedCloud(
     val studentAvatar = painterResource(id = studentPicture)
     val corona = painterResource(id = getCoronaPicture(studentPoints))
     val screenSize = LocalConfiguration.current.screenWidthDp
-    val screenHeight = LocalConfiguration.current.screenHeightDp
+    LocalConfiguration.current.screenHeightDp
     val avatarOffset = Offset((screenSize - 150).toFloat(), screenSize.toFloat())
-    val fadeIn = remember {
-        mutableStateOf(false)
-    }
     val fadeAlpha = remember {
         mutableFloatStateOf(0f)
     }
@@ -86,7 +82,7 @@ fun getCoronaPicture(studentPoints: Int): Int{
             R.drawable.firstcrown
         }
         in 100..149 -> {
-            R.drawable.seconcrown
+            R.drawable.secondcrown
         }
         in 150..199 -> {
             R.drawable.thirdcrown
