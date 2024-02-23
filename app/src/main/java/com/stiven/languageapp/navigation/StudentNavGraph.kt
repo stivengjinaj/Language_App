@@ -54,19 +54,19 @@ fun StudentNavGraph(
     wordViewModel: WordViewModel
 ) {
     //USE THIS FOR THE REAL FUNCTIONING.
-    /*insertStudentPoints(
-        studentId = studentId,
-        lettersLearntViewModel = lettersLearntViewModel,
-        quizAnswerViewModel = quizAnswerViewModel,
-        studentViewModel = studentViewModel
-    )*/
-    //USE THIS FUNCTION TO DEMONSTRATE.
-    demoInsertStudentPoints(
+    insertStudentPoints(
         studentId = studentId,
         lettersLearntViewModel = lettersLearntViewModel,
         quizAnswerViewModel = quizAnswerViewModel,
         studentViewModel = studentViewModel
     )
+    /*//USE THIS FUNCTION TO DEMONSTRATE.
+    demoInsertStudentPoints(
+        studentId = studentId,
+        lettersLearntViewModel = lettersLearntViewModel,
+        quizAnswerViewModel = quizAnswerViewModel,
+        studentViewModel = studentViewModel
+    )*/
     NavHost(
         navController = navController,
         startDestination = BottomBarScreens.Lessons.route
@@ -146,7 +146,7 @@ fun StudentNavGraph(
     }
 }
 
-/**
+/*/**
  * Function demonstrate how points work without completely
  * completing the exercises.
  *
@@ -172,7 +172,7 @@ fun demoInsertStudentPoints(
         val blank = if(blankAnswered >= 1) 50 else 0
         studentViewModel.updateStudent(studentId, pronounced+written+translations+blank)
     }
-}
+}*/
 /**
  * Function used to insert student points based in his progress.
  *
