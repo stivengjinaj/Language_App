@@ -50,8 +50,6 @@ fun ThirdCloudNavGraph(
                 studentId = studentId,
                 navController = navController,
                 rootNavController = rootNavController,
-                studentViewModel = studentViewModel,
-                textToSpeechViewModel = textToSpeechViewModel,
                 quizViewModel = quizViewModel,
                 quizAnswerViewModel = quizAnswerViewModel
             )

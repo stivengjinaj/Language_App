@@ -51,12 +51,11 @@ fun FirstCloudNavGraph(
             AlphabetPronouncing(
                 navController = navController,
                 rootNavController = rootNavController,
-                studentViewModel = studentViewModel,
                 speechToTextViewModel = speechToTextViewModel,
                 textToSpeechViewModel = textToSpeechViewModel,
                 lettersLearntViewModel = lettersLearntViewModel,
-                studentId = studentId,
-                letterViewModel = letterViewModel
+                letterViewModel = letterViewModel,
+                studentId = studentId
             )
         }
         composable(route = FirstCloudRoutes.FINISHED_CLOUD){

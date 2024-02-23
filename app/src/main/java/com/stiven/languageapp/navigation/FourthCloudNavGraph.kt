@@ -50,8 +50,6 @@ fun FourthCloudNavGraph(
                 studentId = studentId,
                 navController = navController,
                 rootNavController = rootNavController,
-                studentViewModel = studentViewModel,
-                textToSpeechViewModel = textToSpeechViewModel,
                 quizAnswerViewModel = quizAnswerViewModel,
                 blankQuizViewModel = blankQuizViewModel
             )

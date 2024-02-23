@@ -46,8 +46,6 @@ import com.stiven.languageapp.utils.QuestionType
 import com.stiven.languageapp.view.LogoBannerNavigation
 import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
 import com.stiven.languageapp.viewmodels.QuizViewModel
-import com.stiven.languageapp.viewmodels.StudentViewModel
-import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import java.util.Locale
 
 /**
@@ -56,8 +54,6 @@ import java.util.Locale
  * @param studentId student's id.
  * @param navController third cloud navigation controller.
  * @param rootNavController root navigation controller.
- * @param studentViewModel student's view-model.
- * @param textToSpeechViewModel text-to-speech view-model
  * @param quizViewModel quiz questions view-model.
  * */
 @Composable
@@ -65,8 +61,6 @@ fun QuizQuestions(
     studentId: String,
     navController: NavHostController,
     rootNavController: NavHostController,
-    studentViewModel: StudentViewModel,
-    textToSpeechViewModel: TextToSpeechViewModel,
     quizViewModel: QuizViewModel,
     quizAnswerViewModel: QuizAnswerViewModel
 ){

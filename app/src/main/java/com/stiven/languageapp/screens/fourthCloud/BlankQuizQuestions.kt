@@ -46,8 +46,6 @@ import com.stiven.languageapp.utils.QuestionType
 import com.stiven.languageapp.view.LogoBannerNavigation
 import com.stiven.languageapp.viewmodels.BlankQuizViewModel
 import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
-import com.stiven.languageapp.viewmodels.StudentViewModel
-import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 
 /**
  * View function for blank question quiz.
@@ -55,8 +53,6 @@ import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
  * @param studentId Student's id.
  * @param navController Fourth cloud navigation controller.
  * @param rootNavController Root navigation controller.
- * @param studentViewModel Student's ViewModel.
- * @param textToSpeechViewModel Text-to-speech ViewModel.
  * @param quizAnswerViewModel Quiz answers ViewModel.
  * @param blankQuizViewModel Blank questions ViewModel.
  * */
@@ -65,8 +61,6 @@ fun BlankQuizQuestions(
     studentId: String,
     navController: NavHostController,
     rootNavController: NavHostController,
-    studentViewModel: StudentViewModel,
-    textToSpeechViewModel: TextToSpeechViewModel,
     quizAnswerViewModel: QuizAnswerViewModel,
     blankQuizViewModel: BlankQuizViewModel
 ){
