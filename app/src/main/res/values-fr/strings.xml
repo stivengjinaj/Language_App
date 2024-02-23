@@ -63,7 +63,7 @@
     <string name="hospital">Hôpital</string>
     <string name="school">École</string>
     <string name="police">Police</string>
-    <string name="roadmap_guide">C\'est votre parcours d\'apprentissage. Pour chaque nuage, vous devez apprendre la leçon afin de passer aux autres nuages et d\'atteindre la ligne d'arrivée.</string>
+    <string name="roadmap_guide">C\'est votre parcours d\'apprentissage. Pour chaque nuage, vous devez apprendre la leçon afin de passer aux autres nuages et d\'atteindre la ligne d\'arrivée.</string>
     <string name="dictionary_guide">Vous trouverez ici le dictionnaire. Il s\'agit de la barre de recherche où vous pouvez trouver le mot dont vous avez besoin.</string>
     <string name="searched_word">C\'est le mot en italien.</string>
     <string name="listen_word">En cliquant sur l\'icône, vous pouvez écouter la prononciation.</string>
