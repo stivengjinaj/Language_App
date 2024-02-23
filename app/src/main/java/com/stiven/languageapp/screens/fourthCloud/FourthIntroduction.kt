@@ -195,6 +195,7 @@ fun FourthIntroduction(
         ){
             IconButton(
                 onClick = {
+                    textToSpeechViewModel.stopTextToSpeech()
                     navController.navigate(FourthCloudNavGraph.BLANK_QUIZ)
                 }
             ) {

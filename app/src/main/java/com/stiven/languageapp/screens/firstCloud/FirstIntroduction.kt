@@ -148,6 +148,7 @@ fun FirstIntroduction(
                             focusIndex.intValue += 1
                         }
                         2 -> {
+                            textToSpeechViewModel.stopTextToSpeech()
                             navController.navigate(FirstCloudRoutes.ALPHABET_PRONOUNCING)
                         }
                     }

@@ -185,6 +185,7 @@ fun ThirdIntroduction(
                             optionsAlpha.floatValue = 1f
                         }
                         else -> {
+                            textToSpeechViewModel.stopTextToSpeech()
                             navController.navigate(ThirdCloudNavGraph.QUIZ_QUESTIONS)
                         }
                     }

@@ -311,17 +311,7 @@ fun NewCourse(
                 Icon(
                     modifier = Modifier
                         .rotate(90f)
-                        .size((screenSize / 6 - 10).dp)
-                        .combinedClickable(
-                            onClick = {},
-                            onLongClick = {
-                                textToSpeechViewModel.customTextToSpeech(
-                                    context,
-                                    context.getString(R.string.next),
-                                    Locale.getDefault()
-                                )
-                            }
-                        ),
+                        .size((screenSize / 6 - 10).dp),
                     imageVector = Icons.Rounded.ArrowUpward,
                     contentDescription = "Next",
                     tint = MaterialTheme.colorScheme.inversePrimary

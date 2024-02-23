@@ -196,6 +196,7 @@ fun SecondIntroduction (
                             textToSpeechViewModel.textToSpeech(context, context.getString(R.string.cameraWritingIntro))
                         }
                         4 -> {
+                            textToSpeechViewModel.stopTextToSpeech()
                             navController.navigate(SecondCloudNavGraph.ALPHABET_WRITING)
                         }
                     }

@@ -233,17 +233,17 @@ fun RoadMap(
                                 navController.navigate(FirstCloudRoutes.FIRST_CLOUD)
                             }
                             CloudType.CLOUD2 -> {
-                                if (studentPoints >= 0) {
+                                if (studentPoints >= 50) {
                                     navController.navigate(SecondCloudNavGraph.SECOND_CLOUD)
                                 }
                             }
                             CloudType.CLOUD3 -> {
-                                if (studentPoints >= 0) {
+                                if (studentPoints >= 100) {
                                     navController.navigate(ThirdCloudNavGraph.THIRD_CLOUD)
                                 }
                             }
                             CloudType.CLOUD4 -> {
-                                if (studentPoints >= 0) {
+                                if (studentPoints >= 150) {
                                     navController.navigate(FourthCloudNavGraph.FOURTH_CLOUD)
                                 }
                             }

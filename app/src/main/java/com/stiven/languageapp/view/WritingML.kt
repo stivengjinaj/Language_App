@@ -66,11 +66,11 @@ fun WritingML(
     val screenSize = LocalConfiguration.current.screenWidthDp
 
     val letterRecognizer = LocalModel.Builder()
-        .setAssetFilePath("lettersModel.tflite")
+        .setAssetFilePath("allLetters.tflite")
         .build()
 
     val newLetterRecognizer = LocalModel.Builder()
-        .setAssetFilePath("lettersModelNew.tflite")
+        .setAssetFilePath("CO.tflite")
         .build()
 
     val customImageLabelerOptions = CustomImageLabelerOptions.Builder(letterRecognizer)
@@ -250,9 +250,9 @@ fun WritingML(
                                     }
                                 }
                             }
-                        }
-                        .addOnFailureListener { e ->
-                            Log.d("ML ERROR", e.message.toString())
+                            if(!correctness.value){
+                                onIncorrectWriting()
+                            }
                         }
                     newLabeler.process(imageToProcess)
                         .addOnSuccessListener { labels ->
@@ -302,8 +302,8 @@ fun WritingML(
             IconButton(
                 modifier = Modifier.size((screenSize / 8).dp),
                 onClick = {
-                cameraDraw.value = false
-            }) {
+                    cameraDraw.value = false
+                }) {
                 Icon(
                     modifier = Modifier.size((screenSize/8).dp),
                     imageVector = Icons.AutoMirrored.Rounded.Undo,

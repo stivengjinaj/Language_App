@@ -53,7 +53,15 @@ fun StudentNavGraph(
     blankQuizViewModel: BlankQuizViewModel,
     wordViewModel: WordViewModel
 ) {
-    insertStudentPoints(
+    //USE THIS FOR THE REAL FUNCTIONING.
+    /*insertStudentPoints(
+        studentId = studentId,
+        lettersLearntViewModel = lettersLearntViewModel,
+        quizAnswerViewModel = quizAnswerViewModel,
+        studentViewModel = studentViewModel
+    )*/
+    //USE THIS FUNCTION TO DEMONSTRATE.
+    demoInsertStudentPoints(
         studentId = studentId,
         lettersLearntViewModel = lettersLearntViewModel,
         quizAnswerViewModel = quizAnswerViewModel,
@@ -138,6 +146,41 @@ fun StudentNavGraph(
     }
 }
 
+/**
+ * Function demonstrate how points work without completely
+ * completing the exercises.
+ *
+ * @param studentId student id to check.
+ * @param lettersLearntViewModel letters learnt viewModel.
+ * @param quizAnswerViewModel answered quiz viewModel.
+ * @param studentViewModel student viewModel
+ * */
+fun demoInsertStudentPoints(
+    studentId: String,
+    lettersLearntViewModel: LettersLearntViewModel,
+    quizAnswerViewModel: QuizAnswerViewModel,
+    studentViewModel: StudentViewModel
+){
+    val lettersPronounced = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId && it.learningType == LearningType.PRONOUNCING }?.size
+    val lettersWritten = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId && it.learningType == LearningType.WRITTEN }?.size
+    val quizAnswered = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId && it.questionType == QuestionType.TRANSLATE }?.size
+    val blankAnswered = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId && it.questionType == QuestionType.FILL_BLANK }?.size
+    if(lettersPronounced != null && lettersWritten != null && quizAnswered != null && blankAnswered != null){
+        val pronounced = if(lettersPronounced >= 1) 50 else 0
+        val written = if(lettersWritten >= 1) 50 else 0
+        val translations = if(quizAnswered >= 1) 50 else 0
+        val blank = if(blankAnswered >= 1) 50 else 0
+        studentViewModel.updateStudent(studentId, pronounced+written+translations+blank)
+    }
+}
+/**
+ * Function used to insert student points based in his progress.
+ *
+ * @param studentId student id to check.
+ * @param lettersLearntViewModel letters learnt viewModel.
+ * @param quizAnswerViewModel answered quiz viewModel.
+ * @param studentViewModel student viewModel
+ * */
 fun insertStudentPoints(
     studentId: String,
     lettersLearntViewModel: LettersLearntViewModel,
@@ -146,7 +189,7 @@ fun insertStudentPoints(
 ){
     val lettersPronounced = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId && it.learningType == LearningType.PRONOUNCING }?.size?.let {
         if(it != 0){
-            mapValue(it, 1.0, 22.0, 1.0, 50.0)
+            mapValue(it, 1.0, 21.0, 1.0, 50.0)
         }else 0
     }?.toInt()
     val lettersWritten = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId && it.learningType == LearningType.WRITTEN }?.size?.let {
@@ -161,11 +204,9 @@ fun insertStudentPoints(
     }?.toInt()
     val blankAnswered = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId && it.questionType == QuestionType.FILL_BLANK }?.size?.let {
         if(it != 0){
-            mapValue(it, 1.0, 1.0, 5.0, 100.0)
+            mapValue(it, 1.0, 4.0, 1.0, 50.0)
         }else 0
     }?.toInt()
-    //val lettersPoints = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId }?.size
-    //val lettersPoints = lettersWritten?.let { lettersPronounced?.plus(it) }
     if(lettersPronounced != null && lettersWritten != null && quizAnswered != null && blankAnswered != null){
         studentViewModel.updateStudent(studentId, lettersPronounced+lettersWritten+quizAnswered+blankAnswered)
     }

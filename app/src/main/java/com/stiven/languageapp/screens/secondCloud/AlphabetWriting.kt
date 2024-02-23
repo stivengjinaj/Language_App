@@ -132,10 +132,11 @@ fun WritingView(
                             )
                         }
                     },
-                    correctness = correctness
-                ) {
-                    textToSpeechViewModel.textToSpeech(context, context.getString(R.string.retry))
-                }
+                    correctness = correctness,
+                    onIncorrectWriting = {
+                        MediaPlayer.create(context, R.raw.incorrect).start()
+                    }
+                )
             }
         }
     }
