@@ -50,7 +50,6 @@ import com.stiven.languageapp.viewmodels.LetterViewModel
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.SpeechActions
 import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
-import com.stiven.languageapp.viewmodels.StudentViewModel
 import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -60,7 +59,6 @@ import kotlinx.coroutines.delay
  *
  * @param navController Current cloud navigation controller.
  * @param rootNavController Root navigation controller.
- * @param studentViewModel Student ViewModel.
  * @param speechToTextViewModel Speech-to-text ViewModel.
  * @param textToSpeechViewModel Text-to-speech ViewModel.
  * @param lettersLearntViewModel Letters learnt ViewModel.
@@ -70,7 +68,6 @@ import kotlinx.coroutines.delay
 fun AlphabetPronouncing(
     navController: NavHostController,
     rootNavController: NavHostController,
-    studentViewModel: StudentViewModel,
     speechToTextViewModel: SpeechToTextViewModel,
     textToSpeechViewModel: TextToSpeechViewModel,
     lettersLearntViewModel: LettersLearntViewModel,
@@ -230,7 +227,7 @@ fun LetterView(
                     MediaPlayer.create(context, R.raw.correct).start()
                 }
                 validation.value = true
-                if(currentLetterIndex.intValue == 20){
+                if(currentLetterIndex.intValue == 2){
                     MediaPlayer.create(context, R.raw.finish).start()
                     navController.navigate(FirstCloudRoutes.FINISHED_CLOUD)
                 }else{

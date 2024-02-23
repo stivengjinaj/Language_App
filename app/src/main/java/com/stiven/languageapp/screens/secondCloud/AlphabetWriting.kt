@@ -34,7 +34,6 @@ import com.stiven.languageapp.view.LogoBannerNavigation
 import com.stiven.languageapp.view.WritingML
 import com.stiven.languageapp.viewmodels.LettersLearntViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
-import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
 import kotlinx.coroutines.Dispatchers
 
 @Composable
@@ -42,7 +41,6 @@ fun AlphabetWriting(
     navController: NavHostController,
     rootNavController: NavHostController,
     studentViewModel: StudentViewModel,
-    textToSpeechViewModel: TextToSpeechViewModel,
     lettersLearntViewModel: LettersLearntViewModel,
     studentId: String
 ){
@@ -62,7 +60,6 @@ fun AlphabetWriting(
             navController = navController,
             studentId = studentId,
             studentViewModel = studentViewModel,
-            textToSpeechViewModel = textToSpeechViewModel,
             lettersLearntViewModel = lettersLearntViewModel,
             screenSize = screenSize
         )
@@ -74,7 +71,6 @@ fun WritingView(
     navController: NavHostController,
     studentId: String,
     studentViewModel: StudentViewModel,
-    textToSpeechViewModel: TextToSpeechViewModel,
     lettersLearntViewModel: LettersLearntViewModel,
     screenSize: Int
 ){
@@ -141,7 +137,7 @@ fun WritingView(
         }
     }
     if(correctness.value){
-        if(currentLetterIndex.intValue < 20){
+        if(currentLetterIndex.intValue < 2){
             LaunchedEffect(Dispatchers.IO){
                 MediaPlayer.create(context, R.raw.correct).start()
                 currentLetterIndex.intValue = currentLetterIndex.intValue + 1
