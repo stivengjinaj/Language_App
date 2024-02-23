@@ -227,7 +227,7 @@ fun LetterView(
                     MediaPlayer.create(context, R.raw.correct).start()
                 }
                 validation.value = true
-                if(currentLetterIndex.intValue == 2){
+                if(currentLetterIndex.intValue == 1){
                     MediaPlayer.create(context, R.raw.finish).start()
                     navController.navigate(FirstCloudRoutes.FINISHED_CLOUD)
                 }else{

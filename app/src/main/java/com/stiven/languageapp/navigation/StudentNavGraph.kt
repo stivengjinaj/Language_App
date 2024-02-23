@@ -1,5 +1,6 @@
 package com.stiven.languageapp.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -67,19 +68,21 @@ fun StudentNavGraph(
         quizAnswerViewModel = quizAnswerViewModel,
         studentViewModel = studentViewModel
     )
+
+    val student = studentViewModel.dataList.value?.find { it.id.toString() == studentId}
     NavHost(
         navController = navController,
         startDestination = BottomBarScreens.Lessons.route
     ){
         composable(route = BottomBarScreens.Lessons.route){
-            Lessons(
-                rootNavController = rootNavController,
-                navController = navController,
-                studentViewModel = studentViewModel,
-                textToSpeechViewModel = textToSpeechViewModel,
-                speechToTextViewModel = speechToTextViewModel,
-                studentId = studentId
-            )
+            if (student != null) {
+                Lessons(
+                    navController = navController,
+                    studentViewModel = studentViewModel,
+                    studentId = studentId,
+                    studentPoints = student.points
+                )
+            }
         }
         composable(route = FirstCloudRoutes.FIRST_CLOUD){
             FirstCloudNavGraph(
@@ -170,7 +173,10 @@ fun demoInsertStudentPoints(
         val written = if(lettersWritten >= 1) 50 else 0
         val translations = if(quizAnswered >= 1) 50 else 0
         val blank = if(blankAnswered >= 1) 50 else 0
+        Log.d("NOT NULL", "${pronounced+written+translations+blank}")
         studentViewModel.updateStudent(studentId, pronounced+written+translations+blank)
+    }else{
+        Log.d("NULL", "NULL")
     }
 }
 /*

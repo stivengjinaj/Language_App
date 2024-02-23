@@ -31,7 +31,7 @@ fun FinishedCloud(
     val studentAvatar = painterResource(id = studentPicture)
     val corona = painterResource(id = getCoronaPicture(studentPoints))
     val screenSize = LocalConfiguration.current.screenWidthDp
-    val screenHeight = LocalConfiguration.current.screenHeightDp
+    LocalConfiguration.current.screenHeightDp
     val avatarOffset = Offset((screenSize - 150).toFloat(), screenSize.toFloat())
     val fadeIn = remember {
         mutableStateOf(false)
@@ -82,13 +82,13 @@ fun FinishedCloud(
 
 fun getCoronaPicture(studentPoints: Int): Int{
     return when(studentPoints) {
-        in 50..99 -> {
+        in 0..49 -> {
             R.drawable.firstcrown
         }
-        in 100..149 -> {
+        in 50..99 -> {
             R.drawable.seconcrown
         }
-        in 150..199 -> {
+        in 100..149 -> {
             R.drawable.thirdcrown
         }
         else -> R.drawable.fourthcrown

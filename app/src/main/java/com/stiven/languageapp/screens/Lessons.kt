@@ -1,6 +1,7 @@
 package com.stiven.languageapp.screens
 
 import android.graphics.RectF
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -14,7 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -32,16 +36,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
+import com.stiven.languageapp.model.BottomBarScreens
 import com.stiven.languageapp.model.Cloud
 import com.stiven.languageapp.navigation.FirstCloudRoutes
 import com.stiven.languageapp.navigation.FourthCloudNavGraph
 import com.stiven.languageapp.navigation.SecondCloudNavGraph
 import com.stiven.languageapp.navigation.ThirdCloudNavGraph
 import com.stiven.languageapp.utils.CloudType
+import com.stiven.languageapp.utils.LearningType
+import com.stiven.languageapp.utils.QuestionType
 import com.stiven.languageapp.view.LogoBanner
-import com.stiven.languageapp.viewmodels.SpeechToTextViewModel
+import com.stiven.languageapp.viewmodels.LettersLearntViewModel
+import com.stiven.languageapp.viewmodels.QuizAnswerViewModel
 import com.stiven.languageapp.viewmodels.StudentViewModel
-import com.stiven.languageapp.viewmodels.TextToSpeechViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.random.Random
@@ -49,20 +57,16 @@ import kotlin.random.Random
 /**
  * Composable that contains the Roadmap an its logics.
  *
- * @param rootNavController Root navigation controller of the application.
  * @param navController Navigation controller for the student section.
  * @param studentViewModel ViewModel of the current student.
- * @param textToSpeechViewModel ViewModel that handles text-to-speech options.
  * @param studentId Current student's id.
  * */
 @Composable
 fun Lessons(
-    rootNavController: NavHostController,
     navController: NavHostController,
     studentViewModel: StudentViewModel,
-    textToSpeechViewModel: TextToSpeechViewModel,
-    speechToTextViewModel: SpeechToTextViewModel,
-    studentId: String
+    studentId: String,
+    studentPoints: Int
 ) {
     val student = studentViewModel.dataList.value!!.find { it.id == studentId.toInt() }
     val screenSize = LocalConfiguration.current.screenWidthDp
@@ -72,7 +76,6 @@ fun Lessons(
     ){
         //Row containing the app title
         LogoBanner(screenSize)
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -111,6 +114,10 @@ fun RoadMap(
     navController: NavHostController,
     studentPoints: Int
 ) {
+    val cloudPoints = remember {
+        mutableIntStateOf(0)
+    }
+    cloudPoints.intValue = studentPoints
     val roadColor = MaterialTheme.colorScheme.primary
     val completedRoadColor = MaterialTheme.colorScheme.tertiary
     val undoneCloud = painterResource(id = R.drawable.undone_checkpoint)
@@ -169,17 +176,20 @@ fun RoadMap(
         //ROAD 12
         Pair(Offset(screenSize * 0.3f, screenSize * 3f), Offset(screenSize * 5f, screenSize * 3f))
     )
-    val avatarCoordinates = listOf(
-        pointsToPosition(studentPoints, roadCoordinates, cloudCoordinates).second
-    )
-    val completedRoads = pointsToPosition(studentPoints, roadCoordinates, cloudCoordinates).first
+    val pointsToPosition = pointsToPosition(cloudPoints.intValue, roadCoordinates, cloudCoordinates)
+    val avatarCoordinates = remember {
+        mutableListOf(pointsToPosition.second)
+    }
+    val avatarOffsets = remember {
+        mutableListOf(
+            Animatable(avatarCoordinates[0].second)
+        )
+    }
+    avatarCoordinates[0] = pointsToPosition(cloudPoints.intValue, roadCoordinates, cloudCoordinates).second
+    val completedRoads = pointsToPosition.first
     val completedRoadsList = roadCoordinates
         .subList(0, completedRoads)
         .toList()
-
-    val avatarOffsets = remember {
-        avatarCoordinates.map { Animatable(it.second) }
-    }
     //Calculates the current position of the avatar and draws the road until it reaches the avatar
     val partialCompletedRoad = partiallyCompletedRoad(completedRoads, roadCoordinates, cloudCoordinates, avatarCoordinates[0])
 
@@ -224,6 +234,7 @@ fun RoadMap(
             detectTapGestures {
                 // Handle clicks on the canvas
                 // Calculate the click position relative to each cloud's position
+                Log.d("POINTS", studentPoints.toString())
                 val clickOffset = Offset(it.x, it.y)
                 cloudCoordinates.forEachIndexed { _, (cloud, position) ->
                     val cloudRect = Offset(position.first, position.second).toRect()
@@ -232,18 +243,21 @@ fun RoadMap(
                             CloudType.CLOUD1 -> {
                                 navController.navigate(FirstCloudRoutes.FIRST_CLOUD)
                             }
+
                             CloudType.CLOUD2 -> {
-                                if (studentPoints >= 50) {
+                                if (cloudPoints.intValue >= 50) {
                                     navController.navigate(SecondCloudNavGraph.SECOND_CLOUD)
                                 }
                             }
+
                             CloudType.CLOUD3 -> {
-                                if (studentPoints >= 100) {
+                                if (cloudPoints.intValue >= 100) {
                                     navController.navigate(ThirdCloudNavGraph.THIRD_CLOUD)
                                 }
                             }
+
                             CloudType.CLOUD4 -> {
-                                if (studentPoints >= 150) {
+                                if (cloudPoints.intValue >= 150) {
                                     navController.navigate(FourthCloudNavGraph.FOURTH_CLOUD)
                                 }
                             }
@@ -528,7 +542,7 @@ fun customDraw(
 }
 
 /**
- * TODO. Function that checks if the lesson of the cloud has been learnt.
+ * Function that checks if the lesson of the cloud has been learnt.
  *
  * @return true if the student has learnt the lesson, false otherwise.
  * */
@@ -546,5 +560,34 @@ private fun checkCloudStatus(studentPoints: Int, cloudType: CloudType): Boolean{
         CloudType.CLOUD4 -> {
             studentPoints >= 200
         }
+    }
+}
+
+/**
+ * Function demonstrate how points work without completely
+ * completing the exercises.
+ *
+ * @param studentId student id to check.
+ * @param lettersLearntViewModel letters learnt viewModel.
+ * @param quizAnswerViewModel answered quiz viewModel.
+ * @param studentViewModel student viewModel
+ * */
+fun demoInsertStudentPoints(
+    studentId: String,
+    lettersLearntViewModel: LettersLearntViewModel,
+    quizAnswerViewModel: QuizAnswerViewModel,
+    studentViewModel: StudentViewModel
+){
+    val lettersPronounced = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId && it.learningType == LearningType.PRONOUNCING }?.size
+    val lettersWritten = lettersLearntViewModel.dataList.value?.filter { it.studentId == studentId && it.learningType == LearningType.WRITTEN }?.size
+    val quizAnswered = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId && it.questionType == QuestionType.TRANSLATE }?.size
+    val blankAnswered = quizAnswerViewModel.dataList.value?.filter { it.studentId == studentId && it.questionType == QuestionType.FILL_BLANK }?.size
+
+    if(lettersPronounced != null && lettersWritten != null && quizAnswered != null && blankAnswered != null){
+        val pronounced = if(lettersPronounced >= 1) 50 else 0
+        val written = if(lettersWritten >= 1) 50 else 0
+        val translations = if(quizAnswered >= 1) 50 else 0
+        val blank = if(blankAnswered >= 1) 50 else 0
+        studentViewModel.updateStudent(studentId, pronounced+written+translations+blank)
     }
 }

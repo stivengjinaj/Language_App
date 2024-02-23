@@ -137,7 +137,7 @@ fun WritingView(
         }
     }
     if(correctness.value){
-        if(currentLetterIndex.intValue < 2){
+        if(currentLetterIndex.intValue < 1){
             LaunchedEffect(Dispatchers.IO){
                 MediaPlayer.create(context, R.raw.correct).start()
                 currentLetterIndex.intValue = currentLetterIndex.intValue + 1
