@@ -126,7 +126,7 @@ fun WordView(
                         IconButton(onClick = {
                             textToSpeechViewModel.customTextToSpeech(context, word.english, Locale.US)
                         }) {
-                            Icon(imageVector = Icons.Rounded.PlayArrow, contentDescription = "Listen")
+                            Icon(imageVector = Icons.Rounded.PlayArrow, contentDescription = "Listen", tint = MaterialTheme.colorScheme.secondary)
                         }
                     }
                 }
@@ -157,7 +157,7 @@ fun WordView(
                         IconButton(onClick = {
                             textToSpeechViewModel.customTextToSpeech(context, word.french, Locale.FRENCH)
                         }) {
-                            Icon(imageVector = Icons.Rounded.PlayArrow, contentDescription = "Listen")
+                            Icon(imageVector = Icons.Rounded.PlayArrow, contentDescription = "Listen", tint = MaterialTheme.colorScheme.secondary)
                         }
                     }
                 }

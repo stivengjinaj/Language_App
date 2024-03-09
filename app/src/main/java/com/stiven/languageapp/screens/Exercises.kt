@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.stiven.languageapp.R
 import com.stiven.languageapp.navigation.FirstCloudRoutes
+import com.stiven.languageapp.navigation.FourthCloudNavGraph
 import com.stiven.languageapp.navigation.SecondCloudNavGraph
 import com.stiven.languageapp.navigation.ThirdCloudNavGraph
 import com.stiven.languageapp.view.ExercisesCard
@@ -106,7 +107,7 @@ fun Exercises(
             context = context,
             textToSpeechViewModel = textToSpeechViewModel,
             onClick = {
-                studentNavController.navigate(FirstCloudRoutes.FIRST_CLOUD)
+                studentNavController.navigate(FourthCloudNavGraph.FOURTH_CLOUD)
             }
         )
     }
